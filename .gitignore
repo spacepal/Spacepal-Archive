@@ -79,6 +79,7 @@ typings/
 Microservices/bin/*
 Microservices/pkg/*
 Microservices/src/*
+Microservices/production/*
 Microservices/src/aiservice/bin/*
 Microservices/src/aiservice/vendor
 !Microservices/src/aiservice
