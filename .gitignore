@@ -71,3 +71,15 @@ typings/
 
 # Serverless directories
 .serverless
+
+# Custom
+.directory
+
+# Go
+Microservices/bin/*
+Microservices/pkg/*
+Microservices/src/*
+Microservices/src/aiservice/bin/*
+Microservices/src/aiservice/vendor
+!Microservices/src/aiservice
+!.keep
