@@ -1,0 +1,23 @@
+$gradiendColorSide: rgba(18, 38, 63, 1.0);
+$gradiendColorCenter: rgba(18, 38, 63, 0.79);
+$gradientActiveSide: rgba(28, 89, 165, 1.0);
+$gradiendActiveColorCenter: rgba(23, 95, 184, 0.8);
+
+$gradient: linear-gradient(70deg,
+  $gradiendColorSide 40%,
+  $gradiendColorCenter 41%,
+  $gradiendColorSide 100%);
+$gradientActive: linear-gradient(70deg,
+  $gradientActiveSide 40%,
+  $gradiendActiveColorCenter 41%,
+  $gradientActiveSide 100%);
+
+$textColor: rgb(79, 125, 146);
+$buttonTextColor: rgb(255, 255, 255);
+$colorLight: rgb(3, 154, 255);
+$colorDim: rgba(3, 154, 255, 0.38);
+$colorActive: rgb(40, 190, 115);
+$background: rgb(0, 0, 14);
+$colorDark: rgb(0, 0, 0.79);
+$opacityBackground: rgba(0, 0, 0, 0.7);
+$colorDanger: rgb(255, 28, 28);

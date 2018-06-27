@@ -1,113 +1,68 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li>
-        <a
-          href="https://vuejs.org"
-          target="_blank"
-        >
-          Core Docs
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://forum.vuejs.org"
-          target="_blank"
-        >
-          Forum
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://chat.vuejs.org"
-          target="_blank"
-        >
-          Community Chat
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://twitter.com/vuejs"
-          target="_blank"
-        >
-          Twitter
-        </a>
-      </li>
-      <br>
-      <li>
-        <a
-          href="http://vuejs-templates.github.io/webpack/"
-          target="_blank"
-        >
-          Docs for This Template
-        </a>
-      </li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li>
-        <a
-          href="http://router.vuejs.org/"
-          target="_blank"
-        >
-          vue-router
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vuex.vuejs.org/"
-          target="_blank"
-        >
-          vuex
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vue-loader.vuejs.org/"
-          target="_blank"
-        >
-          vue-loader
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-        >
-          awesome-vue
-        </a>
-      </li>
-    </ul>
+    <div class="loop_header"></div>
+    <div id="main">
+      <STable></STable>
+      <div class="button" @click="showWindow">Create game</div>
+    </div>
+    <Window ref="window" type="confirm" title="Game creation">
+      <div class="form">
+        <TextInput placeholder="Username" validate='^[0-9]{4,32}$' :max="32"></TextInput>
+        <TextInput placeholder="Gamename" :max="48"></TextInput>
+        <TextInput placeholder="Map width" validate='^[0-9]*$'></TextInput>
+        <TextInput placeholder="Map height" validate='^[0-9]*$'></TextInput>
+      </div>
+    </Window>
+    <Preloader ref="loader"></Preloader>
   </div>
 </template>
 
 <script>
+import STable from './STable.vue'
+import TextInput from './TextInput.vue'
+import Preloader from './Preloader.vue'
+import Window from './Window.vue'
+
 export default {
   name: 'HelloWorld',
+  components: {STable, Preloader, Window, TextInput},
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
+    }
+  },
+  methods: {
+    showWindow () {
+      this.$refs.loader.show()
+      setTimeout(() => {
+        this.$refs.loader.hide()
+        this.$refs.window.show()
+      }, 3000)
     }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1, h2 {
-  font-weight: normal;
+<style>
+.i {
+  width: 400px;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+body {
+  background: rgb(0, 0, 14);
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+#main {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
-a {
-  color: #42b983;
+@keyframes bg {
+  from {
+    background-position-x: 0%;
+  }
+  to {
+    background-position-x: 150px;
+  }
 }
 </style>
