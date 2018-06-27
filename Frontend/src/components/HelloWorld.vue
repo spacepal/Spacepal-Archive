@@ -14,6 +14,7 @@
       </div>
     </Window>
     <Preloader ref="loader"></Preloader>
+    <Toast></Toast>
   </div>
 </template>
 
@@ -22,10 +23,11 @@ import STable from './STable.vue'
 import TextInput from './TextInput.vue'
 import Preloader from './Preloader.vue'
 import Window from './Window.vue'
+import Toast from './Toast.vue'
 
 export default {
   name: 'HelloWorld',
-  components: {STable, Preloader, Window, TextInput},
+  components: {STable, Preloader, Window, TextInput, Toast},
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
