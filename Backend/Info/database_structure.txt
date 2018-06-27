@@ -1,0 +1,11 @@
+GAMES
+GAME:ID:PARAMS
+GAME:ID:PLAYER:ID
+GAME:ID:PLANET:ID
+
+ID:GAME
+	edge_used_id
+ID:GAME:(ID):PLAYER
+	edge_used_id
+ID:GAME:(ID):PLANET
+	edge_used_id
