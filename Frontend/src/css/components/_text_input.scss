@@ -35,13 +35,13 @@
       transition: all 0.1s linear;
     }
 
-    .field:hover .label, .field input[value=""] .label, .label-out{
+    .field:hover .label, .label-out .label {
       font-size: 0.8m !important;
       transform: translateY(0) !important;
       transition: all 0.2s linear !important;
     }
 
-    .field input[type="text"] {
+    .field input {
       width: calc(100% - 7px);
       padding: 10px;
       padding-right: 50px;
@@ -57,8 +57,17 @@
       box-sizing: border-box;
     }
 
+    .field input[type="number"] {
+      padding-right: 7px;
+    }
+
+    .field:hover input::placeholder, .label-out input::placeholder {
+      color: map_get($colorText, $theme) !important;
+    }
+
     .field input::placeholder {
       color: transparent;
+      transition: color 0.2s linear;
     }
 
   }

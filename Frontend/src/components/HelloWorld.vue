@@ -8,10 +8,10 @@
     </div>
     <Window ref="window" type="alert" title="Game creation">
       <div class="form">
-        <TextInput placeholder="Username" validate='^[0-9]{4,32}$' :max="32"></TextInput>
+        <TextInput placeholder="Username" validate='^[0-9A-Za-z_-]*$' :min="4" :max="32"></TextInput>
         <TextInput placeholder="Gamename" :max="48"></TextInput>
-        <TextInput placeholder="Map width" validate='^[0-9]*$'></TextInput>
-        <TextInput placeholder="Map height" validate='^[0-9]*$'></TextInput>
+        <TextInput placeholder="Map width" type="number" defaultValue="24" :min="10" :max="1024"></TextInput>
+        <TextInput placeholder="Map height" type="number" defaultValue="32" :min="10" :max="1024"></TextInput>
       </div>
     </Window>
     <Preloader ref="loader"></Preloader>
