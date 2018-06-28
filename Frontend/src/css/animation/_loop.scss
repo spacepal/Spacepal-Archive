@@ -1,27 +1,32 @@
-$clrSide: rgba(18, 38, 63, 1.0);
-$clrCntr: rgba(19, 105, 211, 0.79);
+@import '../_colors.scss';
 
-@keyframes loopAnim {
-  from {
-    background: linear-gradient(70deg, $clrSide 99%, $clrCntr 100%, $clrSide 98%)
-  }
-  @for $i from 1 through 49 {
-    #{$i}#{'%'} {
-      $j: max(100-$i*4, 0);
-      $k: $j + 1;
-      $l: 100 - $i * 2;
-      background: linear-gradient(70deg, $clrSide #{$j}#{'%'}, $clrCntr #{$k}#{'%'}, $clrSide #{$l}#{'%'})
+@each $theme in $themes {
+
+  $clrCntr: nth(map_get($gradientColorsLoop, $theme), 1);
+  $clrSide: nth(map_get($gradientColorsLoop, $theme), 2);
+
+  @keyframes loop-anim-#{$theme} {
+    from {
+      background: linear-gradient(70deg, $clrSide 99%, $clrCntr 100%, $clrSide 98%)
+    }
+    @for $i from 1 through 49 {
+      #{$i}#{'%'} {
+        $j: max(100-$i*4, 0);
+        $k: $j + 1;
+        $l: 100 - $i * 2;
+        background: linear-gradient(70deg, $clrSide #{$j}#{'%'}, $clrCntr #{$k}#{'%'}, $clrSide #{$l}#{'%'})
+      }
+    }
+    @for $i from 1 through 49 {
+      #{$i + 50}#{'%'} {
+        $j: $i * 2;
+        $k: min($i * 4, 99);
+        $l: $k + 1;
+        background: linear-gradient(70deg, $clrSide #{$j}#{'%'}, $clrCntr #{$k}#{'%'}, $clrSide #{$l}#{'%'})
+      }
+    }
+    to {
+      background: linear-gradient(70deg, $clrSide 98%, $clrCntr 99%, $clrSide 100%)
     }
   }
-  @for $i from 1 through 49 {
-    #{$i + 50}#{'%'} {
-      $j: $i * 2;
-      $k: min($i * 4, 99);
-      $l: $k + 1;
-      background: linear-gradient(70deg, $clrSide #{$j}#{'%'}, $clrCntr #{$k}#{'%'}, $clrSide #{$l}#{'%'})
-    }
-  }
-  to {
-    background: linear-gradient(70deg, $clrSide 98%, $clrCntr 99%, $clrSide 100%)
-  }
- }
+}

@@ -1,0 +1,30 @@
+@import '../_colors.scss';
+
+@each $theme in $themes {
+  .#{$theme} {
+
+    .toast {
+      $width: 250px;
+      position: fixed;
+      width: $width;
+      right: 30px;
+      min-height: 100px;
+      padding: 4px;
+      bottom: 30px;
+      margin-left: -$width * 0.5;
+      box-sizing: border-box;
+      display: flex;
+      cursor: default;
+      border: 1px solid map_get($colorBorderLight, $theme);
+    }
+    .toast .body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+      text-align: center;
+      background: map_get($gradientActive, $theme);
+      color: map_get($colorToastText, $theme);
+    }
+  }
+}

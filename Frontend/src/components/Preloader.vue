@@ -1,7 +1,7 @@
 <template>
   <div>
     <transition name="fade">
-      <div id="background" v-if="isVisible">
+      <div class="background" v-if="isVisible">
         <div class="star" v-for="i in 300" :key="i" :style="rocketStyle(i, true)"></div>
         <div id="loading"></div>
       </div>
@@ -43,63 +43,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../css/animation/_preloader.scss';
-@import '../css/_colors.scss';
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 1s;
-}
-
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-
-.fade-leave-to {
-  transition: opacity 0.2s;
-}
-
-#loading {
-  font-size: 32pt;
-  cursor: default;
-  perspective: 500px;
-  color: white;
-  animation-name: loading_motion;
-  animation-duration: 60s;
-  animation-timing-function: linear;
-  animation-direction: normal;
-  animation-play-state: running;
-  animation-iteration-count: infinite;
-}
-
-#loading::after {
-  content: 'Loading'
-}
-
-.star {
-  position: fixed;
-  width: 2px;
-  height: 2px;
-  background: white;
-  box-shadow: 0 0 5px white;
-  border-radius: 2px;
-  animation-name: star_motion;
-  animation-duration: 1s;
-  animation-delay: -10s;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-  animation-direction: reverse;
-}
-
-#background {
-  perspective: 500px;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  background: $opacityBackground;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+@import '../css/components/_preloader.scss';
 </style>

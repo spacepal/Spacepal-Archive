@@ -1,31 +1,35 @@
 @import '../_colors.scss';
 @import '../animation/_loop.scss';
 
-.button {
-  margin: 8px;
-  padding: 13px 20px;
-  color: $buttonTextColor;
-  cursor: pointer;
-  background: $gradient;
-  box-shadow: 4px 4px 1px $colorLight,
-              -4px -4px 1px $colorLight;
-  transition: box-shadow 0.1s ease-in;
-  border-radius: 5px 0;
-}
+@each $theme in $themes {
 
-.button:hover {
-  animation-name: loopAnim;
-  animation-duration: 2s;
-  animation-timing-function: linear;
-  animation-direction: normal;
-  animation-play-state: running;
-  animation-iteration-count: infinite;
-  box-shadow: 8px -8px 1px $colorLight,
-              -8px 8px 1px $colorLight;
-  transition: box-shadow 0.1s ease-in;
-}
+  .#{$theme} .button {
+    margin: 8px;
+    padding: 13px 20px;
+    color: map_get($colorButtonText, $theme);
+    cursor: pointer;
+    background: map_get($gradient, $theme);
+    box-shadow: 4px 4px 1px map_get($colorBorderLight, $theme),
+                -4px -4px 1px map_get($colorBorderLight, $theme);
+    transition: box-shadow 0.1s ease-in;
+    border-radius: 5px 0;
+  }
 
-.button:active {
-  box-shadow: 8px -8px 1px $colorActive,
-              -8px 8px 1px $colorActive;
+  .#{$theme} .button:hover {
+    animation-name: loop-anim-#{$theme};
+    animation-duration: 2s;
+    animation-timing-function: linear;
+    animation-direction: normal;
+    animation-play-state: running;
+    animation-iteration-count: infinite;
+    box-shadow: 8px -8px 1px map_get($colorBorderLight, $theme),
+                -8px 8px 1px map_get($colorBorderLight, $theme);
+    transition: box-shadow 0.1s ease-in;
+  }
+
+  .#{$theme} .button:active {
+    box-shadow: 8px -8px 1px map_get($colorBorderActive, $theme),
+                -8px 8px 1px map_get($colorBorderActive, $theme),
+  }
+
 }

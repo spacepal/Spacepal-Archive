@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="background" v-if="isVisible" class="full"></div>
+    <div class="background full" v-if="isVisible"></div>
     <transition name="scale" mode="out-in">
       <div v-if="isVisible" class="full">
         <div id="window">
@@ -64,71 +64,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../css/_colors.scss';
-
-.scale-enter-active, .scale-leave-active {
-  transition: all .5s;
-  opacity: 1.0;
-  transform: scale3d(1.0, 1.0, 1.0);
-}
-.scale-enter, .scale-leave-to {
-  opacity: 0;
-  transform: scale3d(0.3, 0.3, 0.3);
-  transition: all .5s;
-}
-
-#background {
-  background: $opacityBackground;
-}
-.full {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-}
-#window {
-  min-height: 250px;
-  width: 400px;
-  border: 2px solid $colorLight;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 0 6px $colorLight;
-}
-#title {
-  margin: 7px;
-  padding: 3px;
-  width: calc(100% - 14px);
-  box-sizing: border-box;
-  color: $colorLight;
-  border: 1px solid $colorLight;
-}
-#title div {
-  padding: 9px;
-}
-#body {
-  width: calc(100% - 14px);
-  padding: 24px;
-  margin: 0 7px;
-  box-sizing: border-box;
-  background: $opacityBackground;
-  border: 1px solid $colorLight;
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: auto;
-}
-#control {
-  margin: 7px;
-  min-height: 60px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
+@import '../css/components/_window.scss';
 </style>

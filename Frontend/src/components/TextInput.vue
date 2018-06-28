@@ -68,3 +68,7 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import '../css/components/_text_input.scss';
+</style>

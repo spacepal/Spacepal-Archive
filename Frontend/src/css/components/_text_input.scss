@@ -1,0 +1,65 @@
+@import '../_colors.scss';
+
+@each $theme in $themes {
+  .#{$theme} {
+
+    .field {
+      width: 100%;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: flex-end;
+    }
+
+    .field-valid input {
+      box-shadow: 0px 0px 8px map_get($colorBorderActive, $theme),
+                  0px 0px 8px map_get($colorBorderActive, $theme) !important;
+      border-color: map_get($colorBorderActive, $theme) !important;
+    }
+
+    .field .counter {
+      $height: 31px;
+      font-size: 0.8em;
+      width: 50px;
+      height: $height;
+      margin-top: -$height;
+      margin-right: 7px;
+    }
+
+    .field .label {
+      margin-top: 7px;
+      height: 20px;
+      width: 100%;
+      transform: translateY(35px);
+      transition: all 0.1s linear;
+    }
+
+    .field:hover .label, .field input[value=""] .label, .label-out{
+      font-size: 0.8m !important;
+      transform: translateY(0) !important;
+      transition: all 0.2s linear !important;
+    }
+
+    .field input[type="text"] {
+      width: calc(100% - 7px);
+      padding: 10px;
+      padding-right: 50px;
+      margin: 7px;
+      min-width: 200px;
+      border: 1px solid map_get($colorBorderLight, $theme);
+      background: transparent;
+      color: map_get($colorText, $theme);
+      box-shadow: inset 0px 0px 4px map_get($colorBorderLight, $theme),
+                  0px 0px 1px map_get($colorBorderLight, $theme);
+                  outline: none;
+      font-family: 'Share Tech Mono', monospace;
+      box-sizing: border-box;
+    }
+
+    .field input::placeholder {
+      color: transparent;
+    }
+
+  }
+}

@@ -1,0 +1,70 @@
+@import '../_colors.scss';
+
+@each $theme in $themes {
+  .#{$theme} {
+    .background {
+      background: map_get($windowBackground, $theme);
+    }
+    .scale-enter-active, .scale-leave-active {
+      transition: all .5s;
+      opacity: 1.0;
+      transform: scale3d(1.0, 1.0, 1.0);
+    }
+    .scale-enter, .scale-leave-to {
+      opacity: 0;
+      transform: scale3d(0.3, 0.3, 0.3);
+      transition: all .5s;
+    }
+    .full {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+    }
+    #window {
+      min-height: 250px;
+      width: 400px;
+      border: 2px solid map_get($colorBorderLight, $theme);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 6px map_get($colorBorderLight, $theme);
+    }
+    #title {
+      text-align: center;
+      margin: 7px;
+      padding: 3px;
+      width: calc(100% - 14px);
+      box-sizing: border-box;
+      color: map_get($colorTextWindowHeader, $theme);
+      border: 1px solid map_get($colorBorderLight, $theme);
+    }
+    #title div {
+      padding: 9px;
+    }
+    #body {
+      width: calc(100% - 14px);
+      padding: 24px;
+      margin: 0 7px;
+      box-sizing: border-box;
+      background: map_get($windowBackground, $theme);
+      border: 1px solid map_get($colorBorderLight, $theme);
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+    }
+    #control {
+      margin: 7px;
+      min-height: 60px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+}

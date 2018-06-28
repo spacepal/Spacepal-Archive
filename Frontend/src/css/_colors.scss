@@ -1,23 +1,100 @@
-$gradiendColorSide: rgba(18, 38, 63, 1.0);
-$gradiendColorCenter: rgba(18, 38, 63, 0.79);
-$gradientActiveSide: rgba(28, 89, 165, 1.0);
-$gradiendActiveColorCenter: rgba(23, 95, 184, 0.8);
 
-$gradient: linear-gradient(70deg,
-  $gradiendColorSide 40%,
-  $gradiendColorCenter 41%,
-  $gradiendColorSide 100%);
-$gradientActive: linear-gradient(70deg,
-  $gradientActiveSide 40%,
-  $gradiendActiveColorCenter 41%,
-  $gradientActiveSide 100%);
+$pallets: (
+  'dark': (
+    'text': (
+      rgb(79, 125, 146), // main
+      rgb(3, 154, 255), // highlighted
+      rgb(255,255,255) // button
+    ),
+    'background': (
+      black, // body
+      rgba(0, 0, 0, 0.7), // opacity
+      rgba(0, 0, 0, 0.7) // window opacity
+    ),
+    'border': (
+      rgb(3, 154, 255), // highlighted
+      rgba(3, 154, 255, 0.38), // dim
+      rgb(40, 190, 115) // active
+    ),
+    'gradients': (
+      (rgba(19, 105, 211, 0.79), rgba(18, 38, 63, 1.0)), // loop
+      (rgba(18, 38, 63, 0.79), rgba(18, 38, 63, 1.0)), // main
+      (rgba(23, 95, 184, 0.8), rgba(28, 89, 165, 1.0)) // active
+    )
+  ),
+  'light': (
+    'text': (
+      rgb(9, 15, 66), // main
+      rgb(0, 85, 141), // header
+      rgb(255,255,255) // button
+    ),
+    'background': (
+      white, // body
+      rgba(0, 0, 0, 0.7), // loader opacity
+      rgba(255, 255, 255, 0.7) // window opacity
+    ),
+    'border': (
+      rgb(3, 154, 255), // highlighted
+      rgba(3, 154, 255, 0.38), // dim
+      rgb(40, 190, 115) // active
+    ),
+    'gradients': (
+      (rgb(255, 255, 255), rgb(119, 180, 255)), // loop
+      (rgb(54, 129, 221), rgb(88, 163, 255)), // main
+      (rgba(23, 95, 184, 0.8), rgba(28, 89, 165, 1.0)) // active
+    )
+  ),
+);
 
-$textColor: rgb(79, 125, 146);
-$buttonTextColor: rgb(255, 255, 255);
-$colorLight: rgb(3, 154, 255);
-$colorDim: rgba(3, 154, 255, 0.38);
-$colorActive: rgb(40, 190, 115);
-$background: rgb(0, 0, 14);
-$colorDark: rgb(0, 0, 0.79);
-$opacityBackground: rgba(0, 0, 0, 0.7);
-$colorDanger: rgb(255, 28, 28);
+/* ================ Do not edit directly ================ */
+
+$themes: map-keys($pallets);
+
+@function color($type, $index) {
+  $res: ();
+  @each $theme, $types in $pallets {
+    $res: map_merge($res, (
+      $theme: nth(map_get($types, $type), $index)
+    ))
+  }
+  @return $res;
+}
+
+@function gen-gradient($colors) {
+  $res: ();
+  @each $theme, $color in $colors {
+    $res: map_merge($res, (
+      $theme: linear-gradient(70deg,
+        nth($color, 1) 40%,
+        nth($color, 2) 41%,
+        nth($color, 1) 100%),
+    ))
+  }
+  @return $res;
+}
+
+/* ================ TEXT SYNONYMS ================ */
+
+$colorButtonText: color("text", 3);
+$colorText: color("text", 1);
+$colorTextTableHeader: color("text", 2);
+$colorTextWindowHeader: color("text", 2);
+$colorToastText: color("text", 2);
+
+/* ================ BORDERS ================ */
+
+$colorBorderLight: color("border", 1);
+$colorBorder: color("border", 2);
+$colorBorderActive: color("border", 3);
+
+
+$background: color("background", 1);
+$colorDark: color("background", 2);
+$loadingBackground: color("background", 2);
+$windowBackground: color("background", 3);
+
+/* ================ GRADIENTS ================ */
+
+$gradient: gen-gradient(color("gradients", 2));
+$gradientActive: gen-gradient(color("gradients", 3));
+$gradientColorsLoop: color("gradients", 1)
