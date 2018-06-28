@@ -3,7 +3,8 @@
   .#{$theme} {
     transition: all 0.5s linear;
     color: map_get($colorText, $theme);
-    font-family: 'Share Tech Mono', monospace;
+    // font-family: 'Share Tech Mono', monospace;
+    font-family: 'Audiowide', sans-serif;
     background: map_get($background, $theme);
   }
 }

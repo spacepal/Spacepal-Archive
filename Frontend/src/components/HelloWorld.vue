@@ -7,11 +7,10 @@
     </div>
     <Window ref="window" type="alert" title="Game creation">
       <div class="form">
-        <!-- <TextInput placeholder="Username" validate='^[0-9]{4,32}$' :max="32"></TextInput>
+        <TextInput placeholder="Username" validate='^[0-9]{4,32}$' :max="32"></TextInput>
         <TextInput placeholder="Gamename" :max="48"></TextInput>
         <TextInput placeholder="Map width" validate='^[0-9]*$'></TextInput>
-        <TextInput placeholder="Map height" validate='^[0-9]*$'></TextInput> -->
-        Hello world
+        <TextInput placeholder="Map height" validate='^[0-9]*$'></TextInput>
       </div>
     </Window>
     <Preloader ref="loader"></Preloader>

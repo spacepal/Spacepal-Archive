@@ -33,7 +33,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono');
+// @import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono');
+@import url('https://fonts.googleapis.com/css?family=Audiowide');
 @import 'mdi/css/materialdesignicons.min.css';
 @import './css/_ui.scss';
 #app {
