@@ -19,7 +19,8 @@ $pallets: (
     'gradients': (
       (rgba(19, 105, 211, 0.79), rgba(18, 38, 63, 1.0)), // loop
       (rgba(18, 38, 63, 0.79), rgba(18, 38, 63, 1.0)), // main
-      (rgba(23, 95, 184, 0.8), rgba(28, 89, 165, 1.0)) // active
+      (rgba(23, 95, 184, 0.8), rgba(28, 89, 165, 1.0)), // active
+      (rgb(3, 154, 255), rgba(0, 0, 0, 0.7), rgb(3, 154, 255)) // header
     )
   ),
   'light': (
@@ -35,13 +36,14 @@ $pallets: (
     ),
     'border': (
       rgb(3, 154, 255), // highlighted
-      rgba(3, 154, 255, 0.38), // dim
+      rgba(0, 37, 61, 0.38), // dim
       rgb(40, 190, 115) // active
     ),
     'gradients': (
       (rgb(255, 255, 255), rgb(119, 180, 255)), // loop
       (rgb(54, 129, 221), rgb(88, 163, 255)), // main
-      (rgba(23, 95, 184, 0.8), rgba(28, 89, 165, 1.0)) // active
+      (rgba(23, 95, 184, 0.8), rgba(28, 89, 165, 1.0)), // active
+      (rgba(3, 154, 255, 0.7), rgba(119, 180, 255, 0.5))
     )
   ),
 );
@@ -95,6 +97,7 @@ $windowBackground: color("background", 3);
 
 /* ================ GRADIENTS ================ */
 
+$gradientColorsLoop: color("gradients", 1);
 $gradient: gen-gradient(color("gradients", 2));
 $gradientActive: gen-gradient(color("gradients", 3));
-$gradientColorsLoop: color("gradients", 1)
+$gradientHeaderLoop: gen-gradient(color("gradients", 4));
