@@ -1,8 +1,8 @@
 <template>
-  <div class="field" :class="placeholderClass + ' ' + statusClass">
-    <div class="label" v-if="hasLabel">{{placeholder}}</div>
+  <div class="field" :class="labelClass + ' ' + statusClass">
+    <div class="label" v-if="hasLabel">{{label}}</div>
     <input :type="type" :maxlength="maxLength" :min="minimum" :max="maximum"
-      v-model="text" :placeholder="defaultValue" @focus="$event.target.select()">
+      v-model="text" :placeholder="placeholder" @focus="$event.target.select()">
     <div class="counter" v-show="text.length !== 0" v-if="hasCounter">
       {{text.length}}\{{max}}
     </div>
@@ -20,11 +20,11 @@ export default {
       type: String,
       default: TYPE_TEXT
     },
-    defaultValue: {
+    placeholder: {
       type: String,
       default: ''
     },
-    placeholder: {
+    label: {
       type: String,
       default: ''
     },
@@ -51,7 +51,7 @@ export default {
   data () {
     return {
       text: '',
-      isPlaceholderOut: false,
+      isLabelOut: false,
       statusClass: ''
     }
   },
@@ -75,10 +75,10 @@ export default {
       return this.max !== undefined && this.type === TYPE_TEXT
     },
     hasLabel () {
-      return this.placeholder.length !== 0
+      return this.label.length !== 0
     },
-    placeholderClass () {
-      return this.isPlaceholderOut ? 'label-out' : ''
+    labelClass () {
+      return this.isLabelOut ? 'label-out' : ''
     }
   },
   methods: {
@@ -105,7 +105,7 @@ export default {
   },
   watch: {
     text (newText) {
-      this.isPlaceholderOut = this.text.length !== 0
+      this.isLabelOut = this.text.length !== 0
       this.statusClass = ''
       if (this.isValid()) {
         this.$emit('update:value', this.text)
