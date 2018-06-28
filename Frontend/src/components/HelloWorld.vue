@@ -4,6 +4,7 @@
     <div id="main">
       <STable></STable>
       <div class="button" @click="showWindow">Create game</div>
+      <div class="button" @click="showToast">Open toast</div>
     </div>
     <Window ref="window" type="alert" title="Game creation">
       <div class="form">
@@ -14,7 +15,6 @@
       </div>
     </Window>
     <Preloader ref="loader"></Preloader>
-    <Toast></Toast>
   </div>
 </template>
 
@@ -23,11 +23,10 @@ import STable from './STable.vue'
 import TextInput from './TextInput.vue'
 import Preloader from './Preloader.vue'
 import Window from './Window.vue'
-import Toast from './Toast.vue'
 
 export default {
   name: 'HelloWorld',
-  components: {STable, Preloader, Window, TextInput, Toast},
+  components: {STable, Preloader, Window, TextInput},
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
@@ -40,6 +39,9 @@ export default {
         this.$refs.loader.hide()
         this.$refs.window.show()
       }, 3000)
+    },
+    showToast () {
+      this.$toast('hello world')
     }
   }
 }

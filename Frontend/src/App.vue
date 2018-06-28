@@ -1,6 +1,7 @@
 <template>
   <div id="app" :class="theme">
     <router-view/>
+    <Toast glob />
   </div>
 </template>
 
@@ -20,7 +21,7 @@ export default {
   },
   mounted () {
     this._evt = (event) => {
-      if (event.key === ' ') {
+      if (event.key === ' ' && event.ctrlKey) {
         this.currentTheme = (this.currentTheme + 1) % themes.length
       }
     }
