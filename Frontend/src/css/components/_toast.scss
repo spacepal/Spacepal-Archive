@@ -34,7 +34,7 @@
       align-items: center;
       flex: 1;
       text-align: center;
-      box-shadow: 0 0 30px map_get($colorBorderLight, $theme);
+      box-shadow: 0 0 10px map_get($colorBorderLight, $theme);
       color: map_get($colorToastText, $theme);
     }
   }
