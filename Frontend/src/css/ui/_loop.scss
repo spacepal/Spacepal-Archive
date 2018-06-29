@@ -1,0 +1,59 @@
+@import '../animation/_loop.scss';
+@import '../animation/_loop_header.scss';
+@import '../_colors.scss';
+
+@each $theme in $themes {
+  .#{$theme} {
+
+    $clrCntr: nth(map_get($gradientColorsLoop, $theme), 1);
+    $clrSide: nth(map_get($gradientColorsLoop, $theme), 2);
+
+    .loop {
+      margin: 8px;
+    }
+
+    .loop_bg {
+      animation-name: loop-anim-#{$theme};
+      animation-duration: 3s;
+      animation-timing-function: linear;
+      animation-direction: normal;
+      animation-play-state: running;
+      animation-iteration-count: infinite;
+    }
+
+    .loop::before, .loop::after {
+      content: '';
+      height: 2px;
+      display: block;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      position: relative;
+      margin: auto;
+      background: linear-gradient(70deg, $clrSide 40%, $clrCntr 41%, $clrSide 100%);
+      animation-name: loop-anim-#{$theme};
+      animation-duration: 3s;
+      animation-timing-function: linear;
+      animation-direction: normal;
+      animation-play-state: running;
+      animation-iteration-count: infinite;
+    }
+
+    .loop_header {
+      top: 0;
+      left: 0;
+      position: fixed;
+      height: 4px;
+      width: 100%;
+      background: map_get($gradientHeaderLoop, $theme);
+      animation-name: loopHeaderAnim;
+      animation-duration: 3s;
+      animation-timing-function: linear;
+      animation-direction: normal;
+      animation-play-state: running;
+      animation-iteration-count: infinite;
+      border-bottom: 1px solid map_get($colorBorderLight, $theme);
+    }
+  }
+}

@@ -1,0 +1,41 @@
+@import '../_colors.scss';
+
+@each $theme in $themes {
+  .#{$theme} {
+
+    .toast-enter-active, .toast-leave-active {
+      transition: all 0.15s linear;
+    }
+
+    .toast-enter, .toast-leave-to {
+      opacity: 0;
+      transform: translateY(100px)
+    }
+
+    .toast {
+      $width: 250px;
+      position: fixed;
+      width: $width;
+      right: 30px;
+      min-height: 40px;
+      padding: 4px;
+      bottom: 30px;
+      margin-left: -$width * 0.5;
+      box-sizing: border-box;
+      display: flex;
+      cursor: default;
+      background: map_get($gradientActive, $theme);
+      box-shadow: inset 3px 3px 1px map_get($colorBorderLight, $theme),
+                  inset -3px -3px 1px map_get($colorBorderLight, $theme);
+    }
+    .toast .body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+      text-align: center;
+      box-shadow: 0 0 10px map_get($colorBorderLight, $theme);
+      color: map_get($colorToastText, $theme);
+    }
+  }
+}
