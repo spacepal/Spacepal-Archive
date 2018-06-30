@@ -1,7 +1,7 @@
 <template>
   <div class="paginator">
     <div class="button" :class="previousClass" @click="go(-1)">Prev</div>
-    <div class="page">{{currentPage + 1}} of {{total}}</div>
+    <div class="page">{{currentPage + 1}} of {{lastPage}}</div>
     <div class="button" :class="nextClass" @click="go(+1)">Next</div>
   </div>
 </template>
@@ -28,10 +28,10 @@ export default {
       return Math.ceil(this.total / this.limit)
     },
     nextClass () {
-      return (this.lastPage < this.page ? '' : 'disabled')
+      return (this.currentPage < this.lastPage - 1 ? '' : 'disabled')
     },
     previousClass () {
-      return (this.page > 0 ? '' : 'disabled')
+      return (this.currentPage > 0 ? '' : 'disabled')
     }
   },
   methods: {
@@ -39,12 +39,14 @@ export default {
       let page = this.currentPage + direction
       page = Math.max(0, page)
       page = Math.min(this.lastPage - 1, page)
-      this.currentPage = page
-      this.$emit('pageChanged', {
-        page: page,
-        limit: this.limit,
-        offset: this.currentPage * this.limit
-      })
+      if (this.currentPage !== page) {
+        this.$emit('pageChanged', {
+          page: page,
+          limit: this.limit,
+          offset: this.currentPage * this.limit
+        })
+        this.currentPage = page
+      }
     }
   }
 }
