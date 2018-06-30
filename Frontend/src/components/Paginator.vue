@@ -25,6 +25,9 @@ export default {
   },
   computed: {
     lastPage () {
+      if (this.total === 0) {
+        return 1
+      }
       return Math.ceil(this.total / this.limit)
     },
     nextClass () {
