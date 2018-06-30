@@ -5,7 +5,7 @@
     <div class="flex-horizontal">
       <div class="space"></div>
       <div id="games-list">
-        <STable :fields="fields" :rows="rows" @rowClicked="rowClicked">
+        <STable :fields="fields" :rows="rows" @rowClicked="rowClicked" :loading="isLoading">
           <template slot="notfound">
             There's no games
           </template>
@@ -73,7 +73,8 @@ export default {
       ],
       rows: [],
       limit: 18,
-      total: 0
+      total: 0,
+      isLoading: true
     }
   },
   mounted () {
@@ -81,7 +82,9 @@ export default {
   },
   methods: {
     refresh (offset) {
+      this.isLoading = true
       Service.game.all(0, this.limit).then((resp) => {
+        this.isLoading = false
         this.total = resp.data.count
         this.rows = resp.data.games
       }).catch((resp) => {

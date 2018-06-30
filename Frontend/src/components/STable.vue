@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="loop">
-      <table class="stable" cellspacing="5">
+      <table class="stable" :class="loadingClass" cellspacing="5">
         <thead>
           <tr>
             <th v-for="field in fields" :key="field.name" :title='field.title'>
@@ -31,10 +31,19 @@ export default {
   name: 'STable',
   props: {
     fields: Array,
-    rows: Array
+    rows: Array,
+    loading: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {
+    }
+  },
+  computed: {
+    loadingClass () {
+      return this.loading ? 'loading' : ''
     }
   },
   methods: {
@@ -48,7 +57,9 @@ export default {
       return ''
     },
     rowClicked (row, i) {
-      this.$emit('rowClicked', {row, i})
+      if (!this.loading) {
+        this.$emit('rowClicked', {row, i})
+      }
     }
   }
 }
