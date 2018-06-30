@@ -29,11 +29,13 @@ export default {
   },
   methods: {
     show (msg, timeout = DEFAULT_TIMEOUT) {
-      this._pending.push({
-        message: msg,
-        timeout: timeout
-      })
-      this.handle()
+      if (this._pending.find((m) => m.message === msg) === undefined) {
+        this._pending.push({
+          message: msg,
+          timeout: timeout
+        })
+        this.handle()
+      }
     },
     close () {
       clearTimeout(this._timeout)

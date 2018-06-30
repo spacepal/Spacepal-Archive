@@ -3,6 +3,10 @@
 @each $theme in $themes {
   .#{$theme} {
 
+    .norows td {
+      padding: 30px !important;
+    }
+
     .stable th, .stable td {
       padding: 10px;
     }

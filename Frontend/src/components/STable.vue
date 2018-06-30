@@ -1,36 +1,52 @@
 <template>
   <div>
     <div class="loop">
-    <table class="stable" cellspacing="5">
-      <thead>
-        <th v-for="field in fields" :key="field">
-          {{field}}
-        </th>
-      </thead>
-      <tbody>
-        <tr v-for="(row, i) in rows" :key="i">
-          <td v-for="cell in row" :key="cell">
-            {{cell}}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+      <table class="stable" cellspacing="5">
+        <thead>
+          <tr>
+            <th v-for="field in fields" :key="field.name" :title='field.title'>
+              {{field.name}}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-if="rows.length === 0" class="norows">
+            <td :colspan="fields.length">There's no rows</td>
+          </tr>
+          <tr v-for="(row, i) in rows" :key="i" @click="rowClicked(row, i)">
+            <td v-for="field in fields" :key="field.name">
+              {{getKeyValue(row, field)}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'STable',
+  props: {
+    fields: Array,
+    rows: Array
+  },
   data () {
     return {
-      fields: ['id', 'name', 'creator', 'players', 'map'],
-      rows: [
-        [1, 'example', 'root', '0/8', '12x12'],
-        [2, 'example', 'root', '0/8', '12x12'],
-        [3, 'example', 'root', '0/8', '12x12'],
-        [4, 'example', 'root', '0/8', '12x12']
-      ]
+    }
+  },
+  methods: {
+    getKeyValue (row, field) {
+      if (field.key) {
+        return row[field.key]
+      } else if (field.value && typeof field.value === 'function') {
+        return field.value(row)
+      }
+      console.warn('STable: No "key" or fucntion "value" in field')
+      return ''
+    },
+    rowClicked (row, i) {
+      this.$emit('rowClicked', {row, i})
     }
   }
 }
