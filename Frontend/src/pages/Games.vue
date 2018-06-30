@@ -1,10 +1,12 @@
 <template>
   <div id="games-page">
     <div class="loop_header"></div>
+    <div class="space"></div>
     <div id="games-list">
       <STable :fields="fields" :rows="rows" @rowClicked="rowClicked" />
       <Paginator :total="total" :limit="limit" @pageChanged="pageChanged" />
     </div>
+    <div class="space"></div>
   </div>
 </template>
 
@@ -91,14 +93,17 @@ export default {
 <style lang="scss" scoped>
 #games-page {
   display: flex;
-  flex-direction: column;
-  width: 100%;
-  align-items: center;
-  height: 100%;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-flow: 1.0;
+  min-width: 100%;
 }
 #games-list {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+.space {
+  flex: 1;
 }
 </style>
