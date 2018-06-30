@@ -11,7 +11,9 @@
         </thead>
         <tbody>
           <tr v-if="rows.length === 0" class="norows">
-            <td :colspan="fields.length">There's no rows</td>
+            <td :colspan="fields.length">
+              <slot name="notfound">There's no rows</slot>
+            </td>
           </tr>
           <tr v-for="(row, i) in rows" :key="i" @click="rowClicked(row, i)">
             <td v-for="field in fields" :key="field.name">
