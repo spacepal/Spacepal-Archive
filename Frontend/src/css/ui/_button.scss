@@ -6,8 +6,8 @@
   .#{$theme} {
 
     .button.disabled, .button.disabled:hover {
-      box-shadow: 4px 4px 1px gray,
-                  -4px -4px 1px gray;
+      box-shadow: 4px 4px 1px map_get($colorBorderDisabled, $theme),
+                  -4px -4px 1px map_get($colorBorderDisabled, $theme);
       animation-name: None;
       cursor: not-allowed
     }

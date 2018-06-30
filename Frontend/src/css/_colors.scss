@@ -14,7 +14,8 @@ $pallets: (
     'border': (
       rgb(3, 154, 255), // highlighted
       rgba(3, 154, 255, 0.38), // dim
-      rgb(40, 190, 115) // active
+      rgb(40, 190, 115), // active
+      rgba(128, 128, 128, 0.7) // disabled
     ),
     'gradients': (
       (rgba(19, 105, 211, 0.79), rgba(18, 38, 63, 1.0)), // loop
@@ -37,13 +38,14 @@ $pallets: (
     'border': (
       rgb(3, 154, 255), // highlighted
       rgb(74, 77, 110), // dim
-      rgb(40, 190, 115) // active
+      rgb(40, 190, 115), // active
+      rgba(43, 60, 187, 0.603) // disabled
     ),
     'gradients': (
       (rgb(255, 255, 255), rgb(119, 180, 255)), // loop
       (rgb(54, 129, 221), rgb(88, 163, 255)), // main
       (rgba(23, 95, 184, 0.8), rgba(28, 89, 165, 1.0)), // active
-      (rgba(3, 154, 255, 0.7), rgba(119, 180, 255, 0.5))
+      (rgba(3, 154, 255, 0.7), rgba(119, 180, 255, 0.5)) // header
     )
   ),
 );
@@ -88,7 +90,7 @@ $colorToastText: color("text", 2);
 $colorBorderLight: color("border", 1);
 $colorBorder: color("border", 2);
 $colorBorderActive: color("border", 3);
-
+$colorBorderDisabled: color("border", 4);
 
 $background: color("background", 1);
 $colorDark: color("background", 2);
