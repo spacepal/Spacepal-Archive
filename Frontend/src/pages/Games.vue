@@ -1,16 +1,24 @@
 <template>
   <div id="games-page">
     <div class="loop_header"></div>
-    <div class="space"></div>
-    <div id="games-list">
-      <STable :fields="fields" :rows="rows" @rowClicked="rowClicked" />
-      <Paginator :total="total" :limit="limit" @pageChanged="pageChanged" />
+    <GameTitle></GameTitle>
+    <div class="flex-horizontal">
+      <div class="space"></div>
+      <div id="games-list">
+        <STable :fields="fields" :rows="rows" @rowClicked="rowClicked">
+          <template slot="notfound">
+            There's no games
+          </template>
+        </STable>
+        <Paginator :total="total" :limit="limit" @pageChanged="pageChanged" />
+      </div>
+      <div class="space"></div>
     </div>
-    <div class="space"></div>
   </div>
 </template>
 
 <script>
+import GameTitle from '../components/GameTitle.vue'
 import STable from '../components/STable.vue'
 import Paginator from '../components/Paginator.vue'
 import Service from '../common/Service.js'
@@ -18,7 +26,8 @@ export default {
   name: 'Games',
   components: {
     STable,
-    Paginator
+    Paginator,
+    GameTitle
   },
   data () {
     return {
@@ -91,10 +100,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#games-page {
+.flex-horizontal {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+}
+#games-page {
   flex-flow: 1.0;
   min-width: 100%;
 }

@@ -1,0 +1,26 @@
+@import '../_colors.scss';
+@import '../animation/_loop_header.scss';
+
+@each $theme in $themes {
+  .#{$theme} {
+    #game-title {
+      font-size: 56pt;
+      margin: 32px 0;
+      text-align: center;
+      cursor: default;
+      user-select: none;
+      @supports (-webkit-background-clip: text) {
+        background: map_get($gradientActive, $theme);
+        background-size: 10px;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation-name: loopHeaderAnim;
+        animation-duration: 50s;
+        animation-timing-function: linear;
+        animation-direction: normal;
+        animation-play-state: running;
+        animation-iteration-count: infinite;
+      }
+    }
+  }
+}
