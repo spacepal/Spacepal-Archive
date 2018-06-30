@@ -2,7 +2,8 @@
   <div class="hello">
     <div class="loop_header"></div>
     <div id="main">
-      <STable></STable>
+      <STable/>
+      <Paginator/>
       <div class="button" @click="showWindow">Create game</div>
       <div class="button" @click="showToast">Open toast</div>
     </div>
@@ -23,10 +24,11 @@ import STable from './STable.vue'
 import TextInput from './TextInput.vue'
 import Preloader from './Preloader.vue'
 import Window from './Window.vue'
+import Paginator from './Paginator.vue'
 
 export default {
   name: 'HelloWorld',
-  components: {STable, Preloader, Window, TextInput},
+  components: {STable, Preloader, Window, TextInput, Paginator},
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
