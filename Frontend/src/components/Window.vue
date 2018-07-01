@@ -16,7 +16,9 @@
           </div>
           <div id="control">
             <template v-if="isConfirm">
-              <div class="button">Confirm</div>
+              <div class="button" @click="confirm" :class="confirmClass">
+                Confirm
+              </div>
               <div class="button" @click="close">Cancel</div>
             </template>
             <template v-if="isAlert">
@@ -43,7 +45,8 @@ export default {
     type: {
       type: String,
       default: TYPE_ALERT
-    }
+    },
+    enabled: Boolean
   },
   data () {
     return {
@@ -52,12 +55,23 @@ export default {
       isAlert: this.type === TYPE_ALERT
     }
   },
+  computed: {
+    confirmClass () {
+      return this.enabled ? '' : 'disabled'
+    }
+  },
   methods: {
     show () {
       this.isVisible = true
     },
     close () {
       this.isVisible = false
+    },
+    confirm () {
+      if (this.enabled) {
+        this.$emit('confirm')
+        this.close()
+      }
     }
   }
 }

@@ -16,6 +16,7 @@
       transition: all .5s;
     }
     .full {
+      z-index: 1000002;
       position: fixed;
       top: 0;
       left: 0;

@@ -49,6 +49,7 @@
     }
 
     .background {
+      z-index: 10000000;
       perspective: 500px;
       position: fixed;
       width: 100%;

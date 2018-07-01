@@ -11,6 +11,12 @@ const service = {
           limit: limit
         }
       })
+    },
+    create (data) {
+      return axios.post(API_URL + 'games', { data })
+    },
+    join (gameID, pinCode) {
+      return axios.put(`${API_URL}games/${gameID}/join`, { data: { pinCode } })
     }
   }
 }

@@ -4,6 +4,7 @@
   .#{$theme} {
 
     .switch {
+      cursor: pointer;
       $height: 32px;
       $width: 56px;
       $border: 2px;

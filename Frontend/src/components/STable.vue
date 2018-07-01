@@ -4,9 +4,8 @@
       <table class="stable" :class="loadingClass" cellspacing="5">
         <thead>
           <tr>
-            <th v-for="field in fields" :key="field.name" :title='field.title'>
-              {{field.name}}
-            </th>
+            <th v-for="field in fields" :key="field.name"
+              v-html="field.name" :title='field.title' />
           </tr>
         </thead>
         <tbody>
