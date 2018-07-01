@@ -6,5 +6,27 @@
     // font-family: 'Share Tech Mono', monospace;
     font-family: 'Audiowide', sans-serif;
     background: map_get($background, $theme);
+
+    .form {
+      border: 2px solid map_get($colorBorder, $theme);
+      padding: 20px 50px;
+      margin: 10px;
+    }
   }
+}
+
+.flex-horizontal {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.flex-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flex-space {
+  flex: 1;
 }

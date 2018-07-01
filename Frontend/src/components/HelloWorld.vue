@@ -15,20 +15,20 @@
         <TextInput label="Map height" type="number" placeholder="32" :min="10" :max="1024"></TextInput>
       </div>
     </Window>
-    <Preloader ref="loader"></Preloader>
+    <FullPreloader ref="loader"></FullPreloader>
   </div>
 </template>
 
 <script>
 import STable from './STable.vue'
 import TextInput from './TextInput.vue'
-import Preloader from './Preloader.vue'
+import FullPreloader from './FullPreloader.vue'
 import Window from './Window.vue'
 import Paginator from './Paginator.vue'
 
 export default {
   name: 'HelloWorld',
-  components: {STable, Preloader, Window, TextInput, Paginator},
+  components: {STable, FullPreloader, Window, TextInput, Paginator},
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'

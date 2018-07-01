@@ -1,9 +1,9 @@
 <template>
   <div id="games-page">
-    <div class="loop_header"></div>
     <GameTitle></GameTitle>
+    <div class="button" id="create-game-button" @click="goToCreate">Create game</div>
     <div class="flex-horizontal">
-      <div class="space"></div>
+      <div class="flex-space"></div>
       <div id="games-list">
         <STable :fields="fields" :rows="rows" @rowClicked="rowClicked" :loading="isLoading">
           <template slot="notfound">
@@ -12,7 +12,7 @@
         </STable>
         <Paginator :total="total" :limit="limit" @pageChanged="pageChanged" />
       </div>
-      <div class="space"></div>
+      <div class="flex-space"></div>
     </div>
     <Window ref="confirm" type="confirm" title="Confirm action">
       Do you want to join this game?
@@ -86,6 +86,11 @@ export default {
     this.refresh(0)
   },
   methods: {
+    goToCreate () {
+      this.$router.push({
+        name: 'CreateGame'
+      })
+    },
     refresh (offset) {
       this.isLoading = true
       Service.game.all(0, this.limit).then((resp) => {
@@ -102,7 +107,7 @@ export default {
     },
     rowClicked ({row, i}) {
       if (row.players_count === row.players_limit) {
-        this.$toast(`There's no space in the room.`)
+        this.$toast(`There's no flex-space in the room.`)
       } else {
         this.$refs.confirm.show()
       }
@@ -112,21 +117,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.flex-horizontal {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
+#create-game-button {
+  position: absolute;
+  right: 10px;
+  top: 30px;
 }
 #games-page {
-  flex-flow: 1.0;
   min-width: 100%;
 }
 #games-list {
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-.space {
-  flex: 1;
 }
 </style>

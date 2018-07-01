@@ -1,8 +1,8 @@
 <template>
-  <div class="field" :class="labelClass + ' ' + statusClass">
+  <div @mousewheel="mousewheel" class="field" :class="labelClass + ' ' + statusClass">
     <div class="label" v-if="hasLabel">{{label}}</div>
     <input :type="type" :maxlength="maxLength" :min="minimum" :max="maximum"
-      v-model="text" :placeholder="placeholder" @focus="$event.target.select()">
+      v-model="text" :placeholder="value" @focus="$event.target.select()">
     <div class="counter" v-show="text.length !== 0" v-if="hasCounter">
       {{text.length}}\{{max}}
     </div>
@@ -16,13 +16,12 @@ const TYPE_NUMBER = 'number'
 export default {
   name: 'field',
   props: {
+    value: {
+      type: [Number, String]
+    },
     type: {
       type: String,
       default: TYPE_TEXT
-    },
-    placeholder: {
-      type: String,
-      default: ''
     },
     label: {
       type: String,
@@ -82,6 +81,19 @@ export default {
     }
   },
   methods: {
+    mousewheel (event) {
+      if (this.type === TYPE_NUMBER) {
+        if (this.text === '') {
+          this.text = this.value
+          return false
+        }
+        let val = this.text + event.wheelDelta / Math.abs(event.wheelDelta)
+        if (val >= this.min && val <= this.max) {
+          this.text = val
+        }
+        return false
+      }
+    },
     isValid () {
       if (this._regExp !== undefined &&
         this._regExp.exec(this.text) === null) {
@@ -89,30 +101,40 @@ export default {
       }
       if (this.type === TYPE_NUMBER) {
         let val = parseInt(this.text)
-        if (this.min !== undefined && val < this.min) {
+        if (val < this.min) {
           return false
         }
-        if (this.max !== undefined && val > this.max) {
+        if (val > this.max) {
           return false
         }
       } else if (this.type === TYPE_TEXT &&
-        this.min !== undefined &&
         this.text.length < this.min) {
         return false
       }
       return true
+    },
+    revalidate () {
+      this.statusClass = ''
+      if (this.isValid() && this.text.length !== 0) {
+        this.statusClass = 'field-valid'
+        return true
+      }
+      return false
     }
   },
   watch: {
     text (newText) {
       this.isLabelOut = this.text.length !== 0
-      this.statusClass = ''
-      if (this.isValid()) {
-        this.$emit('update:value', this.text)
-        if (this.text.length !== 0) {
-          this.statusClass = 'field-valid'
-        }
+      if (this.revalidate()) {
+        this.$emit('input', (this.type === TYPE_NUMBER ? parseInt(newText) : newText))
       }
+      this.$emit('change')
+    },
+    max () {
+      this.revalidate()
+    },
+    min () {
+      this.revalidate()
     }
   }
 }

@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: 'Preloader',
+  name: 'FullPreloader',
   data () {
     return {
       isVisible: false
