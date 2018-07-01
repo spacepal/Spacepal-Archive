@@ -16,9 +16,8 @@
             </td>
           </tr>
           <tr v-for="(row, i) in rows" :key="i" @click="rowClicked(row, i)">
-            <td v-for="field in fields" :key="field.name">
-              {{getKeyValue(row, field)}}
-            </td>
+            <td v-for="field in fields" :key="field.name"
+              :v-html="getKeyValue(row, field)" />
           </tr>
         </tbody>
       </table>

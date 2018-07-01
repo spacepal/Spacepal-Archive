@@ -22,6 +22,7 @@
                   -4px -4px 1px map_get($colorBorderLight, $theme);
       transition: box-shadow 0.1s ease-in;
       border-radius: 5px 0;
+      user-select: none;
     }
 
     .button:hover {

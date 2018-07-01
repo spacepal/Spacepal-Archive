@@ -9,6 +9,7 @@
       // filter: blur(2px) !important;
       opacity: 0.3 !important;
       transition: opacity 0.4s ease-out !important;
+      user-select: none !important;
     }
 
     .has-spinner > * {
