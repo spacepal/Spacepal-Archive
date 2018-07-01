@@ -15,8 +15,17 @@
             </td>
           </tr>
           <tr v-for="(row, i) in rows" :key="i" @click="rowClicked(row, i)">
-            <td v-for="field in fields" :key="field.name"
-              :v-html="getKeyValue(row, field)" />
+            <td v-for="field in fields" :key="field.name">
+              <span v-if="field.isBoolean === true">
+                <span v-if="getKeyValue(row, field)"
+                  class="mdi mdi-check mdi-24px"></span>
+                <span v-else
+                  class="mdi mdi-cancel mdi-24px"></span>
+              </span>
+              <span v-else>
+                {{getKeyValue(row, field)}}
+              </span>
+            </td>
           </tr>
         </tbody>
       </table>

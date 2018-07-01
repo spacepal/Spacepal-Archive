@@ -21,6 +21,7 @@
         v-model="join.pinCode" type="text" :min="4" :max="4"
         validate='^[0-9]+$' @change="checkPinCodeForm" />
     </Window>
+    <FullPreloader ref="loader"></FullPreloader>
   </div>
 </template>
 
@@ -30,6 +31,7 @@ import STable from '../components/STable.vue'
 import Paginator from '../components/Paginator.vue'
 import Window from '../components/Window.vue'
 import TextInput from '../components/TextInput.vue'
+import FullPreloader from '../components/FullPreloader.vue'
 import Service from '../common/Service.js'
 export default {
   name: 'Games',
@@ -38,7 +40,8 @@ export default {
     Paginator,
     GameTitle,
     Window,
-    TextInput
+    TextInput,
+    FullPreloader
   },
   data () {
     return {
@@ -50,6 +53,10 @@ export default {
         {
           'name': 'Name',
           'key': 'name'
+        },
+        {
+          'name': 'Creator',
+          'key': 'creator'
         },
         {
           'name': 'Planets',
@@ -65,30 +72,35 @@ export default {
         },
         {
           'name': 'Buffs',
-          'key': 'buffs'
+          'key': 'buffs',
+          'isBoolean': true
         },
         {
           'name': 'Pirates',
-          'key': 'pirates'
+          'key': 'pirates',
+          'isBoolean': true
         },
         {
           'name': 'Accum',
           'title': 'Accumulative',
-          'key': 'accumulative'
+          'key': 'accumulative',
+          'isBoolean': true
         },
         {
           'name': 'PAC',
           'title': 'Production after capture',
-          'key': 'production_after_capture'
+          'key': 'production_after_capture',
+          'isBoolean': true
         },
         {
           'name': '<span class="mdi mdi-lock mdi-24px"></span>',
           'title': 'Is private room',
-          'key': 'has_pin_code'
+          'key': 'has_pin_code',
+          'isBoolean': true
         }
       ],
       rows: [],
-      limit: 18,
+      limit: 9,
       total: 0,
       isLoading: true,
       join: {
@@ -104,13 +116,13 @@ export default {
   },
   methods: {
     joinConfirm () {
-      this.isLoading = true
+      this.$refs.loader.show()
       Service.game.join(this.join.gameID, this.join.pinCode).then((resp) => {
-        this.isLoading = false
+        this.$refs.loader.hide()
         console.warn('@todo: Games.vue: joinConfirm() -> $toast errors')
         console.warn('@todo: Games.vue: joinConfirm() -> redirect')
       }).catch((resp) => {
-        this.isLoading = false
+        this.$refs.loader.hide()
         this.$toast('Connection error')
         console.error(resp)
       })
@@ -125,7 +137,7 @@ export default {
     },
     refresh (offset) {
       this.isLoading = true
-      Service.game.all(0, this.limit).then((resp) => {
+      Service.game.all(offset, this.limit).then((resp) => {
         this.isLoading = false
         this.total = resp.data.count
         this.rows = resp.data.games
@@ -139,12 +151,12 @@ export default {
     },
     rowClicked ({row, i}) {
       if (row.players_count === row.players_limit) {
+        this.$toast(`There's no space in the room.`)
+      } else {
         this.join.gameID = row.id
         this.join.pinCode = ''
         this.join.hasPinCode = row.has_pin_code
         this.join.isValid = !row.has_pin_code
-        this.$toast(`There's no flex-space in the room.`)
-      } else {
         this.$refs.confirm.show()
       }
     }
@@ -165,5 +177,6 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin: 10px;
 }
 </style>

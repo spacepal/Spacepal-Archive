@@ -46,7 +46,7 @@ export default {
         this.$emit('pageChanged', {
           page: page,
           limit: this.limit,
-          offset: this.currentPage * this.limit
+          offset: page * this.limit
         })
         this.currentPage = page
       }
