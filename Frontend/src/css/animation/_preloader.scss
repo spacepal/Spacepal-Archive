@@ -6,11 +6,19 @@
     transform: scale3d(0.0, 0.0, 0.0);
   }
 }
+
 @keyframes star_motion {
   from {
     transform: translateZ(0px);
   }
   to {
     transform: translateZ(2000px);
+  }
+}
+
+@keyframes spinner_motion {
+  to {
+    transform: rotate(360deg);
+    filter: hue-rotate(360deg);
   }
 }

@@ -1,0 +1,40 @@
+@import '../animation/_preloader.scss';
+@import '../_colors.scss';
+@import '../animation/_loop.scss';
+
+@each $theme in $themes {
+  .#{$theme} {
+
+    .has-spinner.loading > * {
+      // filter: blur(2px) !important;
+      opacity: 0.3 !important;
+      transition: opacity 0.4s ease-out !important;
+    }
+
+    .has-spinner > * {
+      transition: opacity 0.3s ease-in !important;
+    }
+
+    .has-spinner.loading::before {
+      $size: 70px;
+      $border: 10px;
+      z-index: 1000000;
+      border-radius: 100%;
+      border-style: solid;
+      border-width: $border;
+      box-shadow: inset 0 0 16px map_get($colorBorderLight, $theme),
+                        0 0 16px map_get($colorBorderLight, $theme);
+      border-color: map_get($colorBorderLight, $theme) transparent transparent;
+      content: '';
+      width: $size;
+      left: 50%;
+      margin-top: -$size * 0.5 + 10px;
+      margin-left: -$size * 0.5 - $border;
+      height: $size;
+      justify-content: center;
+      position: absolute;
+      animation: spinner_motion 0.8s ease-in-out 0s infinite;
+    }
+
+  }
+}

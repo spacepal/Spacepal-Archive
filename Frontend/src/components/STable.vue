@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     loadingClass () {
-      return this.loading ? 'loading' : ''
+      return this.loading ? 'loading has-spinner' : 'has-spinner'
     }
   },
   methods: {

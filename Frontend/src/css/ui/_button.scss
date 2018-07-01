@@ -5,7 +5,7 @@
 
   .#{$theme} {
 
-    .button.disabled, .button.disabled:hover {
+    .button.disabled, .button.disabled:hover, .button.disabled:active {
       box-shadow: 4px 4px 1px map_get($colorBorderDisabled, $theme),
                   -4px -4px 1px map_get($colorBorderDisabled, $theme);
       animation-name: None;

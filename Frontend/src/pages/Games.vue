@@ -14,6 +14,9 @@
       </div>
       <div class="space"></div>
     </div>
+    <Window ref="confirm" type="confirm" title="Confirm action">
+      Do you want to join this game?
+    </Window>
   </div>
 </template>
 
@@ -21,13 +24,15 @@
 import GameTitle from '../components/GameTitle.vue'
 import STable from '../components/STable.vue'
 import Paginator from '../components/Paginator.vue'
+import Window from '../components/Window.vue'
 import Service from '../common/Service.js'
 export default {
   name: 'Games',
   components: {
     STable,
     Paginator,
-    GameTitle
+    GameTitle,
+    Window
   },
   data () {
     return {
@@ -96,7 +101,11 @@ export default {
       this.refresh(pageInfo.offset)
     },
     rowClicked ({row, i}) {
-      this.$toast(`${row.name}#${i + 1} is clicked`)
+      if (row.players_count === row.players_limit) {
+        this.$toast(`There's no space in the room.`)
+      } else {
+        this.$refs.confirm.show()
+      }
     }
   }
 }
