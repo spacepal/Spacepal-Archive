@@ -13,6 +13,8 @@ gem 'puma', '~> 3.11'
 # gem 'jbuilder', '~> 2.5'
 gem 'redis', '~> 4.0'
 gem 'redis_orm', :github => 'german/redis_orm'
+gem 'faker'
+gem 'rainbow'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -25,9 +27,14 @@ gem 'bootsnap', '>= 1.1.0', require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
 
+group :test do
+  gem 'rspec'
+end
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'rspec-rails'
 end
 
 group :development do
