@@ -108,7 +108,11 @@ export default {
         hasPinCode: false,
         pinCode: '',
         isValid: false
-      }
+      },
+      hotKeys: [
+        { key: 'N', method: this.goToCreate, description: 'New game' },
+        { key: 'C', method: this.goToCreate, description: 'Create game' }
+      ]
     }
   },
   mounted () {

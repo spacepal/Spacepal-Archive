@@ -53,14 +53,22 @@ export default {
       isVisible: false,
       isConfirm: this.type === TYPE_CONFIRM,
       isAlert: this.type === TYPE_ALERT,
-      hotKeys: {
-        'Enter': () => {
-          if (this.isVisible) {
-            this.confirm()
-          }
+      hotKeys: [
+        {
+          key: 'Enter',
+          method: () => {
+            if (this.isVisible) {
+              this.confirm()
+            }
+          },
+          description: 'Confirm action'
         },
-        'Escape': this.close
-      }
+        {
+          key: 'Escape',
+          method: this.close,
+          description: 'Close'
+        }
+      ]
     }
   },
   computed: {

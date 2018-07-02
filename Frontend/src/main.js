@@ -7,7 +7,9 @@ import ToastPlugin from './plugins/Toast.js'
 import HotKeysPlugin from './plugins/HotKeys.js'
 
 Vue.use(ToastPlugin)
-Vue.use(HotKeysPlugin)
+Vue.use(HotKeysPlugin, {
+  caseInsensitive: true
+})
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

@@ -88,10 +88,10 @@ export default {
           hasPinCode: false
         }
       },
-      hotKeys: {
-        'Enter': this.createGame,
-        'Escape': this.goHome
-      }
+      hotKeys: [
+        { key: 'Enter', method: this.createGame, description: 'Submit' },
+        { key: 'Escape', method: this.goHome, description: 'Close' }
+      ]
     }
   },
   methods: {

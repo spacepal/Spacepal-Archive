@@ -14,24 +14,22 @@ export default {
   name: 'App',
   data () {
     return {
-      currentTheme: 0
+      currentTheme: 0,
+      hotKeys: [
+        {
+          key: ' ',
+          ctrl: true,
+          method: () => {
+            this.currentTheme = (this.currentTheme + 1) % themes.length
+          }
+        }
+      ]
     }
   },
   computed: {
     theme () {
       return themes[this.currentTheme]
     }
-  },
-  mounted () {
-    this._evt = (event) => {
-      if (event.key === ' ' && event.ctrlKey) {
-        this.currentTheme = (this.currentTheme + 1) % themes.length
-      }
-    }
-    window.addEventListener('keyup', this._evt)
-  },
-  beforeDestroy () {
-    window.removeEventListener('keyup', this._evt)
   }
 }
 </script>
