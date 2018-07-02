@@ -8,7 +8,7 @@ import store from '@/store'
 
 Vue.use(Router)
 
-function beforeEnter (from, to, next) {
+function beforeEnter (to, _, next) {
   let isRoom = store.getters['game/isRoom']
   let isGame = store.getters['game/isGame']
   if (isRoom && to.name !== 'Room') {
@@ -20,12 +20,18 @@ function beforeEnter (from, to, next) {
   if (to.name === 'Game' || to.name === 'Room') {
     return next({ name: 'Games' })
   }
-  console.log(from, to)
   next()
 }
 
 export default new Router({
   routes: [
+    {
+      path: '*',
+      name: 'NotFound',
+      redirect: {
+        name: 'Games'
+      }
+    },
     {
       path: '/',
       name: 'Games',
