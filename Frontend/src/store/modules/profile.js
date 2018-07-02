@@ -1,11 +1,9 @@
-import storage from '@/common/storage/index.js'
-
-const storageGameID = 'game_id'
-const storageUsername = 'username'
+const STORAGE_GAME_ID = 'game_id'
+const STORAGE_USERNAME = 'username'
 
 const state = {
-  username: storage.getItem(storageUsername),
-  gameID: storage.getItem(storageGameID)
+  username: localStorage.getItem(STORAGE_USERNAME),
+  gameID: localStorage.getItem(STORAGE_GAME_ID)
 }
 
 const mutations = {
@@ -21,19 +19,19 @@ const mutations = {
 
 const actions = {
   logout ({ commit, getters }) {
-    ApiService.deleteLogin(getters.username, getters.token)
-    localStorage.removeItem(storageUsername)
-    localStorage.removeItem(storageGameID)
+    localStorage.removeItem(STORAGE_USERNAME)
+    localStorage.removeItem(STORAGE_GAME_ID)
     commit('LOGOUT')
   },
   login ({ commit }, { username, gameID }) {
-    storage.setItem(storageUsername, username)
-    storage.setItem(storageGameID, resp.body.data.token)
+    localStorage.setItem(STORAGE_USERNAME, username)
+    localStorage.setItem(STORAGE_GAME_ID, gameID)
+    commit('LOGIN', { username, gameID })
   }
 }
 
 const getters = {
-  isPlaying: state => {
+  isPlayer: (state, getters) => {
     return !!state.username && !!state.gameID
   }
 }
