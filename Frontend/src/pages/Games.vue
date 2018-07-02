@@ -17,6 +17,9 @@
     <Window ref="confirm" type="confirm" @confirm="joinConfirm"
       title="Confirm action" :enabled="join.isValid">
       Do you want to join this game?
+      <TextInput ref="pinInp" class="validates" label="Username" v-if="join.hasPinCode"
+        v-model="join.pinCode" type="text" :min="4" :max="4"
+        validate='^[0-9]+$' @change="checkPinCodeForm" />
       <TextInput ref="pinInp" label="Pincode" v-if="join.hasPinCode"
         v-model="join.pinCode" type="text" :min="4" :max="4"
         validate='^[0-9]+$' @change="checkPinCodeForm" />

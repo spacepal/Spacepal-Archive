@@ -1,0 +1,12 @@
+@import '../_colors.scss';
+
+@each $theme in $themes {
+  .#{$theme} {
+    .form {
+      border: 2px solid map_get($colorBorderLight, $theme);
+      box-shadow: 0 0 8px map_get($colorBorderLight, $theme);
+      padding: 20px 50px;
+      margin: 10px;
+    }
+  }
+}

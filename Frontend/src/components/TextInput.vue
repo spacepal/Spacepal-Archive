@@ -38,6 +38,10 @@ export default {
     max: {
       type: Number,
       default: undefined
+    },
+    enableValidation: {
+      type: Boolean,
+      default: true
     }
   },
   mounted () {
@@ -95,6 +99,9 @@ export default {
       }
     },
     isValid () {
+      if (!this.enableValidation) {
+        return true
+      }
       if (this._regExp !== undefined &&
         this._regExp.exec(this.text) === null) {
         return false
@@ -123,6 +130,9 @@ export default {
     }
   },
   watch: {
+    enableValidation () {
+      this.$emit('change')
+    },
     text (newText) {
       this.isLabelOut = this.text.length !== 0
       if (this.revalidate()) {
