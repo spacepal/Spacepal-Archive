@@ -1,7 +1,7 @@
 <template>
   <div @mousewheel="mousewheel" class="field" :class="labelClass + ' ' + statusClass">
     <div class="label" v-if="hasLabel">{{label}}</div>
-    <input :type="type" :maxlength="maxLength" :min="minimum" :max="maximum"
+    <input ref="inp" :type="type" :maxlength="maxLength" :min="minimum" :max="maximum"
       v-model="text" :placeholder="value" @focus="$event.target.select()">
     <div class="counter" v-show="text.length !== 0" v-if="hasCounter">
       {{text.length}}\{{max}}
@@ -85,6 +85,9 @@ export default {
     }
   },
   methods: {
+    focus () {
+      this.$refs.inp.focus()
+    },
     mousewheel (event) {
       if (this.type === TYPE_NUMBER) {
         if (this.text === '') {

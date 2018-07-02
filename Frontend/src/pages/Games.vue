@@ -16,13 +16,15 @@
     </div>
     <Window ref="confirm" type="confirm" @confirm="joinConfirm"
       title="Confirm action" :enabled="join.isValid">
-      Do you want to join this game?
-      <TextInput ref="pinInp" class="validates" label="Username" v-if="join.hasPinCode"
-        v-model="join.pinCode" type="text" :min="4" :max="4"
-        validate='^[0-9]+$' @change="checkPinCodeForm" />
-      <TextInput ref="pinInp" label="Pincode" v-if="join.hasPinCode"
-        v-model="join.pinCode" type="text" :min="4" :max="4"
-        validate='^[0-9]+$' @change="checkPinCodeForm" />
+      Do you want to join game #{{ join.gameID }}?
+      <Form ref="joinForm" class="withoutborder">
+        <TextInput label="Username" v-model="join.username" ref="usernameInput"
+          type="text" validate='^[0-9A-Za-z_-]*$' :min="1" :max="32"
+          @change="checkJoinForm" />
+        <TextInput label="Pincode" v-if="join.hasPinCode" v-model="join.pinCode"
+          type="text" :min="4" :max="4" validate='^[0-9]+$'
+          :enableValidation="join.hasPinCode" @change="checkJoinForm" />
+      </Form>
     </Window>
     <FullPreloader ref="loader"></FullPreloader>
   </div>
@@ -35,6 +37,7 @@ import Paginator from '../components/Paginator.vue'
 import Window from '../components/Window.vue'
 import TextInput from '../components/TextInput.vue'
 import FullPreloader from '../components/FullPreloader.vue'
+import Form from '../components/Form.vue'
 import Service from '../common/Service.js'
 export default {
   name: 'Games',
@@ -44,7 +47,8 @@ export default {
     GameTitle,
     Window,
     TextInput,
-    FullPreloader
+    FullPreloader,
+    Form
   },
   data () {
     return {
@@ -110,6 +114,7 @@ export default {
         gameID: 0,
         hasPinCode: false,
         pinCode: '',
+        username: '',
         isValid: false
       },
       hotKeys: [
@@ -124,18 +129,21 @@ export default {
   methods: {
     joinConfirm () {
       this.$refs.loader.show()
-      Service.game.join(this.join.gameID, this.join.pinCode).then((resp) => {
+      Service.game.join(
+        this.join.gameID,
+        this.join.pinCode,
+        this.join.username).then((resp) => {
         this.$refs.loader.hide()
         console.warn('@todo: Games.vue: joinConfirm() -> $toast errors')
-        console.warn('@todo: Games.vue: joinConfirm() -> redirect')
+        console.warn('@todo: Games.vue: joinConfirm() -> redirect on success')
       }).catch((resp) => {
         this.$refs.loader.hide()
         this.$toast('Connection error')
         console.error(resp)
       })
     },
-    checkPinCodeForm () {
-      this.join.isValid = this.$refs.pinInp.isValid()
+    checkJoinForm () {
+      this.join.isValid = this.$refs.joinForm.isValid()
     },
     goToCreate () {
       this.$router.push({
@@ -163,7 +171,7 @@ export default {
         this.join.gameID = row.id
         this.join.pinCode = ''
         this.join.hasPinCode = row.has_pin_code
-        this.join.isValid = !row.has_pin_code
+        this.join.isValid = false
         this.$refs.confirm.show()
       }
     }

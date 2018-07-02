@@ -7,16 +7,21 @@ const service = {
     all (offset, limit) {
       return axios.get(API_URL + 'games', {
         params: {
-          offset: offset,
-          limit: limit
+          offset,
+          limit
         }
       })
     },
     create (data) {
       return axios.post(API_URL + 'games', { data })
     },
-    join (gameID, pinCode) {
-      return axios.put(`${API_URL}games/${gameID}/join`, { data: { pinCode } })
+    join (gameID, pinCode, username) {
+      return axios.put(`${API_URL}games/${gameID}/join`, {
+        data: {
+          pinCode,
+          username
+        }
+      })
     }
   }
 }

@@ -7,10 +7,18 @@
 <script>
 export default {
   name: 'Form',
+  mounted () {
+    this.$children.some(ref => {
+      if (typeof ref.focus === 'function') {
+        ref.focus()
+        return true
+      }
+      return false
+    })
+  },
   methods: {
     isValid () {
       return !this.$children.some(ref => {
-        console.log(ref)
         if (typeof ref.isValid === 'function') {
           return !ref.isValid()
         }

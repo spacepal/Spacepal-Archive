@@ -8,5 +8,11 @@
       padding: 20px 50px;
       margin: 10px;
     }
+    .form.withoutborder {
+      border: none;
+      box-shadow: none;
+      margin: 0;
+      padding: 0;
+    }
   }
 }

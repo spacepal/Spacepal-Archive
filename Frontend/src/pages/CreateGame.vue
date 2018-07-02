@@ -1,7 +1,7 @@
 <template>
   <div id="create-page" class="flex-vertical">
     <GameTitle></GameTitle>
-    <Form class="form" ref="form">
+    <Form ref="form">
       <TextInput v-model="pref.username" label="Username"
         validate='^[0-9A-Za-z_-]*$' :min="1"
         :max="32" @change="checkForm" />
