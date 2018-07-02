@@ -89,8 +89,8 @@ export default {
         }
       },
       hotKeys: [
-        { key: 'Enter', method: this.createGame, description: 'Submit' },
-        { key: 'Escape', method: this.goHome, description: 'Close' }
+        { code: 'Enter', method: this.createGame, description: 'Submit' },
+        { code: 'Escape', method: this.goHome, description: 'Close' }
       ]
     }
   },

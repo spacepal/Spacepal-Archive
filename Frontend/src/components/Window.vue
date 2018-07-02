@@ -24,9 +24,7 @@
             <template v-if="isAlert">
               <div class="button" @click="confirm">Ok</div>
             </template>
-            <template slot="footer">
-
-            </template>
+            <template slot="footer"></template>
           </div>
         </div>
       </div>
@@ -55,7 +53,7 @@ export default {
       isAlert: this.type === TYPE_ALERT,
       hotKeys: [
         {
-          key: 'Enter',
+          code: 'Enter',
           method: () => {
             if (this.isVisible) {
               this.confirm()
@@ -64,7 +62,7 @@ export default {
           description: 'Confirm action'
         },
         {
-          key: 'Escape',
+          code: 'Escape',
           method: this.close,
           description: 'Close'
         }

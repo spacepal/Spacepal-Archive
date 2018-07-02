@@ -1,13 +1,12 @@
 const HotKeysPlugin = {
-  install (Vue, options) {
-    let isCaseInsensitive = (
-      options === undefined || options.caseInsensitive === undefined
-        ? false : options.caseInsensitive)
+  install (Vue) {
+    let registeredHotkeys = new Set()
     Vue.mixin({
       mounted: function () {
         if (!Array.isArray(this.hotKeys)) {
           return
         }
+        registeredHotkeys.add(this.hotKeys)
         this._hotKeysEvent = (e) => {
           this.hotKeys.forEach((key) => {
             if (!key.ctrl === e.ctrlKey) {
@@ -19,10 +18,7 @@ const HotKeysPlugin = {
             if (!key.alt === key.altKey) {
               return
             }
-            let caseIns = (key.caseInsensitive !== undefined
-              ? this.hotKeys.caseInsensitive : isCaseInsensitive)
-            if (e.key === key.key || (caseIns &&
-              e.key.toLowerCase() === key.key.toLowerCase())) {
+            if (e.code === key.code) {
               key.method(e)
             }
           })
@@ -30,9 +26,32 @@ const HotKeysPlugin = {
         window.addEventListener('keyup', this._hotKeysEvent)
       },
       beforeDestroy: function () {
+        registeredHotkeys.delete(this.hotKeys)
         window.removeEventListener('keyup', this._hotKeysEvent)
       }
     })
+    let keyVal = key => {
+      let modifiers = []
+      if (key.ctrl) modifiers.push('Ctrl')
+      if (key.alt) modifiers.push('Alt')
+      if (key.shift) modifiers.push('Shift')
+      modifiers.push(key.code.replace(/^Key/, ''))
+      return modifiers.join('+')
+    }
+    Vue.prototype.$allHotKeys = () => {
+      let resKeys = new Map()
+      registeredHotkeys.forEach(el => {
+        el.forEach(key => {
+          if (!key.description) {
+            return
+          }
+          let vals = resKeys.get(key.description) || new Set()
+          vals.add(keyVal(key))
+          resKeys.set(key.description, vals)
+        })
+      })
+      return resKeys
+    }
   }
 }
 

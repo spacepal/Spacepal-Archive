@@ -25,7 +25,7 @@ export default {
     mousewheel (e) {
       this.checked = e.wheelDelta > 0
       this.emitEvents(this.checked)
-      e.preventDefault();
+      e.preventDefault()
     },
     emitEvents (checked) {
       this.$emit('input', checked)

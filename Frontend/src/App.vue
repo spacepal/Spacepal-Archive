@@ -4,11 +4,21 @@
     <transition name="fade">
       <router-view/>
     </transition>
+    <Window ref="hotKeysWin" type="alert" title="Hotkeys">
+      <div class="hotKeysGrid">
+        <template v-for="list in Array.from(allHotKeys)">
+          <span :key="list[0] + '-description'">{{list[0]}}</span>
+          <span :key="list[0] + '-icon'" class="mdi mdi-keyboard mdi-24px splitter"></span>
+          <span :key="list[0] + '-hotkeys'">{{Array.from(list[1]).join(', ')}}</span>
+        </template>
+      </div>
+    </Window>
     <Toast glob />
   </div>
 </template>
 
 <script>
+import Window from './components/Window.vue'
 let themes = ['dark', 'light']
 export default {
   name: 'App',
@@ -17,20 +27,33 @@ export default {
       currentTheme: 0,
       hotKeys: [
         {
-          key: ' ',
+          code: 'Space',
           ctrl: true,
           method: () => {
             this.currentTheme = (this.currentTheme + 1) % themes.length
-          }
+          },
+          description: 'Change theme'
+        },
+        {
+          code: 'Tab',
+          alt: true,
+          ctrl: true,
+          method: () => {
+            this.allHotKeys = this.$allHotKeys()
+            this.$refs.hotKeysWin.show()
+          },
+          description: 'Show hotkeys'
         }
-      ]
+      ],
+      allHotKeys: new Map()
     }
   },
   computed: {
     theme () {
       return themes[this.currentTheme]
     }
-  }
+  },
+  components: { Window }
 }
 </script>
 
@@ -58,5 +81,13 @@ export default {
 
 .fade-enter, .fade-leave-active {
   opacity: 0
+}
+
+.hotKeysGrid {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  .splitter {
+    margin: 0 10px;
+  }
 }
 </style>
