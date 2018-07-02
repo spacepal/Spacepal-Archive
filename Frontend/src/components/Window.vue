@@ -22,7 +22,7 @@
               <div class="button" @click="close">Cancel</div>
             </template>
             <template v-if="isAlert">
-              <div class="button" @click="close">Ok</div>
+              <div class="button" @click="confirm">Ok</div>
             </template>
             <template slot="footer">
 
@@ -52,7 +52,15 @@ export default {
     return {
       isVisible: false,
       isConfirm: this.type === TYPE_CONFIRM,
-      isAlert: this.type === TYPE_ALERT
+      isAlert: this.type === TYPE_ALERT,
+      hotKeys: {
+        'Enter': () => {
+          if (this.isVisible) {
+            this.confirm()
+          }
+        },
+        'Escape': this.close
+      }
     }
   },
   computed: {
@@ -68,7 +76,9 @@ export default {
       this.isVisible = false
     },
     confirm () {
-      if (this.enabled) {
+      if (this.type === TYPE_ALERT) {
+        this.close()
+      } else if (this.enabled) {
         this.$emit('confirm')
         this.close()
       }

@@ -3,9 +3,11 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import ToastPlugin from './plugins/toast.js'
+import ToastPlugin from './plugins/Toast.js'
+import HotKeysPlugin from './plugins/HotKeys.js'
 
 Vue.use(ToastPlugin)
+Vue.use(HotKeysPlugin)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

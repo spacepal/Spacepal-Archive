@@ -53,6 +53,7 @@
 </template>
 
 <script>
+
 import GameTitle from '../components/GameTitle.vue'
 import TextInput from '../components/TextInput.vue'
 import SwitchBox from '../components/SwitchBox.vue'
@@ -86,6 +87,10 @@ export default {
           accumulative: true,
           hasPinCode: false
         }
+      },
+      hotKeys: {
+        'Enter': this.createGame,
+        'Escape': this.goHome
       }
     }
   },
