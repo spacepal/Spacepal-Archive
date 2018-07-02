@@ -4,7 +4,7 @@
       {{ label }}
     </p>
     <input type="checkbox" v-model="checked" @input="emitEvents($event.target.checked)">
-    <div class="slider"></div>
+    <div @mousewheel="mousewheel" class="slider"></div>
   </label>
 </template>
 
@@ -22,6 +22,11 @@ export default {
     }
   },
   methods: {
+    mousewheel (e) {
+      this.checked = e.wheelDelta > 0
+      this.emitEvents(this.checked)
+      e.preventDefault();
+    },
     emitEvents (checked) {
       this.$emit('input', checked)
       this.$emit('change')
