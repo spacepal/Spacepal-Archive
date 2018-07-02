@@ -16,4 +16,18 @@ namespace :db do
       game.save
     end
   end
+  task :clear => :environment do 
+    Planet.all.each { |planet| planet.destroy }
+    p "planets = " + Planet.count.to_s
+    Fleet.all.each { |fleet| fleet.destroy }
+    p "fleets = " + Fleet.count.to_s
+    Player.all.each do |player| 
+      player.destroy
+    end
+    p "players = " + Player.count.to_s
+    Cell.all.each { |cell| cell.destroy }
+    p "cells = " + Cell.count.to_s
+    Game.all.each { |game| game.destroy }
+    p "games = " + Game.count.to_s
+  end
 end

@@ -37,7 +37,7 @@ RSpec.describe Game, type: :model do
     game.production_after_capture = true
     expect(game).to be_valid
   end
-  it "is not valid with not valid planets" do
+  it "adding planet to model" do
     planet = Planet.new
     game = Game.new
     game.name = "game"
@@ -49,7 +49,9 @@ RSpec.describe Game, type: :model do
     game.buffs = true
     game.pirates = true
     game.production_after_capture = true
+    game.save
     game.planets << planet
-    expect(game).to be_valid
+    game.save
+    expect(game.planets.count).to eq 1
   end
 end
