@@ -15,21 +15,21 @@ const mutations = {
 }
 
 const actions = {
-  setGameInfo ({ commit }, { gameInfo }) {
+  setInfo ({ commit }, gameInfo) {
     localStorage.setItem(STORAGE_GAME_INFO, JSON.stringify(gameInfo))
-    commit('SET_GAME_INFO')
+    commit('SET_GAME_INFO', gameInfo)
   }
 }
 
 const getters = {
-  isRoom: (state, getters) => {
-    return getters.isPlayer && state.info.state === STATE_ROOM
+  isRoom: (state, _, __, rootGetters) => {
+    return rootGetters.isPlayer && state.info.state === STATE_ROOM
   },
-  isGame: (state, getters) => {
-    return getters.isPlayer && state.info.state === STATE_GAME
+  isGame: (state, _, __, rootGetters) => {
+    return rootGetters.isPlayer && state.info.state === STATE_GAME
   },
-  isEnded: (state, getters) => {
-    return getters.isPlayer && state.info.state === STATE_END
+  isEnded: (state, _, __, rootGetters) => {
+    return rootGetters.isPlayer && state.info.state === STATE_END
   }
 }
 
