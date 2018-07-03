@@ -37,7 +37,7 @@ class Creation
     end
     game.cells << cells
     game.save
-    #game.cells.first.set_all_neighbors
+    game.cells.first.set_all_neighbors
     if game.cells.count != game.width * game.height
       return false
     else
