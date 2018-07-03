@@ -9,19 +9,12 @@ import store from '@/store'
 
 Vue.use(Router)
 
-function beforeEnter (to, _, next) {
-  let isRoom = store.getters['game/isRoom']
-  let isGame = store.getters['game/isGame']
-  if (isRoom && to.name !== 'Room') {
-    return next({ name: 'Room' })
+function beforeEnter (_, __, next) {
+  if (store.getters['isPlayer'] && store.getters['game/isRoom']) {
+    next({ name: 'Room' })
+  } else {
+    next()
   }
-  if (isGame && to.name !== 'Game') {
-    return next({ name: 'Game' })
-  }
-  if (to.name === 'Game' || to.name === 'Room') {
-    return next({ name: 'Games' })
-  }
-  next()
 }
 
 export default new Router({
@@ -49,13 +42,25 @@ export default new Router({
       path: '/play',
       name: 'Game',
       component: Game,
-      beforeEnter
+      beforeEnter: (_, __, next) => {
+        if (!store.getters['game/isGame']) {
+          next({ name: 'Room' })
+        } else {
+          next()
+        }
+      }
     },
     {
       path: '/room',
       name: 'Room',
       component: Room,
-      beforeEnter
+      beforeEnter: (_, __, next) => {
+        if (!store.getters['game/isRoom']) {
+          next({ name: 'Games' })
+        } else {
+          next()
+        }
+      }
     },
     {
       path: '/test',
