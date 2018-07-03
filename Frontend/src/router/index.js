@@ -10,8 +10,12 @@ import store from '@/store'
 Vue.use(Router)
 
 function beforeEnter (_, __, next) {
-  if (store.getters['isPlayer'] && store.getters['game/isRoom']) {
-    next({ name: 'Room' })
+  if (store.getters['isPlayer']) {
+    if (store.getters['game/isRoom']) {
+      next({ name: 'Room' })
+    } else if (store.getters['game/isGame']) {
+      next({ name: 'Game' })
+    }
   } else {
     next()
   }
