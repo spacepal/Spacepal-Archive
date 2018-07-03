@@ -11,3 +11,26 @@ class Array
   end 
 
 end
+
+class String 
+
+  def color color
+    s = Rainbow(self)
+    eval("s." + color.to_s)
+  end
+
+  def bg color
+    s = Rainbow(self).bg(color.to_sym)
+  end
+
+  def out
+    puts self
+  end
+
+  def print_
+    print self
+  end
+
+  private 
+
+end

@@ -18,8 +18,12 @@ class Mm < Nn
 
 end
 
-def ff a: :fff, b: 10
+def ff c, a: :fff, b: 10
   p a
   p b
+  p c
 end
+
+ff 111, a: 222, b: 333
+
 

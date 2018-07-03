@@ -1,3 +1,15 @@
+class PlayerValidator < ActiveModel::Validator
+
+  def validate record
+    if record.is_ai
+      if !record.ai_type
+        record.errors.add :ai_type, "must been defined when if is ai"
+      end
+    end
+  end
+
+end
+
 class Player < RedisOrm::Base
 
   DEFAULT_COLOR = -1
@@ -14,6 +26,7 @@ class Player < RedisOrm::Base
   property :is_ai, RedisOrm::Boolean
   property :ai_type, Integer
 
+  validates_with PlayerValidator
   validates :name, presence: true, length: { in: 1..32 }
   validates :color_id, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: -1 }
   validates :is_admin, inclusion: { in: [true, false] }

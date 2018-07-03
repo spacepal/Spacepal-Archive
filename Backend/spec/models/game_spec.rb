@@ -37,21 +37,4 @@ RSpec.describe Game, type: :model do
     game.production_after_capture = true
     expect(game).to be_valid
   end
-  it "adding planet to model" do
-    planet = Planet.new
-    game = Game.new
-    game.name = "game"
-    game.width = 10
-    game.height = 10
-    game.planets_count = 50
-    game.players_limit = 8
-    game.accumulative = true
-    game.buffs = true
-    game.pirates = true
-    game.production_after_capture = true
-    game.save
-    game.planets << planet
-    game.save
-    expect(game.planets.count).to eq 1
-  end
 end
