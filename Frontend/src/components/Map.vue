@@ -14,6 +14,7 @@
 
 <script>
 import HexagonSurface from '../common/HexagonSurface'
+
 export default {
   name: 'Map',
   extends: HexagonSurface,
@@ -62,12 +63,50 @@ export default {
     this._mouseUpListener = () => {
       this.drag = false
     }
+    this.$store.watch((_, getters) => getters.planets, () => this.tick())
+    this.$store.watch((_, getters) => getters.members, () => this.tick())
     window.addEventListener('mouseup', this._mouseUpListener)
+    setTimeout(() => {
+      this.genRandomPlanets()
+      setTimeout(() => {
+        this.genMembers()
+      }, 1000)
+    }, 1000)
   },
   beforeDestroy () {
     window.removeEventListener('mouseup', this._mouseUpListener)
   },
   methods: {
+    genRandomPlanets (count = 100) {
+      let rndInt = (min, max) => {
+        var rand = min + Math.random() * (max + 1 - min)
+        rand = Math.floor(rand)
+        return rand
+      }
+      let planets = []
+      let ownerMemberID = 1
+      for (let i = 0; i < count; ++i) {
+        planets.push({
+          cellID: rndInt(0, this.mapSizeWidth * this.mapSizeHeight - 1),
+          ownerMemberID: (ownerMemberID++) % 9,
+          killPerc: Math.random(),
+          production: rndInt(10, 80),
+          ships: rndInt(0, 1000)
+        })
+      }
+      this.$store.dispatch('setPlanets', planets)
+    },
+    genMembers () {
+      let members = []
+      for (let i = 1; i < 9; ++i) {
+        members.push({
+          id: i,
+          username: 'player' + i,
+          colorID: i
+        })
+      }
+      this.$store.dispatch('setMembers', members)
+    },
     mousewheel ({wheelDelta, layerX, layerY}) {
       let delta = wheelDelta / Math.abs(wheelDelta)
       this.scaleSurface(1.0 + delta * 0.1)

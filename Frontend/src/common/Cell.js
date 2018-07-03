@@ -1,3 +1,6 @@
+import store from '@/store'
+import Colors from './Colors'
+
 class Cell {
   constructor ({ x, y }, a, i, degree = 2.0 / 3.0 * Math.PI) {
     this._id = i
@@ -7,6 +10,8 @@ class Cell {
     let dx = a * Math.cos(Math.PI - degree)
     let posY = y * this._dy * 2 + (x % 2 === 1 ? this._dy : 0)
     this._points = Cell._genHexagon({ x: x * dx * 3, y: posY }, a, degree)
+    this._planet = store.getters['planet']
+    this._member = store.getters['member']
   }
 
   get id () {
@@ -24,6 +29,7 @@ class Cell {
   set isHovered (val) {
     this._isHovered = val
   }
+
   _isPointInTriangle (A, B, C, point, eps = 0.1) {
     let area1 = this._triangleArea(A, B, point)
     let area2 = this._triangleArea(A, point, C)
@@ -31,6 +37,7 @@ class Cell {
     let area = this._triangleArea(A, B, C)
     return Math.abs((area1 + area2 + area3) / area - 1) < eps
   }
+
   _triangleArea (A, B, C) {
     return Math.abs(A.x * (B.y - C.y) +
       B.x * (C.y - A.y) +
@@ -39,25 +46,83 @@ class Cell {
 
   render (ctx) {
     ctx.save()
+
     ctx.beginPath()
     Cell._drawPoints(ctx, this._points)
     ctx.lineWidth = 3
     ctx.strokeStyle = 'rgb(3, 154, 255)'
     ctx.closePath()
-    if (this._isHovered) {
-      ctx.fillStyle = 'rgb(119, 180, 255)'
+    let text = this.id + ''
+    let memberColor = Colors['neutral']
+    let planet = this._planet(this._id)
+    if (planet) {
+      let member = this._member(planet.ownerMemberID)
+      if (member) {
+        text = member.username
+        memberColor = Colors[member.colorID]
+      }
+      ctx.fillStyle = memberColor.bg
     } else {
       ctx.fillStyle = 'black'
     }
     ctx.fill()
+    if (this._isHovered) {
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.1)'
+    }
+    ctx.fill()
     ctx.stroke()
+
     ctx.restore()
+    ctx.save()
+
+    if (planet) {
+      ctx.font = '96px Material Design Icons'
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'
+      ctx.textAlign = 'center'
+      ctx.fillText('\uF1E7',
+        this.firstPoint.x + this._a / 2,
+        this.firstPoint.y + 125)
+    }
+
+    ctx.restore()
+    ctx.save()
     ctx.font = '32px Audiowide'
-    ctx.fillStyle = 'rgb(0, 85, 141)'
+    if (this._isHovered) {
+      text = this.id + ''
+    }
+    ctx.fillStyle = memberColor.text
     ctx.textAlign = 'center'
-    ctx.fillText(this.id + '',
-      this.firstPoint.x + this._a / 2,
-      this.firstPoint.y + 40)
+    let fontHeight = 30
+    let textParts = text.match(/.{1,9}/g)
+    let y = 60
+    if (textParts.length > 3) {
+      textParts = textParts.slice(0, 2)
+      textParts[2] = '...'
+    }
+    textParts.forEach(part => {
+      ctx.fillText(part,
+        this.firstPoint.x + this._a / 2,
+        this.firstPoint.y + y, 130)
+      y += fontHeight
+    })
+    if (planet) {
+      ctx.restore()
+      ctx.save()
+      ctx.font = '18px Audiowide'
+      ctx.fillStyle = memberColor.text
+      ctx.textAlign = 'center'
+      ctx.fillText('Ships: ' + planet.ships,
+        this.firstPoint.x + this._a / 2,
+        this.firstPoint.y + 150)
+      if (this._isHovered) {
+        ctx.fillText('Kill: ' + Math.round(planet.killPerc * 100) / 100.0,
+          this.firstPoint.x + this._a / 2,
+          this.firstPoint.y + 125)
+        ctx.fillText('Prod: ' + planet.production,
+          this.firstPoint.x + this._a / 2,
+          this.firstPoint.y + 100)
+      }
+    }
   }
 
   isPointOver ({ x, y }) {

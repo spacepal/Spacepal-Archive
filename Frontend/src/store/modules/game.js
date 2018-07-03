@@ -9,7 +9,7 @@ const state = {
 }
 
 const mutations = {
-  SET_GAME_INFO (gameInfo) {
+  SET_GAME_INFO (state, gameInfo) {
     state.info = gameInfo
   }
 }
