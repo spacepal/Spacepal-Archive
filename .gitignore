@@ -105,6 +105,7 @@ Backend/db/*.sqlite3-journal
 Backend/public/system
 Backend/coverage/
 Backend/spec/tmp
+Backend/spec/rspec_results.html
 *.orig
 rerun.txt
 pickle-email-*.html

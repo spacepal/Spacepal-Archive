@@ -1,23 +1,24 @@
 <template>
   <div id="create-page" class="flex-vertical">
     <GameTitle></GameTitle>
-    <div class="form">
-      <TextInput ref="unInp" v-model="pref.username" label="Username"
-        validate='^[0-9A-Za-z_-]*$' :min="1" :max="32" @change="checkForm" />
-      <TextInput ref="gnInp" v-model="pref.gamename"
+    <Form ref="form">
+      <TextInput v-model="pref.username" label="Username"
+        validate='^[0-9A-Za-z_-]*$' :min="1"
+        :max="32" @change="checkForm" />
+      <TextInput v-model="pref.gamename"
         label="Game name" :max="32" @change="checkForm" />
       <div class="flex-horizontal">
-        <TextInput ref="mwInp" v-model="pref.map.width" label="Map width"
+        <TextInput v-model="pref.map.width" label="Map width"
           type="number" :min="2" :max="64" @change="checkForm" />
-        <TextInput ref="mhInp" v-model="pref.map.height" label="Map height"
+        <TextInput v-model="pref.map.height" label="Map height"
           type="number" :min="2" :max="64" @change="checkForm" />
       </div>
       <div class="flex-horizontal">
-        <TextInput ref="plInp" v-model="pref.playersLimit" label="Players limit"
+        <TextInput v-model="pref.playersLimit" label="Players limit"
           type="number" :min="2" :max="8" @change="checkForm" />
-        <TextInput ref="pcInp" v-model="pref.planetsCount" label="Planets count"
-          type="number" :min="pref.playersLimit" @change="checkForm"
-          :max="pref.map.height * pref.map.width"/>
+        <TextInput v-model="pref.planetsCount" label="Planets count"
+          type="number" :min="pref.playersLimit"
+          @change="checkForm" :max="pref.map.height * pref.map.width"/>
       </div>
       <div class="switches">
         <SwitchBox label="Buffs" v-model="pref.flags.buffs" />
@@ -30,13 +31,14 @@
         <label class="flex-horizontal pincode-switch">
           <span v-if="pref.flags.hasPinCode" class="mdi mdi-lock mdi-24px"></span>
           <span v-else class="mdi mdi-lock-open mdi-24px"></span>
-          <SwitchBox title="Has pincode" v-model="pref.flags.hasPinCode"
-             @change="checkForm" />
+          <SwitchBox title="Has pincode" v-model="pref.flags.hasPinCode" />
         </label>
         <transition name="fade">
-          <TextInput ref="pinInp" v-model="pref.pinCode" label="Pincode"
+          <TextInput v-model="pref.pinCode" label="Pincode"
               type="text" :min="4" :max="4" @change="checkForm"
-              v-show="pref.flags.hasPinCode" validate='^[0-9]+$' />
+              :enableValidation="pref.flags.hasPinCode"
+              v-show="pref.flags.hasPinCode"
+              validate='^[0-9]+$' />
         </transition>
       </div>
       <div class="flex-horizontal">
@@ -47,7 +49,7 @@
           <span class="mdi mdi-earth"> </span> Create game
         </div>
       </div>
-    </div>
+    </Form>
     <FullPreloader ref="loader"></FullPreloader>
   </div>
 </template>
@@ -58,6 +60,7 @@ import GameTitle from '../components/GameTitle.vue'
 import TextInput from '../components/TextInput.vue'
 import SwitchBox from '../components/SwitchBox.vue'
 import FullPreloader from '../components//FullPreloader.vue'
+import Form from '../components/Form.vue'
 import Service from '../common/Service.js'
 export default {
   name: 'CreateGame',
@@ -65,7 +68,8 @@ export default {
     GameTitle,
     TextInput,
     SwitchBox,
-    FullPreloader
+    FullPreloader,
+    Form
   },
   data () {
     return {
@@ -99,7 +103,7 @@ export default {
       this.$router.push({name: 'Games'})
     },
     createGame () {
-      if (this.isFormValid()) {
+      if (this.$refs.form.isValid()) {
         this.$refs.loader.show()
         Service.game.create(this.pref).then((resp) => {
           console.warn('@todo: CreateGame.vue -> $toast errors')
@@ -111,18 +115,8 @@ export default {
         })
       }
     },
-    isFormValid () {
-      let validadeInp = [this.$refs.unInp, this.$refs.gnInp, this.$refs.mwInp,
-        this.$refs.mhInp, this.$refs.plInp, this.$refs.pcInp]
-      if (this.pref.flags.hasPinCode && !this.$refs.pinInp.isValid()) {
-        return false
-      }
-      return !validadeInp.some((el) => {
-        return !el.isValid()
-      })
-    },
     checkForm () {
-      this.createButtonClass = this.isFormValid() ? '' : 'disabled'
+      this.createButtonClass = this.$refs.form.isValid() ? '' : 'disabled'
     }
   }
 }

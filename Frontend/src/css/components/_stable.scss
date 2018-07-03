@@ -16,6 +16,8 @@
     }
 
     .stable td {
+      word-wrap: break-word;
+      max-width: 200px;
       background:  map_get($gradient, $theme);
     }
 

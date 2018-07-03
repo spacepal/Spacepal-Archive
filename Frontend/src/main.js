@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import ToastPlugin from './plugins/Toast.js'
 import HotKeysPlugin from './plugins/HotKeys.js'
+import store from './store'
 
 Vue.use(ToastPlugin)
 Vue.use(HotKeysPlugin)
@@ -14,6 +15,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
