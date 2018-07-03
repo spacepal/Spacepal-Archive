@@ -4,6 +4,7 @@ import Games from '@/pages/Games.vue'
 import CreateGame from '@/pages/CreateGame.vue'
 import Game from '@/pages/Game.vue'
 import Room from '@/pages/Room.vue'
+import Test from '@/components/Test.vue'
 import store from '@/store'
 
 Vue.use(Router)
@@ -55,6 +56,11 @@ export default new Router({
       name: 'Room',
       component: Room,
       beforeEnter
+    },
+    {
+      path: '/test',
+      name: 'Test',
+      component: Test
     }
   ]
 })
