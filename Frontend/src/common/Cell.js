@@ -1,5 +1,5 @@
 class Cell {
-  constructor ({x, y}, a, i, degree = 2.0 / 3.0 * Math.PI) {
+  constructor ({ x, y }, a, i, degree = 2.0 / 3.0 * Math.PI) {
     this._id = i
     this._a = a
     this._isHovered = false
@@ -23,6 +23,18 @@ class Cell {
 
   set isHovered (val) {
     this._isHovered = val
+  }
+  _isPointInTriangle (A, B, C, point, eps = 0.1) {
+    let area1 = this._triangleArea(A, B, point)
+    let area2 = this._triangleArea(A, point, C)
+    let area3 = this._triangleArea(point, B, C)
+    let area = this._triangleArea(A, B, C)
+    return Math.abs((area1 + area2 + area3) / area - 1) < eps
+  }
+  _triangleArea (A, B, C) {
+    return Math.abs(A.x * (B.y - C.y) +
+      B.x * (C.y - A.y) +
+      C.x * (A.y - B.y)) * 0.5
   }
 
   render (ctx) {
@@ -48,32 +60,39 @@ class Cell {
       this.firstPoint.y + 40)
   }
 
-  isPointOver ({x, y}) {
+  isPointOver ({ x, y }) {
     let p = this.firstPoint
     if (p.x < x && x < p.x + this._a &&
         p.y < y && y < p.y + this._dy * 2) {
+      return true
+    }
+    if (this._isPointInTriangle(p, this._points[1], this._points[2], { x, y })) {
+      return true
+    }
+    if (this._isPointInTriangle(this._points[3],
+      this._points[4], this._points[5], { x, y })) {
       return true
     }
     return false
   }
 
   static _drawPoints (ctx, points) {
-    let {x, y} = points[0]
+    let { x, y } = points[0]
     ctx.beginPath()
     ctx.moveTo(x, y)
     points.forEach((point) => {
-      let {x, y} = point
+      let { x, y } = point
       ctx.lineTo(x, y)
     })
     ctx.lineTo(x, y)
   }
 
-  static _genHexagon ({x, y}, a, degree) {
+  static _genHexagon ({ x, y }, a, degree) {
     let dx = a * Math.cos(Math.PI - degree)
     let dy = a * Math.sin(Math.PI - degree)
     x += dx
     return [
-      {x, y},
+      { x, y },
       {x: x - dx, y: y + dy},
       {x, y: y + 2 * dy},
       {x: x + a, y: y + 2 * dy},
