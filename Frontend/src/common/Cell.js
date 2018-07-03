@@ -25,16 +25,12 @@ class Cell {
     this._isHovered = val
   }
 
-  render (ctx, onlyFill = false) {
+  render (ctx) {
     ctx.save()
     ctx.beginPath()
     Cell._drawPoints(ctx, this._points)
-    ctx.lineWidth = 2
-    ctx.shadowColor = 'rgb(3, 154, 255)'
-    ctx.shadowBlur = 10
-    ctx.shadowOffsetY = 0
-    ctx.strokeStyle = 'rgb(119, 180, 255)'
-    ctx.shadowOffsetX = 0
+    ctx.lineWidth = 3
+    ctx.strokeStyle = 'rgb(3, 154, 255)'
     ctx.closePath()
     if (this._isHovered) {
       ctx.fillStyle = 'rgb(119, 180, 255)'
@@ -42,9 +38,7 @@ class Cell {
       ctx.fillStyle = 'black'
     }
     ctx.fill()
-    if (!onlyFill) {
-      ctx.stroke()
-    }
+    ctx.stroke()
     ctx.restore()
     ctx.font = '32px Audiowide'
     ctx.fillStyle = 'rgb(0, 85, 141)'

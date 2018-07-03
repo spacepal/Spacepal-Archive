@@ -35,7 +35,20 @@ export default {
     return {
       width: 1920,
       height: 1080,
-      drag: false
+      drag: false,
+      hotKeys: [
+        {
+          code: 'KeyH',
+          method: this.goHome,
+          description: 'Go to center of the map'
+        },
+        {
+          code: 'Home',
+          isKey: true,
+          method: this.goHome,
+          description: 'Go to center of the map'
+        }
+      ]
     }
   },
   computed: {
@@ -45,7 +58,7 @@ export default {
   },
   mounted () {
     let context = this.$refs.canvas.getContext('2d')
-    this.init(context, this.hexSize)
+    this.init(context, this.hexSize, this.mapSizeWidth, this.mapSizeHeight)
     this._mouseUpListener = () => {
       this.drag = false
     }
@@ -61,7 +74,6 @@ export default {
       this.tick()
     },
     mousedown (event) {
-      console.log(event)
       // middle mouse button
       // or shift + left mouse button
       if (event.which === 2 || (event.which === 1 && event.shiftKey)) {

@@ -18,7 +18,7 @@ const HotKeysPlugin = {
             if (!key.alt === key.altKey) {
               return
             }
-            if (e.code === key.code) {
+            if (e.code === key.code || (e.key === key.code && key.isKey)) {
               key.method(e)
             }
           })
