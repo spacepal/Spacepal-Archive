@@ -30,6 +30,7 @@ class Game < RedisOrm::Base
   has_many :fleets
   has_many :planets
   has_many :players
+  has_many :cells
 
   property :id, Integer
   property :name, String 
@@ -96,5 +97,7 @@ class Game < RedisOrm::Base
   def get_creator_name
     "Smile for you"
   end
+
+  
   
 end

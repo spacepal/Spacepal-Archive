@@ -1,6 +1,7 @@
 class Player < RedisOrm::Base
 
-  DEFAULT_COLOR = 0
+  DEFAULT_COLOR = -1
+  NEUTRAL_COLOR = 0
 
   has_many :planets
   has_many :fleets
@@ -17,11 +18,12 @@ class Player < RedisOrm::Base
   validates :color_id, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: -1 }
   validates :is_admin, inclusion: { in: [true, false] }
   validates :is_ai, inclusion: { in: [true, false] }
+  validates :ai_type, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
   validates_associated :planets
   validates_associated :fleets
 
-  def has_ships_or_planets
-
+  def has_fleets_or_planets
+    self.planets.count > 0 or self.fleets.count > 0
   end
 
 end
