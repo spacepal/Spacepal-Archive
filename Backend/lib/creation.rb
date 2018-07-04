@@ -6,6 +6,7 @@ class Creation
     res = {}
     g = Game.new
     g.name = gamename
+    g.step = Game::IS_ROOM
     g.width = map[:width]
     g.height = map[:height]
     g.players_limit = players_limit
@@ -18,9 +19,10 @@ class Creation
     if g.save
       player.game = g
       player.is_admin = true
+      player.save
       return g
     else 
-      return nil
+      return g
     end
   end
 
@@ -31,12 +33,9 @@ class Creation
     player.color_id = Player::DEFAULT_COLOR
     player.is_ai = is_ai
     player.ai_type = ai_type
-    if player.save
-      player
-    else 
-      p player.errors.messages
-      false
-    end
+    player.save
+    player
+
   end
 
   def self.create_cells game
@@ -65,10 +64,9 @@ class Creation
     players_ids = game.players.all.ids
     cells_ids = cells_ids.shuffle.take game.planets_count
     cells_ids.each_with_index do |id, index|
-      if players_ids[index]
+      if index < game.players_limit
         planet = Planet.new
         planet.make_players_planet
-        planet.player = game.players.find(players_ids[index]) 
         planet.cell = game.cells.find(id)
       else
         planet = Planet.new
@@ -76,7 +74,6 @@ class Creation
       end
       planet.save
       game.cells.find(id).planet = planet
-      planet.player = game.players.find(players_ids[index])
       game.planets << planet.clone
     end
     game.planets.all

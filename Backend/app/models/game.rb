@@ -1,5 +1,5 @@
 class GameValidator < ActiveModel::Validator
-  
+
   def validate record
     self.piece_of_validations record, lambda { |r|
       r.planets_count <= ( r.width * r.height)
@@ -27,6 +27,9 @@ end
 
 class Game < RedisOrm::Base
 
+  IS_ROOM = 0
+  IS_OVER = -1
+
   has_many :fleets
   has_many :planets
   has_many :players
@@ -39,6 +42,7 @@ class Game < RedisOrm::Base
   property :height, Integer 
   property :planets_count, Integer
   property :players_limit, Integer
+  property :step, Integer
   property :accumulative, RedisOrm::Boolean 
   property :buffs, RedisOrm::Boolean 
   property :pirates, RedisOrm::Boolean 
@@ -59,6 +63,17 @@ class Game < RedisOrm::Base
   validates_associated :planets
   validates_associated :players
 
+  def is_room?
+    self.step == Game::IS_ROOM
+  end
+
+  def is_playing?
+    self.step != Game::IS_ROOM and self.step != Game::IS_OVER 
+  end
+
+  def is_over?
+    self.step == Game::IS_OVER
+  end
 
   def self.get_all offset_limit #get hash of selected games
     arr = Game.all offset_limit
@@ -66,7 +81,7 @@ class Game < RedisOrm::Base
     el_hash = {}
     arr.each do |game|
       el_hash[:id] = game.id
-      el_hash[:creator] = game.get_creator_name
+      el_hash[:creator] = game.get_creator.name
       el_hash[:name] = game.name
       el_hash[:has_pin_code] = game.pin_code != ""
       el_hash[:width] = game.width
@@ -83,19 +98,27 @@ class Game < RedisOrm::Base
     arr_hash
   end
 
-  def enter_player player
+  def add_player player_name
     if self.players.count < self.players_limit
       pl = Players.create player
       if pl.id
         self.players << pl
+        true
       end
     else
-      errors.add :players_limit, "no place for new player"
+      self.errors.add :players_limit, "no place for new player"
+      false
     end
   end
 
-  def get_creator_name
-    "Smile for you"
+  def get_creator
+    self.players.all.each do |player| 
+      player.to_s.color("red").out
+      if player.is_admin
+        return player
+      end
+    end
+    nil
   end
 
   

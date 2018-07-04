@@ -43,7 +43,7 @@ RSpec.describe Creation do
       pirates: false, accumulative: false })
     cells = Creation.create_cells game
     planets = Creation.create_planets game
-    check = planets.count == game.planets_count
+    check = (planets.count == game.planets_count)
     Deletion.delete_game game
     expect(planets.count).to eq(game.planets_count)
   end

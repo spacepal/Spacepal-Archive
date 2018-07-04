@@ -11,7 +11,9 @@ class Planet < RedisOrm::Base
   property :kill_perc, Float
   property :production, Integer
   property :ships, Integer
+  property :is_capital, RedisOrm::Boolean
 
+  validates :is_capital, inclusion: { in: [true, false] }
   validates :buff, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
   validates :kill_perc, presence: true, numericality: { less_than: 1, greater_than: 0 }
   validates :production, presence: true, numericality: { only_integer: true, greater_than: 0 }
@@ -22,6 +24,7 @@ class Planet < RedisOrm::Base
     self.set_kill_percent
     self.set_ships
     self.get_properties
+    self.is_capital = false
     self
   end
 
@@ -59,6 +62,7 @@ class Planet < RedisOrm::Base
     self.set_production 10
     self.set_kill_percent 0.4
     self.set_ships
+    self.is_capital = true
   end
 
   def get_properties

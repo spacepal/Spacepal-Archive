@@ -22,6 +22,7 @@ RSpec.describe Planet, type: :model do
     planet.production = 10
     planet.kill_perc = 0.4
     planet.ships = 10
+    planet.is_capital = true
     expect(planet == planet_make).to be true
   end
 end
