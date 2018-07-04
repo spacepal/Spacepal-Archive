@@ -1,5 +1,5 @@
 class Creation
-  
+
   def self.create_game(player, gamename, map, 
         players_limit, planets_count, pin_code, 
         flags) 
@@ -24,6 +24,21 @@ class Creation
     end
   end
 
+  def self.create_player name, is_ai: false, ai_type: nil 
+    player = Player.new
+    player.name = name
+    player.is_admin = false
+    player.color_id = Player::DEFAULT_COLOR
+    player.is_ai = is_ai
+    player.ai_type = ai_type
+    if player.save
+      player
+    else 
+      p player.errors.messages
+      false
+    end
+  end
+
   def self.create_cells game
     cells = Array.new
     game.height.times do |h|
@@ -45,40 +60,25 @@ class Creation
     end
   end
 
-  def self.create_player name, is_ai: false, ai_type: nil 
-    player = Player.new
-    player.name = name
-    player.is_admin = false
-    player.color_id = Player::DEFAULT_COLOR
-    player.is_ai = is_ai
-    player.ai_type = ai_type
-    if player.save
-      player
-    else 
-      p player.errors.messages
-      false
-    end
-  end
-
-  def self.create_planet cell, buff: nil, player: nil
-    planet = Planet.new
-    if  player
-      planet.make_players_planet
-      planet.buff = buff
-      if planet.save
-        cell.planet << planet
-        player.planets << planet
-        planet
+  def self.create_planets game
+    cells_ids = game.cells.all.ids
+    players_ids = game.players.all.ids
+    cells_ids = cells_ids.shuffle.take game.planets_count
+    cells_ids.each_with_index do |id, index|
+      if players_ids[index]
+        planet = Planet.new
+        planet.make_players_planet
+        planet.owner = game.players.find(index) 
+        planet.cell = game.cells.find(id)
+      else
+        planet = Planet.new
+        planet.set_properties        
+        planet.cell = game.cells.find(id)
       end
-    else
-      planet.set_properties
-      planet.buff = buff
-      if planet.save
-        cell.planet << planet
-        planet
-      end
+      planet.save
+      game.planets << planet.clone
     end
-    false
+    game.planets.all
   end
 
   def self.create_fleet

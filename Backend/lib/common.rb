@@ -9,6 +9,16 @@ class Array
       a
     end
   end 
+  def pluck_arr symb
+    if self[0].class == Array or self[0].class == Hash
+      self.map { |el| el[symb.to_sym] }
+    else
+      self.map { |el| el.send(symb.to_sym)}
+    end
+  end
+  def ids
+    self.pluck_arr :id
+  end
 
 end
 
@@ -16,7 +26,7 @@ class String
 
   def color color
     s = Rainbow(self)
-    eval("s." + color.to_s)
+    s.send(color.to_sym)
   end
 
   def bg color
@@ -29,6 +39,10 @@ class String
 
   def print_
     print self
+  end
+
+  def pp_
+    pp self
   end
 
   private 

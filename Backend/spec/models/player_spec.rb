@@ -35,5 +35,4 @@ RSpec.describe Player, type: :model do
     player.valid?
     expect(player.errors.messages[:ai_type].include? "must been defined when if is ai").to be true
   end
-
 end

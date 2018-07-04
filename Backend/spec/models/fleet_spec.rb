@@ -36,5 +36,4 @@ RSpec.describe Fleet, type: :model do
     fleet.ships = 100
     expect(fleet.status).to eq "avoiding"
   end
-
 end

@@ -17,9 +17,7 @@ RSpec.describe Creation do
       buffs: false, production_after_capture: false,
       pirates: false, accumulative: false })
     flag = !!game
-    player.game.destroy
-    game.destroy
-    player.destroy
+    Deletion.delete_game game
     expect(flag).to be true
   end
   it "create cells" do
@@ -32,11 +30,21 @@ RSpec.describe Creation do
       pirates: false, accumulative: false })
     cells = Creation.create_cells game
     flag = !!cells
-    game.cells.first.game.destroy
-    cells.each { |cell| cell.destroy}
-    game.destroy
-    player.destroy
+    Deletion.delete_game game
     expect(flag).to be true
   end
- 
+  it "create planet" do
+    player = Creation.create_player "Jack"
+    game = Creation.create_game(
+      player , "game_create_planets", 
+      { width: 5, height: 5 },
+      3, 5, "1234", { has_pin_code: false,
+      buffs: false, production_after_capture: false,
+      pirates: false, accumulative: false })
+    cells = Creation.create_cells game
+    planets = Creation.create_planets game
+    check = planets.count == game.planets_count
+    Deletion.delete_game game
+    expect(planets.count).to eq(game.planets_count)
+  end
 end

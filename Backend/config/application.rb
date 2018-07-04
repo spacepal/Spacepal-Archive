@@ -14,6 +14,7 @@ require "action_view/railtie"
 require "action_cable/engine"
 require_relative "../lib/common.rb"
 require_relative "../lib/creation.rb"
+require_relative "../lib/deletion.rb"
 # require "sprockets/railtie"
 require "rails/test_unit/railtie"
 

@@ -15,5 +15,4 @@ RSpec.describe Cell, type: :model do
     valid = cell.valid?
     expect(valid).to be false
   end
-  
 end
