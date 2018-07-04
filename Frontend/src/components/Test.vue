@@ -1,8 +1,8 @@
 <template>
   <div>
-    <!-- <Map></Map> -->
-    <div v-if="isLoggedIn" class='button' @click="logout">Logout</div>
-    <div v-else class='button' @click="login">Login</div>
+    <Map full />
+    <!-- <div v-if="isLoggedIn" class='button' @click="logout">Logout</div>
+    <div v-else class='button' @click="login">Login</div> -->
   </div>
 </template>
 
@@ -24,11 +24,7 @@ export default {
   },
   methods: {
     login () {
-      this.$store.dispatch('login', {
-        username: 'hedhyw',
-        gameID: '1',
-        isCreator: true
-      })
+      this.$store.dispatch('login', 1)
     },
     logout () {
       this.$store.dispatch('logout')

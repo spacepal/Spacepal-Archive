@@ -1,15 +1,13 @@
 <template>
-  <div id="surface">
-    <canvas
-      :width="width"
-      :height="height"
-      @mousedown="mousedown"
-      @mousemove="mousemove"
-      @mouseup="mouseup"
-      @mousewheel="mousewheel"
-      :class="canvasClass"
-      ref="canvas"></canvas>
-  </div>
+  <canvas
+    :width="width"
+    :height="height"
+    @mousedown="mousedown"
+    @mousemove="mousemove"
+    @mouseup="mouseup"
+    @mousewheel="mousewheel"
+    :class="canvasClass"
+    ref="canvas"></canvas>
 </template>
 
 <script>
@@ -19,6 +17,10 @@ export default {
   name: 'Map',
   extends: HexagonSurface,
   props: {
+    full: {
+      type: Boolean,
+      default: false
+    },
     mapSizeWidth: {
       type: Number,
       default: 24
@@ -34,7 +36,7 @@ export default {
   },
   data () {
     return {
-      width: 1920,
+      width: 2048,
       height: 1080,
       drag: false,
       hotKeys: [
@@ -54,7 +56,36 @@ export default {
   },
   computed: {
     canvasClass () {
-      return this.drag ? 'dragged' : ''
+      let classes = []
+      if (this.drag) {
+        classes.push('dragged')
+      }
+      if (this.full) {
+        classes.push('full')
+      }
+      return classes.join(' ')
+    }
+  },
+  created () {
+    let timeout = {
+      timeout: undefined,
+      doOnceAfter (func, ms) {
+        clearTimeout(this.timeout)
+        this.timeout = setTimeout(func, ms)
+      }
+    }
+    this._onResizeFunc = () => {
+      timeout.doOnceAfter(() => {
+        this.width = document.documentElement.clientWidth
+        this.height = document.documentElement.clientHeight
+        this.clearOffset()
+        this.tick()
+      }, 300)
+    }
+    if (this.full) {
+      this.width = document.documentElement.clientWidth
+      this.height = document.documentElement.clientHeight
+      window.addEventListener('resize', this._onResizeFunc)
     }
   },
   mounted () {
@@ -70,11 +101,12 @@ export default {
       this.genRandomPlanets()
       setTimeout(() => {
         this.genMembers()
-      }, 1000)
-    }, 1000)
+      }, 100)
+    }, 100)
   },
   beforeDestroy () {
     window.removeEventListener('mouseup', this._mouseUpListener)
+    window.removeEventListener('resize', this._onResizeFunc)
   },
   methods: {
     genRandomPlanets (count = 100) {
@@ -143,34 +175,34 @@ export default {
       let dx = event.layerX - this.mouse.x
       let dy = event.layerY - this.mouse.y
       this.mouse = { x: event.layerX, y: event.layerY }
-      this.translateSurface({ dx, dy })
+      this.translateSurface({ dx, dy }, event.shiftKey)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-#surface {
-  position: absolute;
-  left: 0;
-  top: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-
+  $height: 1080;
+  $width: 2048;
   canvas {
-    $height: 1080;
-    $width: 1920;
-    max-width: 80vw;
-    max-height: 90vh;
+    $margin: 4px;
+    margin: $margin;
+    max-width: calc(100% - #{$margin});
+    max-height: calc(100% - #{$margin});
     border: 1px solid rgb(54, 129, 221);
+  }
+
+  .full {
+    position: fixed !important;
+    border: none !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
   }
 
   .dragged {
     cursor: crosshair
   }
-}
+
 </style>

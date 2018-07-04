@@ -1,11 +1,12 @@
-const STORAGE_GAME_INFO = 'game_info'
-
 const STATE_ROOM = 1
 const STATE_GAME = 2
 const STATE_END = 3
 
 const state = {
-  info: JSON.parse(localStorage.getItem(STORAGE_GAME_INFO) || '{}')
+  info: {
+    state: 1,
+    turnNumber: 0
+  }
 }
 
 const mutations = {
@@ -16,7 +17,6 @@ const mutations = {
 
 const actions = {
   setInfo ({ commit }, gameInfo) {
-    localStorage.setItem(STORAGE_GAME_INFO, JSON.stringify(gameInfo))
     commit('SET_GAME_INFO', gameInfo)
   }
 }

@@ -3,6 +3,7 @@ import Cell from './Cell.js'
 export default {
   data () {
     return {
+      a: 0,
       dx: 0,
       dy: 0,
       context: undefined,
@@ -21,8 +22,27 @@ export default {
       mapSize: {
         width: 0,
         height: 0
-      }
+      },
+      frames: 0,
+      fps: 0
     }
+  },
+  computed: {
+    renderedCount () {
+      return this.cells.active.length
+    }
+  },
+  mounted () {
+    this._fpsTimeout = undefined
+    let fpsFunc = () => {
+      this.fps = this.frames
+      this.frames = 0
+      this._fpsTimeout = setTimeout(fpsFunc, 1000)
+    }
+    fpsFunc()
+  },
+  beforeDestroy () {
+    clearTimeout(this._fpsTimeout)
   },
   methods: {
     _genSurface (a) {
@@ -108,6 +128,7 @@ export default {
       this.paused = false
     },
     init (ctx, a, mapSizeWidth, mapSizeHeight) {
+      this.a = a
       this.mapSize.width = mapSizeWidth
       this.mapSize.height = mapSizeHeight
       this.context = ctx
@@ -124,9 +145,9 @@ export default {
     tick () {
       requestAnimationFrame(() => this.redraw(this.context))
     },
-    translateSurface ({dx, dy}) {
-      this.pending.dx += dx
-      this.pending.dy += dy
+    translateSurface ({dx, dy}, considerScale = false) {
+      this.pending.dx += dx * (considerScale ? 1.0 / this.scale : 1.0)
+      this.pending.dy += dy * (considerScale ? 1.0 / this.scale : 1.0)
     },
     scaleSurface (scale) {
       this.pending.scale *= scale
@@ -150,6 +171,10 @@ export default {
       ctx.scale(scale, scale)
       ctx.translate(-cx + this.dx, -cy + this.dy)
     },
+    clearOffset () {
+      this.dx = 0
+      this.dy = 0
+    },
     redraw (ctx) {
       let { scale, dx, dy } = this.pending
       this.pending = { scale: 1.0, dx: 0.0, dy: 0.0 }
@@ -163,8 +188,15 @@ export default {
 
       let realPosCalc = this._relPosCalculator()
       let rect = this.context.canvas.getBoundingClientRect()
-      let startPoint = realPosCalc({x: -100, y: -100})
-      let endPoint = realPosCalc({x: rect.width, y: rect.height})
+      let visibilityOffset = this.a * this.scale
+      let startPoint = realPosCalc({
+        x: -visibilityOffset * 1.5,
+        y: -visibilityOffset * 1.5
+      })
+      let endPoint = realPosCalc({
+        x: rect.width + visibilityOffset,
+        y: rect.height + visibilityOffset
+      })
       this.cells.active = this.cells.all.filter(cell => {
         if (cell.firstPoint.x > startPoint.x &&
           cell.firstPoint.x < endPoint.x &&
@@ -174,6 +206,7 @@ export default {
           return true
         }
       })
+      this.frames++
     }
   }
 }

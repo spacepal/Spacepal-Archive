@@ -53,7 +53,12 @@ export default {
       return themes[this.currentTheme]
     }
   },
-  components: { Window }
+  components: { Window },
+  mounted () {
+    if (this.$store.getters['isPlayer']) {
+      this.$store.enableCable()
+    }
+  }
 }
 </script>
 

@@ -9,15 +9,13 @@ import store from '@/store'
 
 Vue.use(Router)
 
-function beforeEnter (_, __, next) {
-  if (store.getters['isPlayer']) {
-    if (store.getters['game/isRoom']) {
-      next({ name: 'Room' })
-    } else if (store.getters['game/isGame']) {
-      next({ name: 'Game' })
+function genBeforeEnter (isForPlayer, failPage) {
+  return (_, __, next) => {
+    if (isForPlayer ^ store.getters['isPlayer']) {
+      next({ name: failPage })
+    } else {
+      next()
     }
-  } else {
-    next()
   }
 }
 
@@ -34,37 +32,25 @@ export default new Router({
       path: '/',
       name: 'Games',
       component: Games,
-      beforeEnter
+      beforeEnter: genBeforeEnter(false, 'Room')
     },
     {
       path: '/create',
       name: 'CreateGame',
       component: CreateGame,
-      beforeEnter
+      beforeEnter: genBeforeEnter(false, 'Room')
     },
     {
       path: '/play',
       name: 'Game',
       component: Game,
-      beforeEnter: (_, __, next) => {
-        if (!store.getters['game/isGame']) {
-          next({ name: 'Room' })
-        } else {
-          next()
-        }
-      }
+      beforeEnter: genBeforeEnter(true, 'Games')
     },
     {
       path: '/room',
       name: 'Room',
       component: Room,
-      beforeEnter: (_, __, next) => {
-        if (!store.getters['game/isRoom']) {
-          next({ name: 'Games' })
-        } else {
-          next()
-        }
-      }
+      beforeEnter: genBeforeEnter(true, 'Games')
     },
     {
       path: '/test',

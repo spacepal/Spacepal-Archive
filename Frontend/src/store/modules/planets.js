@@ -33,7 +33,7 @@ const getters = {
   },
   isMemberPlanetOwner (state) {
     return (memberID) => {
-      return state.planets.memberID === memberID
+      return state.planets[memberID] === memberID
     }
   }
 }
