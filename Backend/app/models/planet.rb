@@ -3,8 +3,8 @@ class Planet < RedisOrm::Base
   DEFAULT_PRODUCTION = 10
 
   belongs_to :game
-  belongs_to :player, :as => :owner
-  belongs_to :cell
+  has_one :player
+  has_one :cell
 
   property :id, Integer
   property :buff, Integer

@@ -68,14 +68,15 @@ class Creation
       if players_ids[index]
         planet = Planet.new
         planet.make_players_planet
-        planet.owner = game.players.find(index) 
+        planet.player = game.players.find(players_ids[index]) 
         planet.cell = game.cells.find(id)
       else
         planet = Planet.new
         planet.set_properties        
-        planet.cell = game.cells.find(id)
       end
       planet.save
+      game.cells.find(id).planet = planet
+      planet.player = game.players.find(players_ids[index])
       game.planets << planet.clone
     end
     game.planets.all

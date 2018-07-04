@@ -1,6 +1,6 @@
 GIT
-  remote: https://github.com/german/redis_orm.git
-  revision: 4afd9eda767c984636f3b71dcebbc38a7021ab54
+  remote: https://github.com/M-Nick/redis_orm.git
+  revision: 5d78d43cb97002d7dae9a501febb1ea0703dd9a0
   specs:
     redis_orm (0.7)
       activemodel (>= 3.0.0)
