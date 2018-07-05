@@ -1,12 +1,13 @@
 import Service from '../../common/Service.js'
 
+const STATE_UNKNOWN = 0
 const STATE_ROOM = 1
 const STATE_GAME = 2
 const STATE_END = 3
 
 const state = {
   info: {
-    state: 1,
+    state: STATE_UNKNOWN,
     turnNumber: 0
   }
 }
@@ -38,6 +39,12 @@ const actions = {
       dispatch('login', resp.data.gameID, { root: true })
       return resp.data.gameID
     })
+  },
+  endTurn ({ dispatch, rootState, rootGetters }) {
+    let fleets = rootGetters['tasks/all']
+    dispatch('tasks/clear', null, { root: true })
+    dispatch('resetSync', null, { root: true })
+    rootState.cable.get(rootState.gameID).endTurn(fleets)
   }
 }
 
@@ -48,8 +55,11 @@ const getters = {
   isGame: (state, _, __, rootGetters) => {
     return rootGetters.isPlayer && state.info.state === STATE_GAME
   },
-  isEnded: (state, _, __, rootGetters) => {
+  isOver: (state, _, __, rootGetters) => {
     return rootGetters.isPlayer && state.info.state === STATE_END
+  },
+  isUnknown: (state, _, __, rootGetters) => {
+    return rootGetters.isPlayer && state.info.state === STATE_UNKNOWN
   }
 }
 

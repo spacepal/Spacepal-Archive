@@ -10,14 +10,14 @@ const mutations = {
       Vue.set(state.members, m.id, m)
     })
   },
-  CLEAR_PLANERS (state) {
+  CLEAR_MEMBERS (state) {
     state.members = {}
   }
 }
 
 const actions = {
   setMembers ({ commit }, members) {
-    commit('CLEAR_PLANERS')
+    commit('CLEAR_MEMBERS')
     commit('SET_MEMBERS', members)
   }
 }

@@ -1,9 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Games from '@/pages/Games.vue'
+import GamesList from '@/pages/GamesList.vue'
 import CreateGame from '@/pages/CreateGame.vue'
 import Game from '@/pages/Game.vue'
-import Room from '@/pages/Room.vue'
 import Test from '@/components/Test.vue'
 import store from '@/store'
 
@@ -25,32 +24,26 @@ export default new Router({
       path: '*',
       name: 'NotFound',
       redirect: {
-        name: 'Games'
+        name: 'GamesList'
       }
     },
     {
       path: '/',
-      name: 'Games',
-      component: Games,
-      beforeEnter: genBeforeEnter(false, 'Room')
+      name: 'GamesList',
+      component: GamesList,
+      beforeEnter: genBeforeEnter(false, 'Game')
     },
     {
       path: '/create',
       name: 'CreateGame',
       component: CreateGame,
-      beforeEnter: genBeforeEnter(false, 'Room')
+      beforeEnter: genBeforeEnter(false, 'Game')
     },
     {
       path: '/play',
       name: 'Game',
       component: Game,
-      beforeEnter: genBeforeEnter(true, 'Games')
-    },
-    {
-      path: '/room',
-      name: 'Room',
-      component: Room,
-      beforeEnter: genBeforeEnter(true, 'Games')
+      beforeEnter: genBeforeEnter(true, 'GamesList')
     },
     {
       path: '/test',

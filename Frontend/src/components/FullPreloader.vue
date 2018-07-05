@@ -12,9 +12,15 @@
 <script>
 export default {
   name: 'FullPreloader',
+  props: {
+    autostart: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
-      isVisible: false
+      isVisible: this.autostart
     }
   },
   methods: {

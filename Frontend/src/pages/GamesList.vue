@@ -40,7 +40,7 @@ import FullPreloader from '../components/FullPreloader.vue'
 import Form from '../components/Form.vue'
 import Service from '../common/Service.js'
 export default {
-  name: 'Games',
+  name: 'GamesList',
   components: {
     STable,
     Paginator,
@@ -131,8 +131,7 @@ export default {
       this.$refs.loader.show()
       this.$store.dispatch('game/join', this.join).then(gameID => {
         this.$refs.loader.hide()
-        this.$toast(`The game #${gameID} is joined`)
-        console.warn('@todo: Games.vue: joinConfirm() -> redirect on success')
+        this.$router.push({ name: 'Game' })
       }).catch(err => {
         this.$refs.loader.hide()
         this.$toast(err.message)

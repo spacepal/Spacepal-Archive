@@ -97,6 +97,7 @@ export default {
     }
     this.$store.watch((_, getters) => getters.planets, () => this.tick())
     this.$store.watch((_, getters) => getters.members, () => this.tick())
+    this.$store.watch((_, getters) => getters.tasks, () => this.tick())
     window.addEventListener('mouseup', this._mouseUpListener)
     setTimeout(() => {
       this.genRandomPlanets()

@@ -1,8 +1,8 @@
 <template>
   <div>
-    <Map full />
-    <!-- <div v-if="isLoggedIn" class='button' @click="logout">Logout</div>
-    <div v-else class='button' @click="login">Login</div> -->
+    <!-- <Map full /> -->
+    <div v-if="isLoggedIn" class='button' @click="logout">Logout</div>
+    <div v-else class='button' @click="login">Login</div>
   </div>
 </template>
 

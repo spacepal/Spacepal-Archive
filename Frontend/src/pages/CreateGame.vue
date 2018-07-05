@@ -130,15 +130,14 @@ export default {
       })
     },
     goHome () {
-      this.$router.push({name: 'Games'})
+      this.$router.push({ name: 'GamesList' })
     },
     createGame () {
       if (this.$refs.form.isValid()) {
         this.$refs.loader.show()
         this.$store.dispatch('game/create', this.pref).then(gameID => {
           this.$refs.loader.hide()
-          this.$toast(`The game #${gameID} is created`)
-          console.warn('@todo: CreateGame.vue: createGame() -> redirect on success')
+          this.$router.push({ name: 'Game' })
         }).catch(err => {
           this.$refs.loader.hide()
           this.$toast(err.message)

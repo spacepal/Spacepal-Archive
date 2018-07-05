@@ -18,7 +18,7 @@ const mutations = {
 }
 
 const actions = {
-  setevents ({ commit }, events) {
+  setEvents ({ commit }, events) {
     commit('CLEAR_EVENTS')
     commit('SET_EVENTS', events)
   }

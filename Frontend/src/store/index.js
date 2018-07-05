@@ -15,7 +15,7 @@ Vue.use(Vuex)
 const STORAGE_GAME_ID = 'game_id'
 
 const state = {
-  cabel: null,
+  cable: new Map(),
   gameID: localStorage.getItem(STORAGE_GAME_ID),
   sync: {
     game: false,
@@ -37,8 +37,8 @@ const mutations = {
   SYNC_SET (state, syncType) {
     state.sync[syncType] = true
   },
-  ENABLE_CABLE ({ cabel }) {
-    cabel = new ActionCabel(state.gameID)
+  ENABLE_CABLE (state) {
+    state.cable.set(state.gameID, new ActionCabel(state.gameID))
   },
   LOGIN (state, gameID) {
     state.gameID = gameID
@@ -49,6 +49,9 @@ const mutations = {
 }
 
 const actions = {
+  enableCable ({ commit }) {
+    commit('ENABLE_CABLE')
+  },
   resetSync ({commit}) {
     commit('SYNC_RESET')
   },
@@ -72,7 +75,7 @@ const actions = {
   login ({ commit }, gameID) {
     localStorage.setItem(STORAGE_GAME_ID, gameID)
     commit('LOGIN', { gameID })
-    commit('ENABLE_CABLE', new ActionCabel(gameID))
+    commit('ENABLE_CABLE')
   }
 }
 

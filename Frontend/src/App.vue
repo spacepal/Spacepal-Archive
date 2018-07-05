@@ -54,7 +54,7 @@ export default {
   components: { Window },
   mounted () {
     if (this.$store.getters['isPlayer']) {
-      this.$store.enableCable()
+      this.$store.dispatch('enableCable')
     }
   }
 }
