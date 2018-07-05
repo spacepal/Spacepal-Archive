@@ -12,6 +12,7 @@
 
 <script>
 import HexagonSurface from '../common/HexagonSurface'
+import Faker from 'faker'
 
 export default {
   name: 'Map',
@@ -110,21 +111,25 @@ export default {
   },
   methods: {
     genRandomPlanets (count = 100) {
-      let rndInt = (min, max) => {
-        var rand = min + Math.random() * (max + 1 - min)
-        rand = Math.floor(rand)
-        return rand
-      }
       let planets = []
       let ownerID = 1
       for (let i = 0; i < count; ++i) {
         planets.push({
           id: i,
           ownerID: (ownerID++) % 9,
-          cellID: rndInt(0, this.mapSizeWidth * this.mapSizeHeight - 1),
+          cellID: Faker.random.number({
+            min: 0,
+            max: this.mapSizeWidth * this.mapSizeHeight - 1
+          }),
           killPerc: Math.random(),
-          production: rndInt(10, 80),
-          ships: rndInt(0, 1000)
+          production: Faker.random.number({
+            min: 10,
+            max: 80
+          }),
+          ships: Faker.random.number({
+            min: 0,
+            max: 1000
+          })
         })
       }
       this.$store.dispatch('setPlanets', planets)

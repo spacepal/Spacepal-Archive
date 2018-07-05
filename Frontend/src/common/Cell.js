@@ -12,6 +12,7 @@ class Cell {
     this._points = Cell._genHexagon({ x: x * dx * 3, y: posY }, a, degree)
     this._planet = store.getters['planet']
     this._member = store.getters['member']
+    this._shipsDec = store.getters['tasks/shipsDecreasing']
   }
 
   get id () {
@@ -111,7 +112,7 @@ class Cell {
       ctx.font = '18px Audiowide'
       ctx.fillStyle = memberColor.text
       ctx.textAlign = 'center'
-      ctx.fillText('Ships: ' + planet.ships,
+      ctx.fillText('Ships: ' + (planet.ships - this._shipsDec(planet.id)),
         this.firstPoint.x + this._a / 2,
         this.firstPoint.y + 150)
       if (this._isHovered) {
