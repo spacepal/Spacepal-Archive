@@ -1,3 +1,5 @@
+import Service from '../../common/Service.js'
+
 const STATE_ROOM = 1
 const STATE_GAME = 2
 const STATE_END = 3
@@ -18,6 +20,24 @@ const mutations = {
 const actions = {
   setInfo ({ commit }, gameInfo) {
     commit('SET_GAME_INFO', gameInfo)
+  },
+  join ({ dispatch }, { gameID, pinCode, username }) {
+    return Service.game.join(gameID, pinCode, username).then((resp) => {
+      if (resp.data.errors) {
+        throw new Error(resp.data.errors.join('; '))
+      }
+      dispatch('login', gameID, { root: true })
+      return gameID
+    })
+  },
+  create ({ dispatch }, data) {
+    return Service.game.create(data).then((resp) => {
+      if (resp.data.errors) {
+        throw new Error(resp.data.errors.join('; '))
+      }
+      dispatch('login', resp.data.gameID, { root: true })
+      return resp.data.gameID
+    })
   }
 }
 

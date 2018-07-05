@@ -22,6 +22,9 @@ export default {
     }
   },
   methods: {
+    forceInput () {
+      this.checked = this.value
+    },
     mousewheel (e) {
       this.checked = e.wheelDelta > 0
       this.emitEvents(this.checked)

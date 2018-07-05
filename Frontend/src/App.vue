@@ -1,9 +1,7 @@
 <template>
   <div id="app" :class="theme">
     <div class="loop_header"></div>
-    <transition name="fade">
-      <router-view/>
-    </transition>
+    <router-view/>
     <Window ref="hotKeysWin" type="alert" title="Hotkeys">
       <div class="hotKeysGrid">
         <template v-for="list in Array.from(allHotKeys)">
@@ -73,19 +71,6 @@ export default {
   top: 0;
   min-width: 100%;
   min-height: 100%;
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition-property: opacity;
-  transition-duration: .25s;
-}
-
-.fade-enter-active {
-  transition-delay: .25s;
-}
-
-.fade-enter, .fade-leave-active {
-  opacity: 0
 }
 
 .hotKeysGrid {

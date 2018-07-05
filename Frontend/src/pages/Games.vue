@@ -129,17 +129,13 @@ export default {
   methods: {
     joinConfirm () {
       this.$refs.loader.show()
-      Service.game.join(
-        this.join.gameID,
-        this.join.pinCode,
-        this.join.username).then((resp) => {
+      this.$store.dispatch('game/join', this.join).then(gameID => {
         this.$refs.loader.hide()
-        console.warn('@todo: Games.vue: joinConfirm() -> $toast errors')
+        this.$toast(`The game #${gameID} is joined`)
         console.warn('@todo: Games.vue: joinConfirm() -> redirect on success')
-      }).catch((resp) => {
+      }).catch(err => {
         this.$refs.loader.hide()
-        this.$toast('Connection error')
-        console.error(resp)
+        this.$toast(err.message)
       })
     },
     checkJoinForm () {

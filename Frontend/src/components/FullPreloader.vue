@@ -24,19 +24,15 @@ export default {
     hide () {
       this.isVisible = false
     },
-    rocketStyle (i, isStar) {
-      let obj = {
+    rocketStyle (i) {
+      let size = Math.random() + 1 + 'px'
+      return {
         left: Math.random() * 100 + '%',
         top: Math.random() * 100 + '%',
-        animationDuration: Math.random() * 30 + 2 + 's'
+        animationDuration: Math.random() * 30 + 2 + 's',
+        width: size,
+        height: size
       }
-      if (isStar) {
-        obj.width = Math.random() + 1 + 'px'
-        obj.height = obj.width
-      } else {
-        obj.opacity = Math.random() * 0.3 + 0.7
-      }
-      return obj
     }
   }
 }

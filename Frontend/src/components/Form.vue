@@ -17,6 +17,13 @@ export default {
     })
   },
   methods: {
+    forceInput () {
+      this.$children.forEach(ref => {
+        if (typeof ref.forceInput === 'function') {
+          ref.forceInput()
+        }
+      })
+    },
     isValid () {
       return !this.$children.some(ref => {
         if (typeof ref.isValid === 'function') {

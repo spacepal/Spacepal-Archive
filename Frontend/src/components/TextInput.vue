@@ -85,6 +85,9 @@ export default {
     }
   },
   methods: {
+    forceInput () {
+      this.text = this.value
+    },
     focus () {
       this.$refs.inp.focus()
     },

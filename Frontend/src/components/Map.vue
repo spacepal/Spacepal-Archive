@@ -116,11 +116,12 @@ export default {
         return rand
       }
       let planets = []
-      let ownerMemberID = 1
+      let ownerID = 1
       for (let i = 0; i < count; ++i) {
         planets.push({
+          id: i,
+          ownerID: (ownerID++) % 9,
           cellID: rndInt(0, this.mapSizeWidth * this.mapSizeHeight - 1),
-          ownerMemberID: (ownerMemberID++) % 9,
           killPerc: Math.random(),
           production: rndInt(10, 80),
           ships: rndInt(0, 1000)

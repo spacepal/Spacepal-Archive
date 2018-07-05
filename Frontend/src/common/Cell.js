@@ -56,7 +56,7 @@ class Cell {
     let memberColor = Colors['neutral']
     let planet = this._planet(this._id)
     if (planet) {
-      let member = this._member(planet.ownerMemberID)
+      let member = this._member(planet.ownerID)
       if (member) {
         text = member.username
         memberColor = Colors[member.colorID]

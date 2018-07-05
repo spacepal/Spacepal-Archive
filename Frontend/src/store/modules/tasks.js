@@ -11,12 +11,12 @@ const state = {
 }
 
 const mutations = {
-  LOCK (state) {
-    state.isLocked = true
+  UNLOCK (state) {
+    state.isLocked = false
   },
   CLEAR (state) {
     state.fleets = {}
-    state.isLocked = false
+    state.isLocked = true
   },
   ADD_TASK ({ tasks, shipsDecreasing, lastTaskID }, task) {
     Vue.set(tasks, lastTaskID, task)
@@ -34,6 +34,9 @@ const mutations = {
 }
 
 const actions = {
+  unlock ({ commit }) {
+    commit('UNLOCK')
+  },
   doAutoTasks ({ commit, state, dispatch }) {
     if (state.isLocked) {
       console.warn('tasks.doAutoTasks: isLocked')

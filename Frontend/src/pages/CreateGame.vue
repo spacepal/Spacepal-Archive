@@ -48,6 +48,9 @@
         <div class="button" :class="createButtonClass" @click="createGame">
           <span class="mdi mdi-earth"> </span> Create game
         </div>
+        <div class="button" @click="setRandom">
+          <span class="mdi mdi-dice-multiple mdi-24px"> </span>
+        </div>
       </div>
     </Form>
     <FullPreloader ref="loader"></FullPreloader>
@@ -61,7 +64,8 @@ import TextInput from '../components/TextInput.vue'
 import SwitchBox from '../components/SwitchBox.vue'
 import FullPreloader from '../components//FullPreloader.vue'
 import Form from '../components/Form.vue'
-import Service from '../common/Service.js'
+import Faker from 'faker'
+
 export default {
   name: 'CreateGame',
   components: {
@@ -99,19 +103,45 @@ export default {
     }
   },
   methods: {
+    setRandom () {
+      this.pref.username = Faker.name.firstName()
+      this.pref.gamename = Faker.company.companyName()
+      this.pref.map.width = Faker.random.number({
+        min: 5,
+        max: 32
+      })
+      this.pref.map.height = Faker.random.number({
+        min: 5,
+        max: this.pref.map.width - 1
+      })
+      this.pref.playersLimit = 8
+      this.pref.planetsCount = Faker.random.number({
+        min: 8,
+        max: this.pref.map.width * this.pref.map.height
+      })
+      this.pref.pinCode = ''
+      this.pref.flags.pirates = Faker.random.boolean()
+      this.pref.flags.buffs = Faker.random.boolean()
+      this.pref.flags.productionAfterCapture = Faker.random.boolean()
+      this.pref.flags.accumulative = Faker.random.boolean()
+      this.pref.flags.hasPinCode = false
+      this.$nextTick(() => {
+        this.$refs.form.forceInput()
+      })
+    },
     goHome () {
       this.$router.push({name: 'Games'})
     },
     createGame () {
       if (this.$refs.form.isValid()) {
         this.$refs.loader.show()
-        Service.game.create(this.pref).then((resp) => {
-          console.warn('@todo: CreateGame.vue -> $toast errors')
+        this.$store.dispatch('game/create', this.pref).then(gameID => {
           this.$refs.loader.hide()
-        }).catch((resp) => {
+          this.$toast(`The game #${gameID} is created`)
+          console.warn('@todo: CreateGame.vue: createGame() -> redirect on success')
+        }).catch(err => {
           this.$refs.loader.hide()
-          this.$toast('Connection error')
-          console.error(resp)
+          this.$toast(err.message)
         })
       }
     },
