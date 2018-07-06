@@ -69,8 +69,12 @@ const actions = {
     commit('SYNC_SET', syncType)
   },
   logout ({ commit }) {
-    localStorage.removeItem(STORAGE_GAME_ID)
-    commit('LOGOUT')
+    return new Promise((resolve, reject) => {
+      console.warn('index.js: @todo logout() to server')
+      localStorage.removeItem(STORAGE_GAME_ID)
+      commit('LOGOUT')
+      resolve()
+    })
   },
   login ({ commit }, gameID) {
     localStorage.setItem(STORAGE_GAME_ID, gameID)
@@ -82,7 +86,8 @@ const actions = {
 const getters = {
   isPlayer: (state) => {
     return !!state.gameID
-  }
+  },
+  sync: (state) => state.sync
 }
 
 export default new Vuex.Store({

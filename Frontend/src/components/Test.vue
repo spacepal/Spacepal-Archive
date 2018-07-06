@@ -1,38 +1,45 @@
 <template>
-  <div>
-    <!-- <Map full /> -->
-    <div v-if="isLoggedIn" class='button' @click="logout">Logout</div>
-    <div v-else class='button' @click="login">Login</div>
+  <div class="room-page">
+    <div class="map-field">
+      <Map></Map>
+    </div>
+    <div>
+      <ActionButtons></ActionButtons>
+      <GameInfo />
+      <Members />
+    </div>
   </div>
 </template>
 
 <script>
-import Map from './Map.vue'
+import Map from './Map'
+import GameInfo from './GameInfo'
+import Members from './Members'
+import ActionButtons from './ActionButtons'
 
 export default {
   name: 'HelloWorld',
-  components: {Map},
+  components: { GameInfo, Map, Members, ActionButtons },
   data () {
     return {
 
-    }
-  },
-  computed: {
-    isLoggedIn () {
-      return this.$store.getters.isPlayer
-    }
-  },
-  methods: {
-    login () {
-      this.$store.dispatch('login', 1)
-    },
-    logout () {
-      this.$store.dispatch('logout')
     }
   }
 }
 </script>
 
 <style lang="scss">
-
+.room-page {
+  display: grid;
+  grid-template-columns: auto 300px;
+}
+.map-field {
+  $margin: 10px;
+  max-width: calc(100% - #{$margin});
+  max-height: calc(100% - #{$margin});
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: $margin;
+}
 </style>

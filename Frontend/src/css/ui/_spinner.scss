@@ -5,6 +5,14 @@
 @each $theme in $themes {
   .#{$theme} {
 
+    $size: 70px;
+    $border: 10px;
+    $marginTop: 20px;
+
+    .has-spinner {
+      min-height: $size + $border * 2 + $marginTop * 2;
+    }
+
     .has-spinner.loading > * {
       // filter: blur(2px) !important;
       opacity: 0.3 !important;
@@ -17,8 +25,6 @@
     }
 
     .has-spinner.loading::before {
-      $size: 70px;
-      $border: 10px;
       z-index: 1000000;
       border-radius: 100%;
       border-style: solid;
@@ -28,12 +34,13 @@
       border-color: map_get($colorBorderLight, $theme) transparent transparent;
       content: '';
       width: $size;
-      left: 50%;
-      margin-top: -$size * 0.5 + 10px;
-      margin-left: -$size * 0.5 - $border;
       height: $size;
       justify-content: center;
-      position: absolute;
+      display: block;
+      margin-top: -$size - $border;
+      position: relative;
+      top: $size + $border + $marginTop;
+      margin-left: calc(50% - #{($size + $border) * 0.5});
       animation: spinner_motion 0.8s ease-in-out 0s infinite;
     }
 

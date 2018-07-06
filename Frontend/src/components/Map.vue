@@ -103,8 +103,8 @@ export default {
       this.genRandomPlanets()
       setTimeout(() => {
         this.genMembers()
-      }, 100)
-    }, 100)
+      }, 2000)
+    }, 4000)
   },
   beforeDestroy () {
     window.removeEventListener('mouseup', this._mouseUpListener)
@@ -146,10 +146,13 @@ export default {
       }
       this.$store.dispatch('setMembers', members)
     },
-    mousewheel ({wheelDelta, layerX, layerY}) {
+    mousewheel (event) {
+      let { wheelDelta } = event
       let delta = wheelDelta / Math.abs(wheelDelta)
       this.scaleSurface(1.0 + delta * 0.1)
       this.tick()
+      event.preventDefault()
+      return false
     },
     mousedown (event) {
       // middle mouse button
@@ -191,12 +194,13 @@ export default {
 <style lang="scss" scoped>
   $height: 1080;
   $width: 2048;
+  $border: 1px;
   canvas {
     $margin: 4px;
     margin: $margin;
-    max-width: calc(100% - #{$margin});
-    max-height: calc(100% - #{$margin});
-    border: 1px solid rgb(54, 129, 221);
+    max-width: calc(100% - #{$margin - $border * 4});
+    max-height: calc(100% - #{$margin - $border * 4});
+    border: $border solid rgb(54, 129, 221);
   }
 
   .full {

@@ -19,8 +19,9 @@ const mutations = {
 }
 
 const actions = {
-  setInfo ({ commit }, gameInfo) {
+  setInfo ({ commit, dispatch }, gameInfo) {
     commit('SET_GAME_INFO', gameInfo)
+    dispatch('syncSet', 'game', { root: true })
   },
   join ({ dispatch }, { gameID, pinCode, username }) {
     return Service.game.join(gameID, pinCode, username).then((resp) => {
@@ -60,7 +61,8 @@ const getters = {
   },
   isUnknown: (state, _, __, rootGetters) => {
     return rootGetters.isPlayer && state.info.state === STATE_UNKNOWN
-  }
+  },
+  info: (state) => state.info
 }
 
 export default {

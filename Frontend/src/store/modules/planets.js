@@ -16,9 +16,10 @@ const mutations = {
 }
 
 const actions = {
-  setPlanets ({ commit }, planets) {
+  setPlanets ({ commit, dispatch }, planets) {
     commit('CLEAR_PLANETS')
     commit('SET_PLANETS', planets)
+    dispatch('syncSet', 'planets', { root: true })
   }
 }
 

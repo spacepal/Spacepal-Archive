@@ -18,9 +18,10 @@ const mutations = {
 }
 
 const actions = {
-  setEvents ({ commit }, events) {
+  setEvents ({ commit, dispatch }, events) {
     commit('CLEAR_EVENTS')
     commit('SET_EVENTS', events)
+    dispatch('syncSet', 'events', { root: true })
   }
 }
 

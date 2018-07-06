@@ -16,9 +16,10 @@ const mutations = {
 }
 
 const actions = {
-  setMembers ({ commit }, members) {
+  setMembers ({ commit, dispatch }, members) {
     commit('CLEAR_MEMBERS')
     commit('SET_MEMBERS', members)
+    dispatch('syncSet', 'members', { root: true })
   }
 }
 

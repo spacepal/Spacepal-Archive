@@ -21,8 +21,10 @@ const actions = {
   resetProfile ({ commit }) {
     commit('RESET_PROFILE')
   },
-  setProfile ({ commit, dispatch }, { username, gameID, isCreator }) {
+  setProfile ({ commit, dispatch }, profile) {
+    commit('SET_PROFILE', profile)
     commit('RESET_PROFILE')
+    dispatch('syncSet', 'profile', { root: true })
   }
 }
 

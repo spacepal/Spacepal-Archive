@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <div class="loop">
-      <table class="stable" :class="loadingClass" cellspacing="5">
+  <div class="loop">
+    <div :class="loadingClass">
+      <table class="stable" cellspacing="5">
         <thead>
           <tr>
             <th v-for="field in fields" :key="field.name"
