@@ -6,6 +6,7 @@ class Cell {
     this._id = i
     this._a = a
     this._isHovered = false
+    this._isSelected = false
     this._dy = a * Math.sin(Math.PI - degree)
     let dx = a * Math.cos(Math.PI - degree)
     let posY = y * this._dy * 2 + (x % 2 === 1 ? this._dy : 0)
@@ -21,6 +22,14 @@ class Cell {
 
   get firstPoint () {
     return this._points[0]
+  }
+
+  get isSelected () {
+    return this._isSelected
+  }
+
+  set isSelected (val) {
+    this._isSelected = val
   }
 
   get isHovered () {
@@ -80,7 +89,8 @@ class Cell {
       ctx.font = '96px Material Design Icons'
       ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'
       ctx.textAlign = 'center'
-      ctx.fillText('\uF1E7',
+      let planetIcon = (this._isSelected ? '\uF485' : '\uF1E7')
+      ctx.fillText(planetIcon,
         this.firstPoint.x + this._a / 2,
         this.firstPoint.y + 125)
     }

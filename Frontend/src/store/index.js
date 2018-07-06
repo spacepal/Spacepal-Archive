@@ -48,7 +48,7 @@ const mutations = {
   LOGOUT (state) {
     state.gameID = null
   },
-  END_TURN_LOCK ({state}) {
+  END_TURN_LOCK (state) {
     state.endTurnLock = true
   },
   END_TURN_UNLOCK (state) {

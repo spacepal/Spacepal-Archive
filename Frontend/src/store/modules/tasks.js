@@ -12,6 +12,7 @@ const state = {
 const mutations = {
   CLEAR (state) {
     state.tasks = {}
+    state.shipsDecreasing = {}
   },
   ADD_TASK ({ tasks, lastTaskID }, task) {
     Vue.set(tasks, lastTaskID, task)
@@ -22,6 +23,10 @@ const mutations = {
   DECREASE_SHIPS ({ shipsDecreasing }, { planetID, count }) {
     let decreasing = shipsDecreasing[planetID] || 0
     Vue.set(state.shipsDecreasing, planetID, decreasing + count)
+  },
+  INCREASE_SHIPS ({ shipsDecreasing }, { planetID, count }) {
+    let decreasing = shipsDecreasing[planetID] || 0
+    Vue.set(state.shipsDecreasing, planetID, decreasing - count)
   },
   REMOVE_TASK (state, taskID) {
     Vue.delete(state.tasks, taskID)
@@ -56,19 +61,25 @@ const actions = {
     if (state.autoTasks[taskID]) {
       commit('REMOVE_AUTO_TASK', taskID)
     } else if (state.tasks[taskID]) {
+      let task = state.tasks[taskID]
       commit('REMOVE_TASK', taskID)
+      commit('INCREASE_SHIPS', { planetID: task.from, count: task.count })
     } else {
       console.warn('tasks.del: invalid taskID')
     }
   },
   add ({ getters, rootGetters, commit }, { from, to, count, isAutoTask }) {
-    let planet = rootGetters.planet(from)
+    let planet = rootGetters.planetByID(from)
     if (!planet) {
-      console.warn('tasks.add: planet not found')
+      console.warn('tasks.add: the planet is not found')
+      return
+    }
+    if (!rootGetters.planetByID(to)) {
+      console.warn('tasks.add: target planet is not found')
       return
     }
     if (!rootGetters.isMemberPlanetOwner(from)) {
-      console.warn('tasks.add: the member is not owner of planet')
+      console.warn('tasks.add: the member is not owner of the planet')
       return
     }
     if (isAutoTask) {
@@ -108,7 +119,7 @@ const getters = {
         return 0
       }
       let dec = shipsDecreasing[planetID] || 0
-      return Math.max(0, p.shipsCount - dec)
+      return Math.max(0, p.ships - dec)
     }
   },
   shipsDecreasing ({ shipsDecreasing }) {

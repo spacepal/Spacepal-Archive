@@ -1,4 +1,5 @@
 import Cell from './Cell.js'
+import { mapGetters } from 'vuex'
 
 export default {
   data () {
@@ -14,6 +15,7 @@ export default {
         active: []
       },
       hoveredIndex: undefined,
+      selectedIndex: undefined,
       pending: {
         scale: 1.0,
         dx: 0,
@@ -29,6 +31,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      planetByCellID: 'planet'
+    }),
     renderedCount () {
       return this.cells.active.length
     }
@@ -76,12 +81,28 @@ export default {
         return { x, y }
       }
     },
-    onSurfaceMouseClick ({ mx, my }) {
-      let cell = this._resolveCell(this.context, { mx, my })
-      if (cell) {
-        this.$toast(`${cell.id} is clicked`)
+    selectCell (cellID) {
+      this.unselectLastCell()
+      this.selectedIndex = cellID
+      this._switchCell(cellID, true)
+    },
+    unselectLastCell () {
+      if (this.selectedIndex) {
+        this._switchCell(this.selectedIndex, false)
+        this.selectedIndex = null
       }
-      console.warn(`@todo HexagonSurface: onSurfaceMouseClick ${mx}, ${my}`)
+    },
+    _switchCell (cellID, selected) {
+      let cell = this.cells.all[cellID]
+      cell.isSelected = selected
+      cell.render(this.context)
+    },
+    resolvePlanet ({ mx, my }) {
+      let cell = this._resolveCell(this.context, { mx, my })
+      if (cell === undefined) {
+        return undefined
+      }
+      return this.planetByCellID(cell.id)
     },
     _resolveCell (ctx, {mx, my}) {
       let calc = this._relPosCalculator(ctx)
@@ -107,22 +128,6 @@ export default {
       }
       this._moveLock = false
     },
-    // _getNeighbours (index) {
-    //   let neighbours = []
-    //   let addIfValid = i => {
-    //     if (i > 0 && i < this.mapSize.height * this.mapSize.width) {
-    //       neighbours.push(i)
-    //     }
-    //   }
-    //   addIfValid(index - this.mapSize.width)
-    //   addIfValid(index + this.mapSize.width)
-    //   addIfValid(index - 1)
-    //   addIfValid(index + 1)
-    //   let oddEvenFactor = index % this.mapSize.width % 2 === 0 ? -1 : +1
-    //   addIfValid(index + oddEvenFactor * this.mapSize.width - 1)
-    //   addIfValid(index + oddEvenFactor * this.mapSize.width + 1)
-    //   return neighbours
-    // },
     pause () {
       this.paused = true
     },

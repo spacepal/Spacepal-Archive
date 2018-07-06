@@ -1,17 +1,34 @@
 <template>
-  <canvas
-    :width="width"
-    :height="height"
-    @mousedown="mousedown"
-    @mousemove="mousemove"
-    @mouseup="mouseup"
-    @mousewheel="mousewheel"
-    :class="canvasClass"
-    ref="canvas"></canvas>
+  <div>
+    <canvas
+      :width="width"
+      :height="height"
+      @mousedown="mousedown"
+      @mousemove="mousemove"
+      @mouseup="mouseup"
+      @mousewheel="mousewheel"
+      :class="canvasClass"
+      ref="canvas"></canvas>
+    <Window type="confirm" ref="taskWindow" title="Create task"
+      @confirm="taskConfirm" @reject="taskReject" :enabled="task.isValid">
+      <Form ref="taskForm" class="withoutborder">
+        <TextInput type="number"
+          label="Ships count"
+          :min='1' :max='task.maxCount'
+          :value="task.maxCount"
+          v-model="task.count"
+          @change="checkTaskForm"></TextInput>
+      </Form>
+    </Window>
+  </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import HexagonSurface from '../common/HexagonSurface'
+import Window from './Window'
+import TextInput from './TextInput'
+import Form from './Form'
 
 export default {
   name: 'Map',
@@ -26,8 +43,17 @@ export default {
       default: 100
     }
   },
+  components: { Window, TextInput, Form },
   data () {
     return {
+      task: {
+        from: null,
+        to: null,
+        count: 0,
+        maxCount: 0,
+        isAutoTask: false,
+        isValid: false
+      },
       width: 2048,
       height: 1080,
       drag: false,
@@ -47,6 +73,11 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      isOwner: 'isMemberPlanetOwner',
+      availableShips: 'tasks/availableShips',
+      isLocked: 'isLocked'
+    }),
     mapSizeWidth () {
       return this.$store.getters['game/info'].mapWidth || 5
     },
@@ -100,7 +131,7 @@ export default {
     })
     this.$store.watch((_, getters) => getters.planets, () => this.tick())
     this.$store.watch((_, getters) => getters.members, () => this.tick())
-    this.$store.watch((_, getters) => getters.tasks, () => this.tick())
+    this.$store.watch((_, getters) => getters['tasks/all'], () => this.tick())
     window.addEventListener('mouseup', this._mouseUpListener)
   },
   beforeDestroy () {
@@ -108,6 +139,46 @@ export default {
     window.removeEventListener('resize', this._onResizeFunc)
   },
   methods: {
+    checkTaskForm () {
+      this.task.isValid = this.$refs.taskForm.isValid()
+    },
+    taskConfirm () {
+      if (this.task.isValid) {
+        this.$store.dispatch('tasks/add', this.task)
+        this.taskReject()
+      }
+    },
+    taskReject () {
+      this.task.from = null
+      this.task.to = null
+      this.task.maxCount = null
+      this.task.count = null
+    },
+    showShipsDialog () {
+      this.$refs.taskWindow.show()
+    },
+    planetClicked (planet) {
+      if (this.isLocked) {
+        return
+      }
+      if (this.task.from !== null) {
+        this.unselectLastCell()
+        if (this.task.from !== planet.id) {
+          this.task.to = planet.id
+          this.showShipsDialog()
+        } else {
+          this.taskReject()
+        }
+      } else if (!this.isOwner(planet.id)) {
+        this.$toast(`This is foreign planet`)
+      } else if (this.availableShips(planet.id) <= 0) {
+        this.$toast(`Lack of ships`)
+      } else {
+        this.selectCell(planet.cellID - 1)
+        this.task.from = planet.id
+        this.task.maxCount = this.availableShips(planet.id)
+      }
+    },
     mousewheel (event) {
       let { wheelDelta } = event
       let delta = wheelDelta / Math.abs(wheelDelta)
@@ -125,10 +196,10 @@ export default {
         this.drag = true
         event.preventDefault()
       } else if (event.which === 1) { // left mouse button
-        this.onSurfaceMouseClick({
-          mx: event.layerX,
-          my: event.layerY
-        })
+        let p = this.resolvePlanet({ mx: event.layerX, my: event.layerY })
+        if (p) {
+          this.planetClicked(p)
+        }
         event.preventDefault()
       }
     },

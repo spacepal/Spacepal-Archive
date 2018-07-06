@@ -1,14 +1,12 @@
 <template>
-  <div class="room-page">
-    <div class="map-field">
-      <Map></Map>
-    </div>
-    <div>
+  <div class="game-page">
+    <Map full></Map>
+    <!-- <div>
       <div class="button" @click="setLoggedIn">Set logged in</div>
       <ActionButtons></ActionButtons>
       <GameInfo />
       <Members />
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -39,6 +37,14 @@ export default {
     }
   },
   mounted () {
+    this.$store.dispatch('unlock')
+    this.$store.dispatch('setProfile', {
+      id: 1,
+      username: 'player1',
+      isCreator: true,
+      isEndTurn: false,
+      isGameOver: false
+    })
     setTimeout(() => {
       this.genGame()
       setTimeout(() => {
@@ -101,7 +107,7 @@ export default {
       let members = []
       for (let i = 1; i < 9; ++i) {
         members.push({
-          id: i * 2 + 1,
+          id: i,
           color: i,
           username: 'player' + i,
           isArtificialIntelligence: Faker.random.boolean(),

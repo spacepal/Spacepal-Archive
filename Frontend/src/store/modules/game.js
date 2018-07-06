@@ -42,6 +42,10 @@ const actions = {
     })
   },
   endTurn ({ dispatch, rootState, rootGetters }) {
+    if (rootGetters.isLocked) {
+      console.warn('game.endTurn is locked')
+      return
+    }
     let fleets = rootGetters['tasks/all']
     dispatch('lock', null, { root: true })
     rootState.cable.get(rootState.gameID).endTurn(fleets)

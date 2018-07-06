@@ -80,6 +80,7 @@ export default {
     },
     close () {
       this.isVisible = false
+      this.$emit('reject')
     },
     confirm () {
       if (this.type === TYPE_ALERT) {
