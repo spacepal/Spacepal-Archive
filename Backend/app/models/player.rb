@@ -1,5 +1,5 @@
 class PlayerValidator < ActiveModel::Validator
-
+  
   def validate record
     if record.is_ai
       if !record.ai_type
@@ -10,21 +10,22 @@ class PlayerValidator < ActiveModel::Validator
 
 end
 
-class Player < RedisOrm::Base
+class Player < Ohm::Model
+
+  include ActiveModel::Validations
 
   DEFAULT_COLOR = -1
   NEUTRAL_COLOR = 0
 
-  has_many :planets
-  has_many :fleets
-  belongs_to :game
+  collection :planets, :Planet
+  collection :fleets, :Fleet
+  reference :game, :Game
 
-  property :id, Integer
-  property :is_admin, RedisOrm::Boolean 
-  property :name, String
-  property :color_id, Integer
-  property :is_ai, RedisOrm::Boolean
-  property :ai_type, Integer
+  attribute :is_admin 
+  attribute :name
+  attribute :color_id, lambda { |x| x.to_i }
+  attribute :is_ai
+  attribute :ai_type
 
   validates_with PlayerValidator
   validates :name, presence: true, length: { in: 1..32 }
@@ -32,11 +33,38 @@ class Player < RedisOrm::Base
   validates :is_admin, inclusion: { in: [true, false] }
   validates :is_ai, inclusion: { in: [true, false] }
   validates :ai_type, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
-  validates_associated :planets
-  validates_associated :fleets
 
   def has_fleets_or_planets
-    self.planets.count > 0 or self.fleets.count > 0
+    self.planets.size > 0 or self.fleets.size > 0
+  end
+
+    def update hash
+    obj = Player.new hash
+    if obj.valid?
+      super hash
+      true
+    else
+      false
+    end
+  end
+
+  def self.create hash
+    obj = Player.new hash
+    if obj.valid?
+      super hash
+      true
+    else
+      false
+    end
+  end
+
+  def save
+    if self.valid?
+      super
+      true
+    else
+      false
+    end
   end
 
 end

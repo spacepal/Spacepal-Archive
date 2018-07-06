@@ -8,7 +8,7 @@ RSpec.describe Player, type: :model do
     player.name = "1"
     player.color_id = Player::DEFAULT_COLOR
     player.is_ai = false
-    expect(player).to be_valid
+    expect(player.valid?).to be true
   end
   it "valid func 'has_fleets_or_planets' having fleets" do
     player = Player.new
@@ -21,12 +21,12 @@ RSpec.describe Player, type: :model do
     fleet.kill_perc = 0.4
     fleet.status = Fleet::DEFAULT_STATUS
     fleet.ships = 10
+    fleet.player = player
     fleet.save
-    player.fleets << fleet
     player.save
     check = player.has_fleets_or_planets
-    player.fleets.first.destroy
-    player.destroy
+    fleet.delete
+    player.delete
     expect(check).to be true
   end
   it "validate ai_type when is_ai true" do

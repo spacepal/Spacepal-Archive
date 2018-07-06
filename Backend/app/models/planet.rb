@@ -1,17 +1,18 @@
-class Planet < RedisOrm::Base
+class Planet < Ohm::Model
+  
+  include ActiveModel::Validations
 
   DEFAULT_PRODUCTION = 10
 
-  belongs_to :game
-  has_one :player
-  has_one :cell
+  reference :game, :Game
+  reference :player, :Player
+  reference :cell, :Cell
 
-  property :id, Integer
-  property :buff, Integer
-  property :kill_perc, Float
-  property :production, Integer
-  property :ships, Integer
-  property :is_capital, RedisOrm::Boolean
+  attribute :buff
+  attribute :kill_perc , lambda { |x| x.to_f }
+  attribute :production, lambda { |x| x.to_i }
+  attribute :ships , lambda { |x| x.to_i }
+  attribute :is_capital
 
   validates :is_capital, inclusion: { in: [true, false] }
   validates :buff, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
@@ -72,6 +73,35 @@ class Planet < RedisOrm::Base
     props[:production] = self.production
     props[:ships] = self.ships
     props
+  end
+
+    def update hash
+    obj = Planet.new hash
+    if obj.valid?
+      super hash
+      true
+    else
+      false
+    end
+  end
+
+  def self.create hash
+    obj = Planet.new hash
+    if obj.valid?
+      super hash
+      true
+    else
+      false
+    end
+  end
+
+  def save
+    if self.valid?
+      super
+      true
+    else
+      false
+    end
   end
 
 end

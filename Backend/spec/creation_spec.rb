@@ -5,7 +5,7 @@ RSpec.describe Creation do
   it "creates player" do 
     player = Creation.create_player "Jack"
     flag = !!player
-    player.destroy
+    player.delete
     expect(flag).to be true
   end
   it "creates game" do 
@@ -33,7 +33,7 @@ RSpec.describe Creation do
     Deletion.delete_game game
     expect(flag).to be true
   end
-  it "create planet" do
+  it "create planets" do
     player = Creation.create_player "Jack"
     game = Creation.create_game(
       player , "game_create_planets", 

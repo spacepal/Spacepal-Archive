@@ -8,7 +8,7 @@ class Api::GameController < ApplicationController
     data = self.game_params
     player = Creation.create_player data[:username]
     if !player.errors.empty?
-      render :json => { errors: player.errors.messages }
+      render :json => { errors: player.errors.messages.values.flatten }
     end
     flags = {}
     flags[:has_pin_code] = data[:flags][:hasPinCode]
@@ -21,7 +21,7 @@ class Api::GameController < ApplicationController
       data[:pinCode], flags
     game.players.all.to_s.color(:green).out
     if !game.errors.empty?
-      render :json => { errors: game.errors.messages }
+      render :json => { errors: game.errors.messages.values.flatten }
     else
       render :json => { errors: nil, gameID: game.id }
     end
@@ -38,15 +38,19 @@ class Api::GameController < ApplicationController
       if game.pin_code
         if data[:pinCode] != game.pin_code
           render :json => { errors: "the pin code is wrong"}
+          return
         end
       end
       if game.add_player data[:username]
         render :json => { errors: nil }
+        return
       else
-        render :json => { errors: game.errors.messages }
+        render :json => { errors: game.errors.messages.values.flatten }
+        return
       end
     else
       render :json => { errors: "the game was started"}
+      return
     end
   end
 

@@ -1,3 +1,5 @@
+require 'rainbow'
+
 class Array
 
   def pluck *args

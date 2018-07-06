@@ -16,13 +16,11 @@ RSpec.describe Planet, type: :model do
     expect(valid).to be false
   end
   it "makes players planet" do 
-    planet_make = Planet.new
-    planet_make.make_players_planet
     planet = Planet.new
-    planet.production = 10
-    planet.kill_perc = 0.4
-    planet.ships = 10
-    planet.is_capital = true
-    expect(planet == planet_make).to be true
+    planet.make_players_planet
+    expect(planet.production).to eq 10
+    expect(planet.kill_perc).to eq 0.4
+    expect(planet.ships).to eq 10
+    expect(planet.is_capital).to be true
   end
 end

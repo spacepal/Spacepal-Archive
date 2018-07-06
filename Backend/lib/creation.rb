@@ -35,7 +35,6 @@ class Creation
     player.ai_type = ai_type
     player.save
     player
-
   end
 
   def self.create_cells game
@@ -49,8 +48,7 @@ class Creation
         cells << cell.clone
       end
     end
-    game.cells << cells
-    game.save
+    cells.each { |cell| cell.game = game; cell.save }
     game.cells.first.set_all_neighbors
     if game.cells.count != game.width * game.height
       return false
@@ -60,23 +58,30 @@ class Creation
   end
 
   def self.create_planets game
-    cells_ids = game.cells.all.ids
-    players_ids = game.players.all.ids
+    cells_ids = game.cells.ids.map { |id| id.to_i }
+    players_ids = game.players.ids.map { |id| id.to_i }
     cells_ids = cells_ids.shuffle.take game.planets_count
     cells_ids.each_with_index do |id, index|
+      ("planet: \n index - " + index.to_s).color(:orange).out
       if index < game.players_limit
         planet = Planet.new
         planet.make_players_planet
-        planet.cell = game.cells.find(id)
+        planet.cell = game.cells[id]
       else
         planet = Planet.new
         planet.set_properties        
+        planet.cell = game.cells[id]
       end
       planet.save
-      game.cells.find(id).planet = planet
-      game.planets << planet.clone
+      game.cells[id].planet = planet
+      planet.game = game
+      planet.save
     end
-    game.planets.all
+    game.cells.each { |cell| (cell.coord_x.to_s + ":" + cell.coord_y.to_s).color(:yellow).out }
+    ("planets: " + game.planets.count.to_s).color(:orange).out
+    ("players: " + game.players.count.to_s).color(:orange).out
+    game.planets.each { |planet| (planet.cell.coord_x.to_s + ":" + planet.cell.coord_y.to_s).color(:yellow).out }
+    game.planets.to_a
   end
 
   def self.create_fleet
