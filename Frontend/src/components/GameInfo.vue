@@ -6,7 +6,8 @@
           <template v-for="row in all">
             <span :key="row.key + '_key'" :title="row.title">{{row.key}}:</span>
             <span :key="row.key + '_val'" :title="row.title">
-              <span v-if="typeof row.val !== 'boolean'">
+              <span v-if="typeof row.val !== 'boolean'"
+                class="value" :title="row.val">
                 {{row.val}}
               </span>
               <span v-else>
@@ -40,6 +41,7 @@ export default {
         { field: 'mapWidth', adapted: 'Width' },
         { field: 'mapHeight', adapted: 'Height' },
         { field: 'planets', adapted: 'Planets' },
+        { field: 'playersLimit', adapted: 'players' },
         { field: 'buffs', adapted: 'Buffs' },
         { field: 'pirates', adapted: 'Pirates' },
         { field: 'accumulative', adapted: 'Accum', title: 'Accumulative' },
@@ -74,12 +76,14 @@ export default {
 
 <style lang="scss" scoped>
 .game-info {
-  widows: 400px;
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: 80px auto;
+  justify-content: center;
 
   span {
-    margin: 0 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 </style>

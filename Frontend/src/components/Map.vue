@@ -12,7 +12,6 @@
 
 <script>
 import HexagonSurface from '../common/HexagonSurface'
-import Faker from 'faker'
 
 export default {
   name: 'Map',
@@ -21,14 +20,6 @@ export default {
     full: {
       type: Boolean,
       default: false
-    },
-    mapSizeWidth: {
-      type: Number,
-      default: 24
-    },
-    mapSizeHeight: {
-      type: Number,
-      default: 12
     },
     hexSize: {
       type: Number,
@@ -56,6 +47,12 @@ export default {
     }
   },
   computed: {
+    mapSizeWidth () {
+      return this.$store.getters['game/info'].mapWidth || 5
+    },
+    mapSizeHeight () {
+      return this.$store.getters['game/info'].mapHeight || 5
+    },
     canvasClass () {
       let classes = []
       if (this.drag) {
@@ -95,57 +92,22 @@ export default {
     this._mouseUpListener = () => {
       this.drag = false
     }
+    this.$store.watch((_, getters) => getters['game/info'], () => {
+      if (this.mapSizeWidth !== this.mapSize.width ||
+        this.mapSizeHeight !== this.mapSize.height) {
+        this.init(context, this.hexSize, this.mapSizeWidth, this.mapSizeHeight)
+      }
+    })
     this.$store.watch((_, getters) => getters.planets, () => this.tick())
     this.$store.watch((_, getters) => getters.members, () => this.tick())
     this.$store.watch((_, getters) => getters.tasks, () => this.tick())
     window.addEventListener('mouseup', this._mouseUpListener)
-    setTimeout(() => {
-      this.genRandomPlanets()
-      setTimeout(() => {
-        this.genMembers()
-      }, 2000)
-    }, 4000)
   },
   beforeDestroy () {
     window.removeEventListener('mouseup', this._mouseUpListener)
     window.removeEventListener('resize', this._onResizeFunc)
   },
   methods: {
-    genRandomPlanets (count = 100) {
-      let planets = []
-      let ownerID = 1
-      for (let i = 0; i < count; ++i) {
-        planets.push({
-          id: i,
-          ownerID: (ownerID++) % 9,
-          cellID: Faker.random.number({
-            min: 0,
-            max: this.mapSizeWidth * this.mapSizeHeight - 1
-          }),
-          killPerc: Math.random(),
-          production: Faker.random.number({
-            min: 10,
-            max: 80
-          }),
-          ships: Faker.random.number({
-            min: 0,
-            max: 1000
-          })
-        })
-      }
-      this.$store.dispatch('setPlanets', planets)
-    },
-    genMembers () {
-      let members = []
-      for (let i = 1; i < 9; ++i) {
-        members.push({
-          id: i,
-          username: 'player' + i,
-          colorID: i
-        })
-      }
-      this.$store.dispatch('setMembers', members)
-    },
     mousewheel (event) {
       let { wheelDelta } = event
       let delta = wheelDelta / Math.abs(wheelDelta)

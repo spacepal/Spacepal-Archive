@@ -25,56 +25,75 @@ const state = {
     profile: false,
     tasks: false,
     autotasks: false // complete
-  }
+  },
+  endTurnLock: true
 }
 
 const mutations = {
   SYNC_RESET (state) {
     for (let s in state.sync) {
-      state[s] = false
+      state.sync[s] = false
     }
   },
   SYNC_SET (state, syncType) {
     state.sync[syncType] = true
   },
   ENABLE_CABLE (state) {
-    state.cable.set(state.gameID, new ActionCabel(state.gameID))
+    let cable = new ActionCabel(state.gameID)
+    state.cable.set(state.gameID, cable)
   },
   LOGIN (state, gameID) {
     state.gameID = gameID
   },
   LOGOUT (state) {
     state.gameID = null
+  },
+  END_TURN_LOCK ({state}) {
+    state.endTurnLock = true
+  },
+  END_TURN_UNLOCK (state) {
+    state.endTurnLock = false
   }
 }
 
 const actions = {
-  enableCable ({ commit }) {
-    commit('ENABLE_CABLE')
+  lock ({ commit }) {
+    commit('END_TURN_LOCK')
   },
-  resetSync ({commit}) {
+  unlock ({ commit }) {
+    commit('END_TURN_UNLOCK')
+  },
+  enableCable ({ state, commit, dispatch }) {
+    dispatch('reset')
+    commit('ENABLE_CABLE')
+    return state.cable.get(state.gameID).isOk
+  },
+  reset ({ commit, dispatch }) { // turn_ended from ActionCable
+    dispatch('lock') // it does not matter
+    dispatch('tasks/clear')
     commit('SYNC_RESET')
   },
-  syncSet ({ state, commit, dispatch }, syncType) {
+  syncSet ({ state, commit, dispatch, getters }, syncType) {
     if (!state.sync.tasks &&
-      state.sync.members && state.sync.planets) {
-      dispatch('tasks/unlock')
-      commit('SYNC_SET', 'tasks')
+      state.sync.profile &&
+      state.sync.members &&
+      state.sync.planets &&
+      !getters['profile'].isEndTurn &&
+      !getters['profile'].isGameOver) {
+      dispatch('unlock')
     }
     if (!state.sync.autotasks &&
+      !state.endTurnLock &&
       state.sync.tasks) {
       dispatch('tasks/doAutoTasks')
-      commit('SYNC_SET', 'autotasks')
     }
     commit('SYNC_SET', syncType)
   },
-  logout ({ commit }) {
-    return new Promise((resolve, reject) => {
-      console.warn('index.js: @todo logout() to server')
-      localStorage.removeItem(STORAGE_GAME_ID)
-      commit('LOGOUT')
-      resolve()
-    })
+  logout ({ commit, dispatch }) {
+    dispatch('reset')
+    localStorage.removeItem(STORAGE_GAME_ID)
+    commit('LOGOUT')
+    return dispatch('game/logout')
   },
   login ({ commit }, gameID) {
     localStorage.setItem(STORAGE_GAME_ID, gameID)
@@ -87,7 +106,8 @@ const getters = {
   isPlayer: (state) => {
     return !!state.gameID
   },
-  sync: (state) => state.sync
+  sync: (state) => state.sync,
+  isLocked: (state) => state.endTurnLock
 }
 
 export default new Vuex.Store({

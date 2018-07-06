@@ -1,8 +1,11 @@
 <template>
   <div class="active-buttons flex-horizontal">
-    <span class='button' v-if='isAdmin' @click="start">Start</span>
-    <span class='button' v-if='canEndTurn' @click="endTurn">endTurn</span>
-    <span class='button' @click="logout">
+    <template v-if="isAdmin && isRoom">
+      <span class="button" @click="start">Start</span>
+      <span class="button" @click="regenerateMap">Regen</span>
+    </template>
+    <span class="button" v-if='canEndTurn' @click="endTurn">endTurn</span>
+    <span class="button" @click="logout">
       <template v-if="isGame">
         Throw in the towel
       </template>
@@ -33,7 +36,7 @@ export default {
     },
     canEndTurn () {
       return this.isGame &&
-        !this.$state.getters['tasks/isLocked']
+        !this.$state.getters.isLocked
     }
   },
   methods: {
@@ -43,13 +46,15 @@ export default {
     endTurn () {
       console.warn('ActionButtons.vue: @todo endTurn()')
     },
+    regenerateMap () {
+      console.warn('ActionButtons.vue: @todo regenerateMap()')
+    },
     logout () {
-      this.$store.dispatch('logout').then(() => {
-        this.$router.push({
-          name: 'GamesList'
-        })
-      }).catch(err => {
+      this.$store.dispatch('logout').catch(err => {
         this.$toast(err.message)
+      })
+      this.$router.push({
+        name: 'GamesList'
       })
     }
   }

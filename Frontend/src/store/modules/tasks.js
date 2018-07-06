@@ -6,20 +6,18 @@ const state = {
   tasks: {},
   shipsDecreasing: {},
   autoTasks: {},
-  isLocked: false,
   lastTaskID: 0
 }
 
 const mutations = {
-  UNLOCK (state) {
-    state.isLocked = false
-  },
   CLEAR (state) {
-    state.fleets = {}
-    state.isLocked = true
+    state.tasks = {}
   },
-  ADD_TASK ({ tasks, shipsDecreasing, lastTaskID }, task) {
+  ADD_TASK ({ tasks, lastTaskID }, task) {
     Vue.set(tasks, lastTaskID, task)
+  },
+  ADD_AUTO_TASK ({ autoTasks, lastTaskID }, autoTask) {
+    Vue.set(autoTasks, lastTaskID, autoTask)
   },
   DECREASE_SHIPS ({ shipsDecreasing }, { planetID, count }) {
     let decreasing = shipsDecreasing[planetID] || 0
@@ -28,41 +26,59 @@ const mutations = {
   REMOVE_TASK (state, taskID) {
     Vue.delete(state.tasks, taskID)
   },
+  REMOVE_AUTO_TASK (state, taskID) {
+    Vue.delete(state.autoTasks, taskID)
+  },
   INCREASE_ID (state) {
     state.lastTaskID++
   }
 }
 
 const actions = {
-  unlock ({ commit }) {
-    commit('UNLOCK')
-  },
-  doAutoTasks ({ commit, state, dispatch }) {
-    if (state.isLocked) {
+  doAutoTasks ({ commit, state, rootGetters, dispatch }) {
+    if (rootGetters.isLocked) {
       console.warn('tasks.doAutoTasks: isLocked')
       return
     }
-    console.warn('tasks.doAutoTasks: @todo method')
+    for (let taskID in state.autoTasks) {
+      let task = state.autoTasks[taskID]
+      let planet = rootGetters.planet(task.from)
+      if (!planet || !rootGetters.isMemberPlanetOwner(from)) {
+        dispatch('del', taskID)
+        continue
+      }
+      task.isAutoTask = false
+      dispatch('add', task)
+    }
+    dispatch('syncSet', 'autotasks', { root: true })
   },
   del ({ state, commit }, taskID) {
-    if (!state.tasks[taskID]) {
+    if (state.autoTasks[taskID]) {
+      commit('REMOVE_AUTO_TASK', taskID)
+    }
+    else if (state.tasks[taskID]) {
+      commit('REMOVE_TASK', taskID)
+    } else {
       console.warn('tasks.del: invalid taskID')
-      return
     }
-    commit('REMOVE_TASK', taskID)
   },
-  add ({ getters, rootGetters, state, commit }, { from, to, count }) {
-    if (state.isLocked) {
-      console.warn('tasks.add: isLocked')
-      return
-    }
+  add ({ getters, rootGetters, commit }, { from, to, count, isAutoTask }) {
     let planet = rootGetters.planet(from)
     if (!planet) {
       console.warn('tasks.add: planet not found')
       return
     }
-    if (rootGetters.isMemberPlanetOwner(from)) {
+    if (!rootGetters.isMemberPlanetOwner(from)) {
       console.warn('tasks.add: the member is not owner of planet')
+      return
+    }
+    if (isAutoTask) {
+      commit('ADD_AUTO_TASK', { from, to, count })
+      commit('INCREASE_ID')
+      return
+    }
+    if (rootGetters.isLocked) {
+      console.warn('tasks.add: isLocked')
       return
     }
     if (getters.availableShips(from) < count) {
@@ -75,6 +91,7 @@ const actions = {
   },
   clear ({ commit }) {
     commit('CLEAR')
+    dispatch('syncSet', 'tasks', { root: true })
   }
 }
 
@@ -82,8 +99,8 @@ const getters = {
   all ({ tasks }) {
     return tasks
   },
-  isLocked ({ isLocked }) {
-    return isLocked
+  autoTasks ({ autoTasks }) {
+    return autoTasks
   },
   availableShips ({ shipsDecreasing }, _, __, { planet, isMemberPlanetOwner }) {
     return (planetID) => {

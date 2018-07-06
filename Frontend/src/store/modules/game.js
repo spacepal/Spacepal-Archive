@@ -43,9 +43,14 @@ const actions = {
   },
   endTurn ({ dispatch, rootState, rootGetters }) {
     let fleets = rootGetters['tasks/all']
-    dispatch('tasks/clear', null, { root: true })
-    dispatch('resetSync', null, { root: true })
+    dispatch('lock', null, { root: true })
     rootState.cable.get(rootState.gameID).endTurn(fleets)
+  },
+  logout ({ rootState }) {
+    if (rootState.gameID === null) {
+      return new Promise((resolve) => resolve())
+    }
+    return Service.game.logout(rootState.gameID)
   }
 }
 

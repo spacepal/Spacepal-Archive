@@ -54,7 +54,14 @@ export default {
   components: { Window },
   mounted () {
     if (this.$store.getters['isPlayer']) {
-      this.$store.dispatch('enableCable')
+      this.$store.dispatch('enableCable').catch(() => {
+        this.$store.dispatch('logout').catch(err => {
+          this.$toast.show(err.message)
+        })
+        this.$router.push({
+          name: 'GamesList'
+        })
+      })
     }
   }
 }

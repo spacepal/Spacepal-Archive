@@ -60,7 +60,7 @@ class Cell {
       let member = this._member(planet.ownerID)
       if (member) {
         text = member.username
-        memberColor = Colors[member.colorID]
+        memberColor = Colors[member.color]
       }
       ctx.fillStyle = memberColor.bg
     } else {

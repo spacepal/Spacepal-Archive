@@ -1,7 +1,9 @@
 const INTIAIL_PROFILE = {
+  id: null,
   username: null,
   isCreator: null,
-  memberId: null
+  isEndTurn: true,
+  isGameOver: null
 }
 
 const state = {

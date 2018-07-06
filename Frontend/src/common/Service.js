@@ -22,6 +22,9 @@ const service = {
           username
         }
       })
+    },
+    logout (gameID) {
+      return axios.delete(`${API_URL}games/${gameID}/player`)
     }
   }
 }

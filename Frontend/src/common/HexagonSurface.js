@@ -3,6 +3,7 @@ import Cell from './Cell.js'
 export default {
   data () {
     return {
+      degree: 2.0 / 3.0 * Math.PI,
       a: 0,
       dx: 0,
       dy: 0,
@@ -46,9 +47,10 @@ export default {
   },
   methods: {
     _genSurface (a) {
+      this.cells.all = []
       for (let y = 0, count = 1; y < this.mapSize.height; ++y) {
         for (let x = 0; x < this.mapSize.width; ++x) {
-          this.cells.all.push(new Cell({ x, y }, a, count++))
+          this.cells.all.push(new Cell({ x, y }, a, count++, this.degree))
         }
       }
     },
@@ -133,14 +135,16 @@ export default {
       this.mapSize.height = mapSizeHeight
       this.context = ctx
       this._genSurface(a)
-      let tick = () => {
-        if (!this.paused) {
-          this.redraw(this.context)
+      if (!this._tick) {
+        this._tick = () => {
+          if (!this.paused) {
+            this.redraw(this.context)
+          }
+          requestAnimationFrame(this._tick)
         }
-        requestAnimationFrame(tick)
+        requestAnimationFrame(this._tick)
       }
       this.goHome()
-      requestAnimationFrame(tick)
     },
     tick () {
       requestAnimationFrame(() => this.redraw(this.context))
@@ -157,8 +161,12 @@ export default {
       this._scaleOverCenter(ctx, 1.0 / this.scale)
       ctx.translate(-this.dx, -this.dy)
       this.scale = 1.0
-      this.dx = -ctx.canvas.width / 2.0
-      this.dy = -ctx.canvas.height / 2.0
+
+      let dyCell = this.a * Math.sin(Math.PI - this.degree) * 2
+      let dxCell = this.a * Math.cos(Math.PI - this.degree) + this.a
+
+      this.dx = ctx.canvas.width / 2.0 - dxCell * this.mapSize.width / 2.0
+      this.dy = ctx.canvas.height / 2.0 - dyCell * this.mapSize.height / 2.0
       ctx.translate(this.dx, this.dy)
       this.tick()
     },
