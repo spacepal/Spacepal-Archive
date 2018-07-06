@@ -1,17 +1,20 @@
 import Vue from 'vue'
 
 const state = {
-  planets: {}
+  planetsByCellID: {},
+  planetsByID: {}
 }
 
 const mutations = {
   SET_PLANETS (state, planets) {
     planets.forEach(p => {
-      Vue.set(state.planets, p.cellID, p)
+      Vue.set(state.planetsByCellID, p.cellID, p)
+      Vue.set(state.planetsByID, p.id, p)
     })
   },
   CLEAR_PLANETS (state) {
-    state.planets = {}
+    state.planetsByCellID = {}
+    state.planetsByID = {}
   }
 }
 
@@ -26,15 +29,20 @@ const actions = {
 const getters = {
   planet (state) {
     return (cellID) => {
-      return state.planets[cellID]
+      return state.planetsByCellID[cellID]
+    }
+  },
+  planetByID (state) {
+    return (planetID) => {
+      return state.planetsByID[planetID]
     }
   },
   planets (state) {
-    return state.planets
+    return state.planetsByID
   },
-  isMemberPlanetOwner (state) {
-    return (memberID) => {
-      return state.planets[memberID] === memberID
+  isMemberPlanetOwner (state, _, __, rootGetters) {
+    return (planetID) => {
+      return state.planetsByID[planetID].ownerID === rootGetters.profile.id
     }
   }
 }

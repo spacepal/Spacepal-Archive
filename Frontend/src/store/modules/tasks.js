@@ -101,9 +101,9 @@ const getters = {
   autoTasks ({ autoTasks }) {
     return autoTasks
   },
-  availableShips ({ shipsDecreasing }, _, __, { planet, isMemberPlanetOwner }) {
+  availableShips ({ shipsDecreasing }, _, __, { planetByID, isMemberPlanetOwner }) {
     return (planetID) => {
-      let p = planet(planetID)
+      let p = planetByID(planetID)
       if (!p || !isMemberPlanetOwner(planetID)) {
         return 0
       }
