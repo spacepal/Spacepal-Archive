@@ -35,7 +35,7 @@ const mutations = {
 }
 
 const actions = {
-  doAutoTasks ({ commit, state, rootGetters, dispatch }) {
+  doAutoTasks ({ state, rootGetters, dispatch }) {
     if (rootGetters.isLocked) {
       console.warn('tasks.doAutoTasks: isLocked')
       return
@@ -43,7 +43,7 @@ const actions = {
     for (let taskID in state.autoTasks) {
       let task = state.autoTasks[taskID]
       let planet = rootGetters.planet(task.from)
-      if (!planet || !rootGetters.isMemberPlanetOwner(from)) {
+      if (!planet || !rootGetters.isMemberPlanetOwner(task.from)) {
         dispatch('del', taskID)
         continue
       }
@@ -55,8 +55,7 @@ const actions = {
   del ({ state, commit }, taskID) {
     if (state.autoTasks[taskID]) {
       commit('REMOVE_AUTO_TASK', taskID)
-    }
-    else if (state.tasks[taskID]) {
+    } else if (state.tasks[taskID]) {
       commit('REMOVE_TASK', taskID)
     } else {
       console.warn('tasks.del: invalid taskID')
@@ -89,7 +88,7 @@ const actions = {
     commit('ADD_TASK', { from, to, count })
     commit('INCREASE_ID')
   },
-  clear ({ commit }) {
+  clear ({ commit, dispatch }) {
     commit('CLEAR')
     dispatch('syncSet', 'tasks', { root: true })
   }

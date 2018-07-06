@@ -74,7 +74,8 @@ const actions = {
     commit('SYNC_RESET')
   },
   syncSet ({ state, commit, dispatch, getters }, syncType) {
-    if (!state.sync.tasks &&
+    if (state.endTurnLock &&
+      state.sync.tasks &&
       state.sync.profile &&
       state.sync.members &&
       state.sync.planets &&
