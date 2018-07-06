@@ -19,7 +19,6 @@ class Api::GameController < ApplicationController
     game = Creation.create_game player, data[:gamename],
       data[:map], data[:playersLimit], data[:planetsCount],
       data[:pinCode], flags
-    game.players.all.to_s.color(:green).out
     if !game.errors.empty?
       render :json => { errors: game.errors.messages.values.flatten }
     else

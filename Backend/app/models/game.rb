@@ -58,10 +58,10 @@ class Game < Ohm::Model
   validates :height, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 64, greater_than_or_equal_to: 2}
   validates :planets_count, presence: true, numericality: { only_integer: true }
   validates :players_limit, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 8, greater_than_or_equal_to: 2  }
-  validates :accumulative, inclusion: { in: [true, false] }
-  validates :buffs, inclusion: { in: [true, false] }
-  validates :pirates, inclusion: { in: [true, false] }
-  validates :production_after_capture, inclusion: { in: [true, false] }
+  validates :accumulative, inclusion: { in: [true, false, "true", "false"] }
+  validates :buffs, inclusion: { in: [true, false, "true", "false"] }
+  validates :pirates, inclusion: { in: [true, false, "true", "false"] }
+  validates :production_after_capture, inclusion: { in: [true, false, "true", "false"] }
 
   def is_room?
     self.step == Game::IS_ROOM
@@ -110,10 +110,10 @@ class Game < Ohm::Model
   def self.get_all params #get hash of selected games
     params[:conditions] = { step: Game::IS_ROOM }
     params.to_s.color("blue").out
-    start_num = params[:offset]
-    end_num = params[:offset] + params[:limit]
-    arr = Game.all.sort_by(:id, limit: [start_num, end_num])
-    #arr.to_s.color(:yellow).out
+    start_num = params[:offset].to_i
+    end_num = params[:offset].to_i + params[:limit].to_i
+    arr = Game.find(step: Game::IS_ROOM).sort_by(:id, limit: [start_num, end_num])
+    arr.to_s.color(:yellow).out
     arr_hash = []
     el_hash = {}
     arr.each do |game|
