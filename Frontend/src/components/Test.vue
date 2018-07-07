@@ -9,7 +9,7 @@
     </div>
     <div class="info-panel-bg" v-if="panelsVisibility.tasks">
       <Form class="info-panel-body">
-        Tasks here
+        <Tasks @goToCell="goToCell"></Tasks>
       </Form>
     </div>
     <div class="info-panel-bg" v-if="panelsVisibility.notifications">
@@ -32,10 +32,19 @@ import GameInfo from './GameInfo'
 import Members from './Members'
 import ActionButtons from './ActionButtons'
 import Notifications from './Notifications'
+import Tasks from './Tasks'
 
 export default {
   name: 'Play',
-  components: { GameInfo, Map, Members, ActionButtons, Form, Notifications },
+  components: {
+    GameInfo,
+    Map,
+    Members,
+    ActionButtons,
+    Form,
+    Notifications,
+    Tasks
+  },
   data () {
     let rnd = Faker.random.number({
       min: 3,

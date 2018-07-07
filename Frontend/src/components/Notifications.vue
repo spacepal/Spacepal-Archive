@@ -1,21 +1,10 @@
 <template>
   <div class="has-spinner" :class="loadingClass">
-    <div v-if="events" class="notifications">
+    <div v-if="notifications.length > 0" class="notifications">
       <template v-for="n in notifications">
-        <a :key="n.id + '_1'" @click="goToCell(n.cellID)">
-          <span class="mdi mdi-earth" :style="n.style"></span>
-          <span>{{ n.cellID }}</span>
-        </a>
+        <Planet :key="n.id + '_1'" @goToCell="goToCell" :id="n.target"></Planet>
         <span :key="n.id + '_2'">{{ n.message }}</span>
-        <span :key="n.id + '_3'">
-          <span class="mdi mdi-desktop-classic"
-            :style="n.style" v-if="n.member.isArtificialIntelligence">
-            {{ n.member.username }}
-          </span>
-          <span class="mdi mdi-account" :style="n.style" v-else>
-            {{ n.member.username }}
-          </span>
-        </span>
+        <Member :key="n.id + '_3'" :id="n.member"></Member>
       </template>
     </div>
     <p v-else>No notifications</p>
@@ -24,7 +13,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Colors from '../common/Colors'
+import Member from './nano/Member'
+import Planet from './nano/Planet'
 
 const MESSAGES = {
   PLANET_LOST: 'The planet is lost',
@@ -41,11 +31,10 @@ export default {
       counter: 0
     }
   },
+  components: { Planet, Member },
   computed: {
     ...mapGetters({
       events: 'events/all',
-      planetByID: 'planetByID',
-      members: 'member',
       sync: 'sync'
     }),
     loadingClass () {
@@ -63,28 +52,11 @@ export default {
       this.$emit('goToCell', cellID)
     },
     notification (event) {
-      let cellID = 0
-      let p = this.planetByID(event.target)
-      if (p) cellID = p.cellID || cellID
-      let color = Colors['neutral'].bg
-      let username = 'unknown'
-      let isArtificialIntelligence = false
-      let m = this.members(event.member)
-      if (m) {
-        color = Colors[m.color].bg
-        username = m.username
-        isArtificialIntelligence = m.isArtificialIntelligence
-      }
-      let message = MESSAGES[event.type] || MESSAGES['UNKNOWN']
       return {
         id: this.counter++,
-        cellID,
-        style: { color },
-        message,
-        member: {
-          username,
-          isArtificialIntelligence
-        }
+        target: event.target,
+        message: MESSAGES[event.type] || MESSAGES['UNKNOWN'],
+        member: event.member
       }
     }
   }
