@@ -179,7 +179,6 @@ export default {
       let { width, height } = ctx.canvas
       let cx = width * 0.5
       let cy = height * 0.5
-      ctx.clearRect(-width, -height, width * 10, height * 10)
       ctx.translate(cx - this.dx, cy - this.dy)
       ctx.scale(scale, scale)
       ctx.translate(-cx + this.dx, -cy + this.dy)
@@ -196,8 +195,11 @@ export default {
       this.dy += dy
       this.scale *= scale
 
-      this._scaleOverCenter(ctx, scale)
-      ctx.translate(dx, dy)
+      ctx.setTransform(1, 0, 0, 1, 0, 0)
+      let { width, height } = ctx.canvas
+      ctx.clearRect(0, 0, width, height)
+      ctx.translate(this.dx, this.dy)
+      this._scaleOverCenter(ctx, this.scale)
 
       let realPosCalc = this._relPosCalculator()
       let rect = this.context.canvas.getBoundingClientRect()
