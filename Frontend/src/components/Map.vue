@@ -61,13 +61,13 @@ export default {
         {
           code: 'KeyH',
           method: this.goHome,
-          description: 'Go to center of the map'
+          description: 'Go to your planet'
         },
         {
           code: 'Home',
           isKey: true,
           method: this.goHome,
-          description: 'Go to center of the map'
+          description: 'Go to your planet'
         }
       ]
     }

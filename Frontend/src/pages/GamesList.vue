@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import GameTitle from '../components/GameTitle.vue'
+import GameTitle from '../components/nano/GameTitle.vue'
 import STable from '../components/STable.vue'
 import Paginator from '../components/Paginator.vue'
 import Window from '../components/Window.vue'

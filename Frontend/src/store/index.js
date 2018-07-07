@@ -13,6 +13,7 @@ import tasks from './modules/tasks'
 Vue.use(Vuex)
 
 const STORAGE_GAME_ID = 'game_id'
+const STORAGE_MENU_IS_SHOWED = 'menu_is_showed'
 
 const state = {
   cable: new Map(),
@@ -27,10 +28,14 @@ const state = {
     events: false,
     autotasks: false // complete
   },
-  endTurnLock: true
+  endTurnLock: true,
+  menuIsShowed: localStorage.getItem(STORAGE_MENU_IS_SHOWED) !== 'false'
 }
 
 const mutations = {
+  SET_MENU_IS_SHOWED (state, isShowed) {
+    state.menuIsShowed = isShowed
+  },
   SYNC_RESET (state) {
     for (let s in state.sync) {
       state.sync[s] = false
@@ -58,6 +63,11 @@ const mutations = {
 }
 
 const actions = {
+  toggleMenuVisibility ({ state, commit }) {
+    let isShowed = !state.menuIsShowed
+    localStorage.setItem(STORAGE_MENU_IS_SHOWED, isShowed)
+    commit('SET_MENU_IS_SHOWED', isShowed)
+  },
   lock ({ commit }) {
     commit('END_TURN_LOCK')
   },
@@ -112,7 +122,8 @@ const getters = {
     return !!state.gameID
   },
   sync: (state) => state.sync,
-  isLocked: (state) => state.endTurnLock
+  isLocked: (state) => state.endTurnLock,
+  menuIsVisible: (state) => state.menuIsShowed
 }
 
 export default new Vuex.Store({

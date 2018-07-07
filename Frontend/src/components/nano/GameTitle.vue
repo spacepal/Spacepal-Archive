@@ -9,5 +9,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../css/components/_game_title.scss';
+@import '../../css/components/_game_title.scss';
 </style>

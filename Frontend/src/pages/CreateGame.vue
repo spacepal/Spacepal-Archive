@@ -59,7 +59,7 @@
 
 <script>
 
-import GameTitle from '../components/GameTitle.vue'
+import GameTitle from '../components/nano/GameTitle.vue'
 import TextInput from '../components/TextInput.vue'
 import SwitchBox from '../components/SwitchBox.vue'
 import FullPreloader from '../components//FullPreloader.vue'

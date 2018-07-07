@@ -1,26 +1,29 @@
 <template>
   <div class="game-page">
     <Map ref="map" full></Map>
-    <div class="info-panel-bg" v-if="panelsVisibility.main">
+    <div class="info-panel-bg"
+      v-if="panelsVisibility.main"
+      @click="hideAllPanels">
       <Form class="info-panel-body">
         <Members class="withoutborder" />
         <GameInfo class="withoutborder" />
       </Form>
     </div>
-    <div class="info-panel-bg" v-if="panelsVisibility.tasks">
-      <Form class="info-panel-body">
+    <div class="info-panel-bg"
+      v-if="panelsVisibility.tasks"
+      @click.self="hideAllPanels">
+      <Form class="info-panel-body" @click="false">
         <Tasks @goToCell="goToCell"></Tasks>
       </Form>
     </div>
-    <div class="info-panel-bg" v-if="panelsVisibility.notifications">
+    <div class="info-panel-bg"
+      v-if="panelsVisibility.notifications"
+      @click="hideAllPanels">
       <Form class="info-panel-body">
         <Notifications @goToCell="goToCell" />
       </Form>
     </div>
-    <div class="menu">
-      <span class="mdi mdi-menu mdi-36px"></span>
-      <ActionButtons></ActionButtons>
-    </div>
+    <GameMenu @showPanel="showPanel" @goHome="goHome" />
   </div>
 </template>
 
@@ -33,11 +36,13 @@ import Members from './Members'
 import ActionButtons from './ActionButtons'
 import Notifications from './Notifications'
 import Tasks from './Tasks'
+import GameMenu from './GameMenu'
 
 export default {
   name: 'Play',
   components: {
     GameInfo,
+    GameMenu,
     Map,
     Members,
     ActionButtons,
@@ -126,6 +131,13 @@ export default {
     }, 1000)
   },
   methods: {
+    showPanel (panelName) {
+      this.hideAllPanels()
+      this.panelsVisibility[panelName] = true
+    },
+    goHome () {
+      this.$refs.map.goHome()
+    },
     goToCell (cellID) {
       this.$refs.map.goToCell(cellID)
     },
@@ -234,35 +246,5 @@ export default {
   justify-content: center;
   align-items: center;
   margin: $margin;
-}
-
-.menu::after {
-  content: ''
-}
-
-$iconSize: 36px;
-$padding: 4px;
-$menuBtn: $iconSize + $padding * 2;
-.menu {
-  display: flex;
-  align-items: center;
-  position: fixed;
-  top: 5px;
-  right: 0;
-  margin-right: $menuBtn;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  border-radius: 0 0 0 10px;
-  padding: $padding;
-  height: 44px;
-  transform: translateX(calc(100%));
-  transition: transform 0.1s ease-in,
-    height 0.1s ease-in;
-}
-.menu:hover {
-  transform: translateX($menuBtn);
-  height: 100px;
-  transition: transform 0.1s ease-out,
-    height 0.1s ease-out;
 }
 </style>
