@@ -17,7 +17,7 @@ class Event < Ohm::Model
   index :name
 
   def name
-    self.attributes[:name].to_i
+    self.attributes[:name]
   end
 
   def update hash

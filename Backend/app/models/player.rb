@@ -27,6 +27,8 @@ class Player < Ohm::Model
   attribute :is_ai
   attribute :ai_type
 
+  index :name
+
   validates_with PlayerValidator
   validates :name, presence: true, length: { in: 1..32 }
   validates :color_id, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: -1 }
