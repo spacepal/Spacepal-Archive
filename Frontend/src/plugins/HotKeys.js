@@ -19,11 +19,16 @@ const HotKeysPlugin = {
               return
             }
             if (e.code === key.code || (e.key === key.code && key.isKey)) {
-              key.method(e)
+              if (e.type === 'keyup') {
+                key.method(e)
+              } else if (typeof key.methodDown === 'function') {
+                key.methodDown(e)
+              }
             }
           })
         }
         window.addEventListener('keyup', this._hotKeysEvent)
+        window.addEventListener('keydown', this._hotKeysEvent)
       },
       beforeDestroy: function () {
         registeredHotkeys.delete(this.hotKeys)

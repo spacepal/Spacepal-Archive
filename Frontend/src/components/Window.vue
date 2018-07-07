@@ -58,13 +58,11 @@ export default {
             if (this.isVisible) {
               this.confirm()
             }
-          },
-          description: 'Confirm action'
+          }
         },
         {
           code: 'Escape',
-          method: this.close,
-          description: 'Close'
+          method: this.close
         }
       ]
     }

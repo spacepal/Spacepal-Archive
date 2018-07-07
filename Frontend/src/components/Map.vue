@@ -14,7 +14,7 @@
       <Form ref="taskForm" class="withoutborder">
         <TextInput type="number"
           label="Ships count"
-          :min='1' :max='task.maxCount'
+          :min="1" :max="task.maxCount"
           :value="task.maxCount"
           v-model="task.count"
           @change="checkTaskForm"></TextInput>

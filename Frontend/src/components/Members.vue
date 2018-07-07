@@ -8,20 +8,24 @@
           <span :key="i + '_ico2'" class="mdi mdi-radiobox-blank mdi-16px"></span>
         </template>
         <template v-for="m in members">
-          <span :key="m.username + 'ico1_1'" v-if='!m.isArtificialIntelligence'
-            class="mdi mdi-account-outline mdi-24px"
-            :style='memberStyle(m)'>
+          <span v-if="m.isGameOver" :key="m.username + 'ico3_0'"
+            class="mdi mdi-ghost mdi-24px" :style='memberIconStyle(m)'>
           </span>
-          <span :key="m.username + 'ico1_2'" v-else
-            class="mdi mdi-desktop-classic mdi-24px"
-            :style='memberStyle(m)'>
-          </span>
-          <span :key="m.username + 'val'" >
+          <template v-else>
+            <span :key="m.username + 'ico1_1'" v-if='!m.isArtificialIntelligence'
+              class="mdi mdi-account-outline mdi-24px"
+              :style='memberIconStyle(m)'>
+            </span>
+            <span :key="m.username + 'ico1_2'" v-else
+              class="mdi mdi-desktop-classic mdi-24px"
+              :style='memberIconStyle(m)'>
+            </span>
+          </template>
+          <span :key="m.username + 'val'">
             {{m.username}}
           </span>
 
-          <span v-if="m.isGameOver" :key="m.username + 'ico3_1'"
-            class="mdi mdi-crosshairs-gps mdi-16px">
+          <span v-if="m.isGameOver" :key="m.username + 'ico3_1'">
           </span>
           <template v-else>
             <span :key="m.username + 'ico2'" v-if='m.isEndTurn'
@@ -59,7 +63,7 @@ export default {
     }
   },
   methods: {
-    memberStyle (member) {
+    memberIconStyle (member) {
       return {
         color: Colors[member.color].bg
       }

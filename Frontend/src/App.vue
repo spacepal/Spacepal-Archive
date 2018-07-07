@@ -33,9 +33,7 @@ export default {
           description: 'Change theme'
         },
         {
-          code: 'Tab',
-          alt: true,
-          ctrl: true,
+          code: 'KeyK',
           method: () => {
             this.allHotKeys = this.$allHotKeys()
             this.$refs.hotKeysWin.show()

@@ -8,7 +8,7 @@
       padding: 20px 50px;
       margin: 10px;
     }
-    .form.withoutborder {
+    .form.withoutborder, .withoutborder .form {
       border: none;
       box-shadow: none;
       margin: 0;

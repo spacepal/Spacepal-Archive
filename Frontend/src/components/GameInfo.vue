@@ -41,7 +41,7 @@ export default {
         { field: 'mapWidth', adapted: 'Width' },
         { field: 'mapHeight', adapted: 'Height' },
         { field: 'planets', adapted: 'Planets' },
-        { field: 'playersLimit', adapted: 'players' },
+        { field: 'playersLimit', adapted: 'Players' },
         { field: 'buffs', adapted: 'Buffs' },
         { field: 'pirates', adapted: 'Pirates' },
         { field: 'accumulative', adapted: 'Accum', title: 'Accumulative' },

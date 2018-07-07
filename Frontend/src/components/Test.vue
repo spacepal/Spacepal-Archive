@@ -7,25 +7,45 @@
       <GameInfo />
       <Members />
     </div> -->
+    <div class="info-panel-bg" v-if="staticInfoIsVisible">
+      <Form class="info-panel-body">
+        <Members class="withoutborder" />
+        <GameInfo class="withoutborder" />
+      </Form>
+    </div>
   </div>
 </template>
 
 <script>
 import Faker from 'faker'
 import Map from './Map'
+import Form from './Form'
 import GameInfo from './GameInfo'
 import Members from './Members'
 import ActionButtons from './ActionButtons'
 
 export default {
-  name: 'HelloWorld',
-  components: { GameInfo, Map, Members, ActionButtons },
+  name: 'Play',
+  components: { GameInfo, Map, Members, ActionButtons, Form },
   data () {
     let rnd = Faker.random.number({
       min: 3,
       max: 32
     })
     return {
+      hotKeys: [
+        {
+          code: 'KeyQ',
+          method: () => {
+            this.staticInfoIsVisible = false
+          },
+          methodDown: () => {
+            this.staticInfoIsVisible = true
+          },
+          description: 'Show game info'
+        }
+      ],
+      staticInfoIsVisible: false,
       mapSizeWidth: Faker.random.number({
         min: rnd,
         max: 32
