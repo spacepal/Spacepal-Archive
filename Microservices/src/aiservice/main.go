@@ -1,7 +1,18 @@
 package main
 
-import "fmt"
+import (
+	"aiservice/constants"
+	"aiservice/handler"
+	"flag"
+	"net/http"
+
+	log "github.com/sirupsen/logrus"
+)
 
 func main() {
-    fmt.Println("hello world!")
+	var addr = flag.String("addr", constants.Address, "address to serve")
+	flag.Parse()
+	var handler = new(handler.MainHandler)
+	http.Handle("/do", handler)
+	log.Fatal(http.ListenAndServe(*addr, nil))
 }
