@@ -9,7 +9,7 @@
         <span :key="n.id + '_2'">{{ n.message }}</span>
         <span :key="n.id + '_3'">
           <span class="mdi mdi-desktop-classic"
-            :style="n.style" v-if="n.isArtificialIntelligence">
+            :style="n.style" v-if="n.member.isArtificialIntelligence">
             {{ n.member.username }}
           </span>
           <span class="mdi mdi-account" :style="n.style" v-else>
@@ -86,9 +86,6 @@ export default {
           isArtificialIntelligence
         }
       }
-    },
-    planetCellID (event) {
-      return this.planetByID(event.target).cellID
     }
   }
 }

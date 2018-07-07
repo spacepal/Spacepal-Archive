@@ -96,7 +96,7 @@ export default {
     }
   },
   mounted () {
-    this.$store.state.gameID = 1
+    this.$store.dispatch('login', 1)
     this.$store.dispatch('setProfile', {
       id: 1,
       username: 'player1',
@@ -140,7 +140,7 @@ export default {
     },
     genEvents () {
       let events = []
-      for (let i = 1; i < 100; ++i) {
+      for (let i = 1; i < 8; ++i) {
         events.push({
           type: 'PLANET_LOST',
           target: i,
