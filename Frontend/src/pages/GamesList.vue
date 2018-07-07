@@ -118,7 +118,7 @@ export default {
         isValid: false
       },
       hotKeys: [
-        { code: 'KeyN', method: this.goToCreate, description: 'New game' },
+        { code: 'KeyN', method: this.goToCreate, description: 'Create game' },
         { code: 'KeyC', method: this.goToCreate, description: 'Create game' }
       ]
     }
