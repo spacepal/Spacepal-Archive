@@ -75,10 +75,12 @@ const actions = {
   },
   syncSet ({ state, commit, dispatch, getters }, syncType) {
     if (state.endTurnLock &&
+      state.sync.game &&
       state.sync.tasks &&
       state.sync.profile &&
       state.sync.members &&
       state.sync.planets &&
+      getters['game/isGame'] &&
       !getters['profile'].isEndTurn &&
       !getters['profile'].isGameOver) {
       dispatch('unlock')

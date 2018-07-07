@@ -1,17 +1,25 @@
 <template>
   <div class="game-page">
     <Map full></Map>
-    <!-- <div>
-      <div class="button" @click="setLoggedIn">Set logged in</div>
-      <ActionButtons></ActionButtons>
-      <GameInfo />
-      <Members />
-    </div> -->
-    <div class="info-panel-bg" v-if="staticInfoIsVisible">
+    <div class="info-panel-bg" v-if="panelsVisibility.main">
       <Form class="info-panel-body">
         <Members class="withoutborder" />
         <GameInfo class="withoutborder" />
       </Form>
+    </div>
+    <div class="info-panel-bg" v-if="panelsVisibility.tasks">
+      <Form class="info-panel-body">
+        Tasks here
+      </Form>
+    </div>
+    <div class="info-panel-bg" v-if="panelsVisibility.history">
+      <Form class="info-panel-body">
+        History here
+      </Form>
+    </div>
+    <div class="menu">
+      <span class="mdi mdi-menu mdi-36px"></span>
+      <ActionButtons></ActionButtons>
     </div>
   </div>
 </template>
@@ -37,15 +45,45 @@ export default {
         {
           code: 'KeyQ',
           method: () => {
-            this.staticInfoIsVisible = false
+            this.panelsVisibility.main = false
           },
           methodDown: () => {
-            this.staticInfoIsVisible = true
+            this.hideAllPanels('info')
+            this.panelsVisibility.main = true
           },
           description: 'Show game info'
+        },
+        {
+          code: 'KeyT',
+          method: () => {
+            this.hideAllPanels('tasks')
+            this.panelsVisibility.tasks ^= true
+          },
+          description: 'Show tasks'
+        },
+        {
+          code: 'KeyH',
+          method: () => {
+            this.hideAllPanels('history')
+            this.panelsVisibility.history ^= true
+          },
+          description: 'Show history'
+        },
+        {
+          code: 'Space',
+          method: this.endTurn,
+          description: 'End turn'
+        },
+        {
+          code: 'Escape',
+          method: this.hideAllPanels
         }
       ],
-      staticInfoIsVisible: false,
+      panelsVisibility: {
+        main: false,
+        tasks: false,
+        history: false
+      },
       mapSizeWidth: Faker.random.number({
         min: rnd,
         max: 32
@@ -57,7 +95,7 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('unlock')
+    this.$store.state.gameID = 1
     this.$store.dispatch('setProfile', {
       id: 1,
       username: 'player1',
@@ -71,11 +109,27 @@ export default {
         this.genRandomPlanets()
         setTimeout(() => {
           this.genMembers()
+          this.$store.dispatch('unlock')
         }, 1000)
       }, 1000)
     }, 1000)
   },
   methods: {
+    endTurn () {
+      if (this.$store.getters.isLocked) {
+        this.$toast('You cannot end turn now')
+      } else {
+        this.$store.dispatch('game/endTurn')
+      }
+    },
+    hideAllPanels (except = '') {
+      for (let k in this.panelsVisibility) {
+        if (k === except) {
+          continue
+        }
+        this.panelsVisibility[k] = false
+      }
+    },
     setLoggedIn () {
       this.$store.dispatch('login', Faker.random.number(1000))
     },
@@ -96,7 +150,7 @@ export default {
         accumulative: Faker.random.boolean(),
         productionAfterCapture: Faker.random.boolean(),
         turnNumber: 0,
-        state: 1
+        state: 2
       })
     },
     genRandomPlanets (count = 100) {
@@ -155,5 +209,31 @@ export default {
   justify-content: center;
   align-items: center;
   margin: $margin;
+}
+
+.menu::after {
+  content: ''
+}
+
+$iconSize: 36px;
+$padding: 4px;
+$menuBtn: $iconSize + $padding * 2;
+.menu {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin-right: $menuBtn;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border-radius: 0 0 0 10px;
+  padding: $padding;
+  transform: translateX(calc(100%));
+  transition: transform 0.1s ease-in;
+}
+.menu:hover {
+  transform: translateX($menuBtn);
+  transition: transform 0.1s ease-out;
 }
 </style>

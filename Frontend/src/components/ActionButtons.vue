@@ -4,7 +4,7 @@
       <span class="button" @click="start">Start</span>
       <span class="button" @click="regenerateMap">Regen</span>
     </template>
-    <span class="button" v-if='canEndTurn' @click="endTurn">endTurn</span>
+    <span class="button" v-if='!isLocked' @click="endTurn">End turn</span>
     <span class="button" @click="logout">
       <template v-if="isGame">
         Throw in the towel
@@ -29,14 +29,11 @@ export default {
       profile: 'profile',
       isLoggedIn: 'isPlayer',
       isRoom: 'game/isRoom',
-      isGame: 'game/isGame'
+      isGame: 'game/isGame',
+      isLocked: 'isLocked'
     }),
     isAdmin () {
       return this.profile.isCreator
-    },
-    canEndTurn () {
-      return this.isGame &&
-        !this.$state.getters.isLocked
     }
   },
   methods: {
@@ -44,7 +41,7 @@ export default {
       console.warn('ActionButtons.vue: @todo start()')
     },
     endTurn () {
-      console.warn('ActionButtons.vue: @todo endTurn()')
+      this.$store.dispatch('game/endTurn')
     },
     regenerateMap () {
       console.warn('ActionButtons.vue: @todo regenerateMap()')
