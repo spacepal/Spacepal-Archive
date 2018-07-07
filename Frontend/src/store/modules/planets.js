@@ -27,6 +27,22 @@ const actions = {
 }
 
 const getters = {
+  // returns the best planet for current player
+  theBestPlanet ({ planetsByID }, _, __, rootGetters) {
+    let id = rootGetters.profile.id
+    if (!id) {
+      return undefined
+    }
+    let memberPlanets = []
+    for (let planetID in planetsByID) {
+      let p = planetsByID[planetID]
+      if (p.ownerID === id) {
+        memberPlanets.push(p)
+      }
+    }
+    let calcPower = (p) => p.killPerc * p.production
+    return memberPlanets.sort((b, a) => calcPower(a) - calcPower(b))[0]
+  },
   planet (state) {
     return (cellID) => {
       return state.planetsByCellID[cellID]

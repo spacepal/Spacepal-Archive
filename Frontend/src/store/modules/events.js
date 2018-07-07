@@ -3,30 +3,30 @@
 import Vue from 'vue'
 
 const state = {
-  events: {}
+  events: []
 }
 
 const mutations = {
   SET_EVENTS (state, events) {
-    events.forEach(e => {
-      Vue.set(state.events, e.id, e)
-    })
+    Vue.set(state, 'events', events)
   },
   CLEAR_EVENTS (state) {
-    state.events = {}
+    Vue.set(state, 'events', [])
   }
 }
 
 const actions = {
-  setEvents ({ commit, dispatch }, events) {
-    commit('CLEAR_EVENTS')
+  set ({ commit, dispatch }, events) {
     commit('SET_EVENTS', events)
     dispatch('syncSet', 'events', { root: true })
+  },
+  clear ({ commit }) {
+    commit('CLEAR_EVENTS')
   }
 }
 
 const getters = {
-  events (state) {
+  all (state) {
     return state.events
   }
 }

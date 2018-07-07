@@ -1,5 +1,6 @@
 <template>
   <div id="app" :class="theme">
+    <div class="bg"></div>
     <div class="loop_header"></div>
     <router-view/>
     <Window ref="hotKeysWin" type="alert" title="Hotkeys">

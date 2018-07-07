@@ -8,12 +8,35 @@ class Cell {
     this._isHovered = false
     this._isSelected = false
     this._dy = a * Math.sin(Math.PI - degree)
-    let dx = a * Math.cos(Math.PI - degree)
+    this._dx = a * Math.cos(Math.PI - degree)
     let posY = y * this._dy * 2 + (x % 2 === 1 ? this._dy : 0)
-    this._points = Cell._genHexagon({ x: x * dx * 3, y: posY }, a, degree)
+    this._points = Cell._genHexagon({ x: x * this._dx * 3, y: posY },
+      { dx: this._dx, dy: this._dy },
+      a, degree)
     this._planet = store.getters['planet']
     this._member = store.getters['member']
     this._shipsDec = store.getters['tasks/shipsDecreasing']
+  }
+
+  get height () {
+    return this._dy * 2
+  }
+
+  // out of neighbour
+  get relativeWidth () {
+    return this._dx + this._a
+  }
+
+  get width () {
+    return this._dx * 2 + this._a
+  }
+
+  // hex in the square
+  get startPoint () {
+    return {
+      x: this.firstPoint.x - this._dx,
+      y: this.firstPoint.y
+    }
   }
 
   get id () {
@@ -163,9 +186,7 @@ class Cell {
     ctx.lineTo(x, y)
   }
 
-  static _genHexagon ({ x, y }, a, degree) {
-    let dx = a * Math.cos(Math.PI - degree)
-    let dy = a * Math.sin(Math.PI - degree)
+  static _genHexagon ({ x, y }, { dx, dy }, a, degree) {
     x += dx
     return [
       { x, y },

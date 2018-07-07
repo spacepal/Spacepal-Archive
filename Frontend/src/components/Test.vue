@@ -1,6 +1,6 @@
 <template>
   <div class="game-page">
-    <Map full></Map>
+    <Map ref="map" full></Map>
     <div class="info-panel-bg" v-if="panelsVisibility.main">
       <Form class="info-panel-body">
         <Members class="withoutborder" />
@@ -12,9 +12,9 @@
         Tasks here
       </Form>
     </div>
-    <div class="info-panel-bg" v-if="panelsVisibility.history">
+    <div class="info-panel-bg" v-if="panelsVisibility.notifications">
       <Form class="info-panel-body">
-        History here
+        <Notifications @goToCell="goToCell" />
       </Form>
     </div>
     <div class="menu">
@@ -31,10 +31,11 @@ import Form from './Form'
 import GameInfo from './GameInfo'
 import Members from './Members'
 import ActionButtons from './ActionButtons'
+import Notifications from './Notifications'
 
 export default {
   name: 'Play',
-  components: { GameInfo, Map, Members, ActionButtons, Form },
+  components: { GameInfo, Map, Members, ActionButtons, Form, Notifications },
   data () {
     let rnd = Faker.random.number({
       min: 3,
@@ -62,12 +63,12 @@ export default {
           description: 'Show tasks'
         },
         {
-          code: 'KeyH',
+          code: 'KeyN',
           method: () => {
-            this.hideAllPanels('history')
-            this.panelsVisibility.history ^= true
+            this.hideAllPanels('notifications')
+            this.panelsVisibility.notifications ^= true
           },
-          description: 'Show history'
+          description: 'Show notifications'
         },
         {
           code: 'Space',
@@ -82,7 +83,7 @@ export default {
       panelsVisibility: {
         main: false,
         tasks: false,
-        history: false
+        notifications: false
       },
       mapSizeWidth: Faker.random.number({
         min: rnd,
@@ -109,12 +110,16 @@ export default {
         this.genRandomPlanets()
         setTimeout(() => {
           this.genMembers()
+          this.genEvents()
           this.$store.dispatch('unlock')
         }, 1000)
       }, 1000)
     }, 1000)
   },
   methods: {
+    goToCell (cellID) {
+      this.$refs.map.goToCell(cellID)
+    },
     endTurn () {
       if (this.$store.getters.isLocked) {
         this.$toast('You cannot end turn now')
@@ -132,6 +137,17 @@ export default {
     },
     setLoggedIn () {
       this.$store.dispatch('login', Faker.random.number(1000))
+    },
+    genEvents () {
+      let events = []
+      for (let i = 1; i < 100; ++i) {
+        events.push({
+          type: 'PLANET_LOST',
+          target: i,
+          member: i
+        })
+      }
+      this.$store.dispatch('events/set', events)
     },
     genGame () {
       this.$store.dispatch('game/setInfo', {
@@ -222,18 +238,22 @@ $menuBtn: $iconSize + $padding * 2;
   display: flex;
   align-items: center;
   position: fixed;
-  top: 0;
+  top: 5px;
   right: 0;
   margin-right: $menuBtn;
   background: rgba(0, 0, 0, 0.7);
   color: white;
   border-radius: 0 0 0 10px;
   padding: $padding;
+  height: 44px;
   transform: translateX(calc(100%));
-  transition: transform 0.1s ease-in;
+  transition: transform 0.1s ease-in,
+    height 0.1s ease-in;
 }
 .menu:hover {
   transform: translateX($menuBtn);
-  transition: transform 0.1s ease-out;
+  height: 100px;
+  transition: transform 0.1s ease-out,
+    height 0.1s ease-out;
 }
 </style>

@@ -24,6 +24,7 @@ const state = {
     planets: false,
     profile: false,
     tasks: false,
+    events: false,
     autotasks: false // complete
   },
   endTurnLock: true
@@ -71,6 +72,7 @@ const actions = {
   reset ({ commit, dispatch }) { // turn_ended from ActionCable
     dispatch('lock') // it does not matter
     dispatch('tasks/clear')
+    dispatch('events/clear')
     commit('SYNC_RESET')
   },
   syncSet ({ state, commit, dispatch, getters }, syncType) {

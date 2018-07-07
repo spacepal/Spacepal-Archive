@@ -32,7 +32,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      planetByCellID: 'planet'
+      planetByCellID: 'planet',
+      theBestPlanet: 'theBestPlanet'
     }),
     renderedCount () {
       return this.cells.active.length
@@ -162,17 +163,29 @@ export default {
       this.pending.scale *= scale
     },
     goHome () {
-      let ctx = this.context
-      this._scaleOverCenter(ctx, 1.0 / this.scale)
-      ctx.translate(-this.dx, -this.dy)
+      let p = this.theBestPlanet
+      if (p) {
+        return this.goToCell(p.cellID)
+      }
+      let firstCell = this.cells.all[0]
+      if (!firstCell) {
+        return this.clearOffset()
+      }
+      let { width, height } = this.context.canvas
+      this.dx = width / 2.0 - firstCell.relativeWidth * this.mapSize.width / 2.0
+      this.dy = height / 2.0 - firstCell.height * this.mapSize.height / 2.0
       this.scale = 1.0
-
-      let dyCell = this.a * Math.sin(Math.PI - this.degree) * 2
-      let dxCell = this.a * Math.cos(Math.PI - this.degree) + this.a
-
-      this.dx = ctx.canvas.width / 2.0 - dxCell * this.mapSize.width / 2.0
-      this.dy = ctx.canvas.height / 2.0 - dyCell * this.mapSize.height / 2.0
-      ctx.translate(this.dx, this.dy)
+      this.tick()
+    },
+    goToCell (cellID) {
+      let cell = this.cells.all[cellID - 1]
+      if (!cell) {
+        return
+      }
+      this.scale = 2.0
+      let { width, height } = this.context.canvas
+      this.dx = -cell.startPoint.x + (width - cell.width) * 0.5
+      this.dy = -cell.startPoint.y + (height - cell.height) * 0.5
       this.tick()
     },
     _scaleOverCenter (ctx, scale) {
@@ -186,6 +199,7 @@ export default {
     clearOffset () {
       this.dx = 0
       this.dy = 0
+      this.scale = 1.0
     },
     redraw (ctx) {
       let { scale, dx, dy } = this.pending
