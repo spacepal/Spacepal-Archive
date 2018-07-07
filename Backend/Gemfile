@@ -12,7 +12,8 @@ gem 'puma', '~> 3.11'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 gem 'redis', '~> 4.0'
-gem 'redis_orm', :github => 'german/redis_orm'
+gem 'redis_orm', :github => 'M-Nick/redis_orm'
+gem 'ohm'
 gem 'faker'
 gem 'rainbow'
 # Use ActiveModel has_secure_password

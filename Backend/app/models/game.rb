@@ -25,24 +25,31 @@ class GameValidator < ActiveModel::Validator
 
 end
 
-class Game < RedisOrm::Base
+class Game < Ohm::Model
 
-  has_many :fleets
-  has_many :planets
-  has_many :players
-  has_many :cells
+  include ActiveModel::Validations
 
-  property :id, Integer
-  property :name, String 
-  property :pin_code, String
-  property :width, Integer 
-  property :height, Integer 
-  property :planets_count, Integer
-  property :players_limit, Integer
-  property :accumulative, RedisOrm::Boolean 
-  property :buffs, RedisOrm::Boolean 
-  property :pirates, RedisOrm::Boolean 
-  property :production_after_capture, RedisOrm::Boolean 
+  IS_ROOM = 0
+  IS_OVER = -1
+
+  collection :fleets, :Fleet
+  collection :planets, :Planet
+  collection :players, :Player
+  collection :cells, :Cell
+
+  attribute :name 
+  attribute :pin_code
+  attribute :width, lambda { |x| x.to_i }
+  attribute :height , lambda { |x| x.to_i }
+  attribute :planets_count, lambda { |x| x.to_i }
+  attribute :players_limit, lambda { |x| x.to_i }
+  attribute :step, lambda { |x| x.to_i }
+  attribute :accumulative 
+  attribute :buffs 
+  attribute :pirates 
+  attribute :production_after_capture 
+
+  index :step
 
   validates_with GameValidator
   validates :name, presence: true, length: { :in => 1..32 }
@@ -51,22 +58,67 @@ class Game < RedisOrm::Base
   validates :height, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 64, greater_than_or_equal_to: 2}
   validates :planets_count, presence: true, numericality: { only_integer: true }
   validates :players_limit, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 8, greater_than_or_equal_to: 2  }
-  validates :accumulative, inclusion: { in: [true, false] }
-  validates :buffs, inclusion: { in: [true, false] }
-  validates :pirates, inclusion: { in: [true, false] }
-  validates :production_after_capture, inclusion: { in: [true, false] }
-  validates_associated :fleets
-  validates_associated :planets
-  validates_associated :players
+  validates :accumulative, inclusion: { in: [true, false, "true", "false"] }
+  validates :buffs, inclusion: { in: [true, false, "true", "false"] }
+  validates :pirates, inclusion: { in: [true, false, "true", "false"] }
+  validates :production_after_capture, inclusion: { in: [true, false, "true", "false"] }
 
+  def is_room?
+    self.step == Game::IS_ROOM
+  end
 
-  def self.get_all offset_limit #get hash of selected games
-    arr = Game.all offset_limit
+  def is_playing?
+    self.step != Game::IS_ROOM and self.step != Game::IS_OVER 
+  end
+
+  def width 
+    self.attributes[:width].to_i
+  end
+  def height 
+    self.attributes[:height].to_i
+  end
+  def planets_count 
+    self.attributes[:planets_count].to_i
+  end
+  def players_limit 
+    self.attributes[:players_limit].to_i
+  end
+  def step 
+    self.attributes[:step].to_i
+  end
+
+  def get_map
+
+  end
+
+  def shuffle_map
+    self.planets.each { |planet| planet.cell_id = nil }
+    self.cells.each { |cell| cell.planet_id = nil }
+    cells_ids = self.cells.ids
+    cells_ids = cells_ids.shuffle.take game.planets_count
+    cells_ids.each_with_index do  |cell_id, index|
+      self.cells[cell_id].planet = self.planets[index]
+      self.cells[cell_id].save
+    end
+    self.get_map
+  end
+
+  def is_over?
+    self.step == Game::IS_OVER
+  end
+
+  def self.get_all params #get hash of selected games
+    params[:conditions] = { step: Game::IS_ROOM }
+    params.to_s.color("blue").out
+    start_num = params[:offset].to_i
+    end_num = params[:offset].to_i + params[:limit].to_i
+    arr = Game.find(step: Game::IS_ROOM).sort_by(:id, limit: [start_num, end_num])
+    arr.to_s.color(:yellow).out
     arr_hash = []
     el_hash = {}
     arr.each do |game|
       el_hash[:id] = game.id
-      el_hash[:creator] = game.get_creator_name
+      el_hash[:creator] = game.get_creator.name
       el_hash[:name] = game.name
       el_hash[:has_pin_code] = game.pin_code != ""
       el_hash[:width] = game.width
@@ -83,21 +135,65 @@ class Game < RedisOrm::Base
     arr_hash
   end
 
-  def enter_player player
-    if self.players.count < self.players_limit
-      pl = Players.create player
-      if pl.id
-        self.players << pl
+  def add_player player_name
+    if self.players.size < self.players_limit
+      if self.playername_is_uniq player_name
+        pl = Creation.create_player player_name
+        if pl.id
+          self.players << pl
+          true
+        end
+      else
+        self.errors.add :player_name, "the name is already used"
+        false
       end
     else
-      errors.add :players_limit, "no place for new player"
+      self.errors.add :players_limit, "no place for new player"
+      false
     end
   end
 
-  def get_creator_name
-    "Smile for you"
+  def playername_is_uniq player_name
+    !self.players.all.pluck_arr(:name).include? player_name
   end
 
+  def get_creator
+    self.players.each do |player| 
+      if player.is_admin
+        return player
+      end
+    end
+    nil
+  end
   
-  
+    def update hash
+    obj = Game.new hash
+    if obj.valid?
+      super hash
+      true
+    else
+      false
+    end
+  end
+
+  def self.create hash
+    obj = Game.new hash
+    if obj.valid?
+      super hash
+      true
+    else
+      false
+    end
+  end
+
+  def save
+    if self.valid?
+      super
+      true
+    else
+      false
+    end
+  end
+
+
 end

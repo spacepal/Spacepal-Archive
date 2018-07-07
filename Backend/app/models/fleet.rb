@@ -1,21 +1,57 @@
-class Fleet < RedisOrm::Base
+class Fleet < Ohm::Model
+  
+  include ActiveModel::Validations
 
   DEFAULT_STATUS = "deffensive"
 
-  belongs_to :game
-  belongs_to :player
-  belongs_to :cell, :as => :current_cell
-  belongs_to :cell, :as => :target_cell
+  reference :game, :Game
+  reference :player, :Player
 
-  property :id, Integer
-  property :kill_perc, Float
-  property :status, String
-  property :ships, Integer
-  property :way, String
+  attribute :kill_perc, lambda { |x| x.to_f }
+  attribute :status
+  attribute :ships, lambda { |x| x.to_i }
+  set :way, :Cell
 
   validates :kill_perc, presence: true, numericality: { less_than: 1, greater_than: 0 }
   validates :status, presence: true, inclusion: { in: %w(aggressive deffensive avoiding)}
   validates :ships, presence: true, numericality: { only_integer: true, greater_than: 0 }
+
+  def kill_perc
+    self.attributes[:kill_perc].to_f
+  end
+
+  def ships
+    self.attributes[:ships].to_i
+  end
+
+  def update hash
+    obj = Fleet.new hash
+    if obj.valid?
+      super hash
+      true
+    else
+      false
+    end
+  end
+
+  def self.create hash
+    obj = Fleet.new hash
+    if obj.valid?
+      super hash
+      true
+    else
+      false
+    end
+  end
+
+  def save
+    if self.valid?
+      super
+      true
+    else
+      false
+    end
+  end
 
   def make_aggressive
     self.status = "aggressive"
