@@ -1,4 +1,4 @@
 package constants
 
-const MeanProd = 50
-const MeanKill = 0.5
+const MidProd = 50
+const MidKill = 0.5

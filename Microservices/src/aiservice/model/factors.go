@@ -34,10 +34,10 @@ func (f Factor) Score(params ScoreParams) float64 {
 type ScoreParams struct {
 	Planet                Planet
 	NormalizedPlayerPower float64
-	MeanShipsCount        float64
+	MidShipsCount         float64
 	Distance              float64
 }
 
 func (sp *ScoreParams) normalizedShips() float64 {
-	return float64(sp.Planet.Ships) / sp.MeanShipsCount
+	return float64(sp.Planet.Ships) / sp.MidShipsCount
 }

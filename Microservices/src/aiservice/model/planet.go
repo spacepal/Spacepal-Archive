@@ -13,18 +13,18 @@ type Planet struct {
 	Cell  int     `json:"cellID"`
 	Prod  int     `json:"production"`
 	Kill  float64 `json:"killPerc"`
-	Ships float64 `json:"ships"`
+	Ships int     `json:"ships"`
 }
 
 func (planet *Planet) normalizedProd() float64 {
-	return float64(planet.Prod) / constants.MeanProd
+	return float64(planet.Prod) / constants.MidProd
 }
 
 func (planet *Planet) normalizedKill() float64 {
-	return planet.Kill / constants.MeanKill
+	return planet.Kill / constants.MidKill
 }
 
-// NormalizedPower returns normalized to mean value power (Kill * Prod)
+// NormalizedPower returns normalized value of power (Kill * Prod)
 func (planet *Planet) NormalizedPower() float64 {
 	return planet.normalizedProd() * planet.normalizedKill()
 }
