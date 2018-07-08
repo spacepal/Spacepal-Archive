@@ -1,11 +1,34 @@
 package handler
 
-import "net/http"
+import (
+	"aiservice/model"
+	"encoding/json"
+	"fmt"
+	"net/http"
 
-// MainHandler receives data from main server
+	log "github.com/sirupsen/logrus"
+)
+
+// MainHandler handles request for move-action
 type MainHandler struct {
 }
 
 func (h *MainHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+	if r.Method != "POST" {
+		http.Error(w,
+			"403 - Method not allowed. Use POST instead.",
+			http.StatusMethodNotAllowed)
+		return
+	}
+	var in model.In
+	if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
+		http.Error(w,
+			fmt.Sprintf("400 - Bad request. Error: %v.", err),
+			http.StatusBadRequest)
+		log.Error("handler.main.go: ", err)
+		return
+	}
+	log.Print(in)
 	w.Write([]byte("hello world"))
 }
