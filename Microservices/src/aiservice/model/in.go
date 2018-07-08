@@ -2,7 +2,7 @@ package model
 
 import "errors"
 
-// In is a model of microservice-input data
+// In is a model of game
 type In struct {
 	AIPlayers []AIPlayer `json:"aiPlayers"`
 	Map       struct {
