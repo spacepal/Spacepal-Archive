@@ -9,7 +9,7 @@ type Factors struct {
 // Factor contains coefficients for determining score
 type Factor struct {
 	Quantity    float64 // relative number of ships to send
-	Random      float64 // is a variance of normal distribution
+	Random      float64 // is a multipler for variance in normal distribution
 	Prod        float64
 	Kill        float64
 	Power       float64
