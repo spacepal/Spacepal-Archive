@@ -109,11 +109,9 @@ class Game < Ohm::Model
 
   def self.get_all params #get hash of selected games
     params[:conditions] = { step: Game::IS_ROOM }
-    params.to_s.color("blue").out
     start_num = params[:offset].to_i
     end_num = params[:offset].to_i + params[:limit].to_i
     arr = Game.find(step: Game::IS_ROOM).sort_by(:id, limit: [start_num, end_num])
-    arr.to_s.color(:yellow).out
     arr_hash = []
     el_hash = {}
     arr.each do |game|
@@ -153,8 +151,18 @@ class Game < Ohm::Model
     end
   end
 
+  def remove_player player_name
+    if self.players.size == 1
+      Deletion.delete_game self
+      return nil
+    else
+      self.players.delete Player.find_by(name: player_name)
+      self
+    end
+  end
+
   def playername_is_uniq player_name
-    !self.players.all.pluck_arr(:name).include? player_name
+    !self.players.to_a.pluck_arr(:name).include? player_name
   end
 
   def get_creator

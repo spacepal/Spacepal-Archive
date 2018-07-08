@@ -30,6 +30,7 @@ class Deletion
     Ohm.redis.call "DEL", game_key[game.id]["players"]
     Ohm.redis.call "DEL", game_key[game.id]["cells"]
     game.delete
+    true
   end
 
 end
