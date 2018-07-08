@@ -74,8 +74,7 @@ func (c cell) neighbours() []*cell {
 }
 
 // CalcDistance calculates map of distances from specific cell to each other
-//  from   starts  with 1
-// cellID  starts  with 0
+// cellID  starts  with 1
 func CalcDistance(from, mapWidth, mapHeight int) (hexSurface map[int]int) {
 	var mapSize = &mapSize{
 		width:  mapWidth,
