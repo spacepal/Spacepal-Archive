@@ -16,6 +16,19 @@ type Planet struct {
 	Ships float64 `json:"ships"`
 }
 
+func (planet *Planet) normalizedProd() float64 {
+	return float64(planet.Prod) / constants.MeanProd
+}
+
+func (planet *Planet) normalizedKill() float64 {
+	return planet.Kill / constants.MeanKill
+}
+
+// NormalizedPower returns normalized to mean value power (Kill * Prod)
+func (planet *Planet) NormalizedPower() float64 {
+	return planet.normalizedProd() * planet.normalizedKill()
+}
+
 // Check validates Planet model
 func (planet Planet) Check(mapWidth, mapHeight int) error {
 	minCell, maxCell := 1, mapWidth*mapHeight
