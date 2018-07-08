@@ -144,8 +144,8 @@ func TestDistanceSurface(t *testing.T) {
 	if NewDistanceSurface(-1, 10, 10) != nil {
 		t.Fatal("NewDistanceSurface(-1, 10, 10) != nil")
 	}
-	if NewDistanceSurface(-1, 10, 10) != nil {
-		t.Fatal("NewDistanceSurface(-1, 10, 10) != nil")
+	if NewDistanceSurface(101, 10, 10) != nil {
+		t.Fatal("NewDistanceSurface(101, 10, 10) != nil")
 	}
 	var c = distanceSurfaceCase
 	var s = NewDistanceSurface(c.from, c.mapWidth, c.mapHeight)
