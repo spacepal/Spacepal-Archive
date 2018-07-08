@@ -12,8 +12,8 @@ type Planet struct {
 	Owner int     `json:"ownerID"`
 	Cell  int     `json:"cellID"`
 	Prod  int     `json:"production"`
-	Kill  float32 `json:"killPerc"`
-	Ships float32 `json:"ships"`
+	Kill  float64 `json:"killPerc"`
+	Ships float64 `json:"ships"`
 }
 
 // Check validates Planet model
