@@ -15,4 +15,6 @@ type PlanetGetter interface {
 // NormalizedPlanetGetter has methods for getting normalized Planet fields
 type NormalizedPlanetGetter interface {
 	NormalizedPower() float64
+	NormalizedKill() float64
+	NormalizedProd() float64
 }

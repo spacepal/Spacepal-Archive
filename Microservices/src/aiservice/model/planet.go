@@ -47,17 +47,19 @@ func (planet Planet) Ships() int {
 	return planet.ShipsCount
 }
 
-func (planet Planet) normalizedProd() float64 {
+// NormalizedProd returns normalized value of production
+func (planet Planet) NormalizedProd() float64 {
 	return float64(planet.Production) / constants.MidProd
 }
 
-func (planet Planet) normalizedKill() float64 {
+// NormalizedKill returns normalized value of kill percentage
+func (planet Planet) NormalizedKill() float64 {
 	return planet.KillPercentage / constants.MidKill
 }
 
 // NormalizedPower returns normalized value of power (Kill * Prod)
 func (planet Planet) NormalizedPower() float64 {
-	return planet.normalizedProd() * planet.normalizedKill()
+	return planet.NormalizedProd() * planet.NormalizedKill()
 }
 
 // IsNeutral checks that planet doesn't have owner

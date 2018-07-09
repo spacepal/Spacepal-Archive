@@ -8,36 +8,53 @@ type Factors struct {
 
 // Factor contains coefficients for determining score
 type Factor struct {
-	Quantity    float64 // relative number of ships to send
-	Random      float64 // is a multipler for variance in normal distribution
-	Prod        float64
-	Kill        float64
-	Power       float64
-	Ships       float64
-	PlayerPower float64
-	Distance    float64 // Must be negative
+	quantity    float64
+	random      float64
+	prod        float64
+	kill        float64
+	power       float64
+	ships       float64
+	playerPower float64
+	distance    float64
 }
 
-// Score calculates score for a target
-func (f Factor) Score(params ScoreParams) float64 {
-	var score = 0.0
-	score += params.Planet.normalizedProd() * f.Prod
-	score += params.Planet.normalizedKill() * f.Kill
-	score += params.Planet.NormalizedPower() * f.Power
-	score += params.normalizedShips() * f.Ships
-	score += params.NormalizedPlayerPower * f.PlayerPower
-	score += params.Distance * f.Distance
-	return 0
+// Quantity of available ships
+func (f Factor) Quantity() float64 {
+	return f.quantity
 }
 
-// ScoreParams represents input arguments of Score
-type ScoreParams struct {
-	Planet                Planet
-	NormalizedPlayerPower float64
-	MidShipsCount         float64
-	Distance              float64
+// Random is a deviation of normal distribution
+// is used for selecting index
+func (f Factor) Random() float64 {
+	return f.random
 }
 
-func (sp *ScoreParams) normalizedShips() float64 {
-	return float64(sp.Planet.ShipsCount) / sp.MidShipsCount
+// Prod is a factor of production importance
+func (f Factor) Prod() float64 {
+	return f.prod
+}
+
+// Kill is a factor of kill percentage importance
+func (f Factor) Kill() float64 {
+	return f.kill
+}
+
+// Power is a factor of planet power importance
+func (f Factor) Power() float64 {
+	return f.power
+}
+
+// Ships is a factor of ships count importance
+func (f Factor) Ships() float64 {
+	return f.ships
+}
+
+// PlayerPower is a factor of player-power importance
+func (f Factor) PlayerPower() float64 {
+	return f.playerPower
+}
+
+// Distance is a factor of distance between planet importance
+func (f Factor) Distance() float64 {
+	return f.distance
 }
