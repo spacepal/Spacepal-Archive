@@ -128,7 +128,7 @@ func TestDistanceSurface(t *testing.T) {
 		t.Fatal("s == nil")
 	}
 	for to, want := range c.to {
-		get := s.DistanceTo(to)
+		get := s.Calculate(to)
 		if get != want {
 			t.Error("Invalid distance to: ", to, "; want: ", want, ", get: ", get)
 		}

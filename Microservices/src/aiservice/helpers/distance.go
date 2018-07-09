@@ -29,8 +29,8 @@ func NewDistanceSurface(cellID int, mapSize imodel.MapSizeGetter) *DistanceSurfa
 	return &surface
 }
 
-// DistanceTo returns shortest distance to given cell
-func (s DistanceSurface) DistanceTo(cell int) int {
+// Calculate returns shortest distance to a given cell
+func (s DistanceSurface) Calculate(cell int) int {
 	if cell < 1 || cell > s.mapSize.LastCellID() {
 		return -1
 	}
