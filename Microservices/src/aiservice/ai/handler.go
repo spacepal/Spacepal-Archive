@@ -2,6 +2,7 @@ package ai
 
 import (
 	"aiservice/ai/iai"
+	"aiservice/constants"
 	"aiservice/helpers"
 	"aiservice/model"
 	"aiservice/model/imodel"
@@ -19,7 +20,7 @@ type TurnHandler struct {
 // NewTurnHandler is a factory method of TurnHandler
 func NewTurnHandler(manager iai.ManagerGetter) iai.Handler {
 	return &TurnHandler{
-		pool:    make(chan imodel.InGetter, 1024),
+		pool:    make(chan imodel.InGetter, constants.TurnHandlerPoolSize),
 		manager: manager,
 	}
 }
