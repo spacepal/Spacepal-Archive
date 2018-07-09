@@ -4,7 +4,7 @@ import "aiservice/model"
 
 // IAI is an interface of artificial intelligence
 type IAI interface {
-	doTurn(model.In)
+	DoTurn(model.In, int) []model.Task
 }
 
 // ManagerRegister is an interface of artificial intelligence registration

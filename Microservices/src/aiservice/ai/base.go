@@ -7,6 +7,8 @@ type BaseAI struct {
 	factors model.Factors
 }
 
-func (b BaseAI) doTurn(planets []model.Planet, aiPlayer int) {
+// DoTurn makes a move
+func (b BaseAI) DoTurn(in model.In, aiPlayer int) []model.Task {
 	// @todo
+	return make([]model.Task, 0)
 }
