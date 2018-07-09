@@ -15,7 +15,8 @@ func main() {
 	flag.Parse()
 	var aiManager = ai.NewManager()
 	ai.RegisterAll(aiManager)
-	http.Handle("/ai/do", new(handler.DoHandler))
 	http.Handle("/ai/names", handler.NewAINamesHandler(aiManager))
+	var turnHander = ai.NewTurnHandler(aiManager)
+	http.Handle("/ai/do", handler.NewDoHandler(turnHander))
 	log.Fatal(http.ListenAndServe(*addr, nil))
 }

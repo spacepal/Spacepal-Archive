@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"aiservice/ai/iai"
 	"aiservice/model"
 	"encoding/json"
 	"fmt"
@@ -11,6 +12,12 @@ import (
 
 // DoHandler handles request for move-action
 type DoHandler struct {
+	handler iai.Handler
+}
+
+// NewDoHandler is a factory method for DoHandler
+func NewDoHandler(handler iai.Handler) http.Handler {
+	return &DoHandler{handler}
 }
 
 func (h *DoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
