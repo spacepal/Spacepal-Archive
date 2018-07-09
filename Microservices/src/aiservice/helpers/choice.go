@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"aiservice/ai/list/ilist"
 	"aiservice/helpers/ihelpers"
 	"aiservice/model/imodel"
 	"math"
@@ -18,7 +19,7 @@ type planetScore struct {
 
 func newPlanetScore(
 	target imodel.PlanetGetter,
-	factor imodel.FactorGetter,
+	factor ilist.FactorGetter,
 	distanceCalc ihelpers.DistanceCalculator,
 	globStat ihelpers.GlobStatGetter,
 ) planetScore {
@@ -73,7 +74,7 @@ func NewPlanetChoiceMaker(
 func (cm PlanetChoiceMaker) MakeChoice(
 	planets []imodel.PlanetGetter,
 	main imodel.PlanetGetter,
-	factor imodel.FactorGetter,
+	factor ilist.FactorGetter,
 ) imodel.PlanetGetter {
 
 	if len(planets) == 0 {
