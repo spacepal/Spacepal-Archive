@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"aiservice/constants"
+	"aiservice/ai"
 	"aiservice/model"
 	"encoding/json"
 	"net/http"
@@ -20,7 +20,7 @@ func (h *AITypesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var out model.AITypesOut
-	for aiType := range constants.AITypes {
+	for aiType := range ai.AITypes {
 		out.Types = append(out.Types, aiType)
 	}
 	raw, err := json.Marshal(out)
