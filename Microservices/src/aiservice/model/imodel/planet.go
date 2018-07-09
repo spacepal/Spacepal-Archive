@@ -6,6 +6,13 @@ type PlanetGetter interface {
 	Owner() int
 	Cell() int
 	Prod() int
-	Kill() int
+	Kill() float64
 	Ships() int
+	IsNeutral() bool
+	NormalizedPlanetGetter
+}
+
+// NormalizedPlanetGetter has methods for getting normalized Planet fields
+type NormalizedPlanetGetter interface {
+	NormalizedPower() float64
 }

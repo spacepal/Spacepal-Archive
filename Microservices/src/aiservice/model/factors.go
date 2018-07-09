@@ -39,5 +39,5 @@ type ScoreParams struct {
 }
 
 func (sp *ScoreParams) normalizedShips() float64 {
-	return float64(sp.Planet.Ships) / sp.MidShipsCount
+	return float64(sp.Planet.ShipsCount) / sp.MidShipsCount
 }
