@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"aiservice/model"
+	"aiservice/model/imodel"
 	"testing"
 )
 
@@ -21,16 +22,16 @@ type Planet struct {
 }
 
 var globStatCases = struct {
-	planets  []model.Planet
+	planets  []imodel.PlanetGetter
 	cases    []statCase
 	midShips int
 }{
-	planets: []model.Planet{
-		model.Planet{Prod: 100, Kill: 1.0, Owner: 1, Ships: 1},
-		model.Planet{Prod: 100, Kill: 1.0, Owner: 1, Ships: 2},
-		model.Planet{Prod: 100, Kill: 1.0, Owner: 1, Ships: 4},
-		model.Planet{Prod: 100, Kill: 1.0, Owner: 1, Ships: 8},
-		model.Planet{Prod: 100, Kill: 0.5, Owner: 2, Ships: 16},
+	planets: []imodel.PlanetGetter{
+		model.Planet{Production: 100, KillPercentage: 1.0, OwnerID: 1, ShipsCount: 1},
+		model.Planet{Production: 100, KillPercentage: 1.0, OwnerID: 1, ShipsCount: 2},
+		model.Planet{Production: 100, KillPercentage: 1.0, OwnerID: 1, ShipsCount: 4},
+		model.Planet{Production: 100, KillPercentage: 1.0, OwnerID: 1, ShipsCount: 8},
+		model.Planet{Production: 100, KillPercentage: 0.5, OwnerID: 2, ShipsCount: 16},
 	},
 	cases: []statCase{
 		{id: 1, player: 0, power: 0},
@@ -42,10 +43,10 @@ var globStatCases = struct {
 	midShips: 8,
 }
 
-func TestGlobalStatistic(t *testing.T) {
-	var gs = NewGlobalStatistic(globStatCases.planets)
+func TestGlobStat(t *testing.T) {
+	var gs = NewGlobStat(globStatCases.planets)
 	if gs == nil {
-		t.Fatal("NewGlobalStatistic(globStatCases.planets) == nil")
+		t.Fatal("NewGlobStat(globStatCases.planets) == nil")
 	}
 	if gs.MidShips() != globStatCases.midShips {
 		t.Errorf("Invalid middle value of ships: want: %d, get: %d",

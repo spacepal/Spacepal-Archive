@@ -1,19 +1,19 @@
 package helpers
 
 import (
-	"aiservice/model"
+	"aiservice/model/imodel"
 	"math"
 )
 
 // DistanceSurface represents a map of offset distances relative to cell
 type DistanceSurface struct {
-	mapSize model.MapSize
+	mapSize imodel.MapSizeGetter
 	cell    cell
 	surface map[int]int
 }
 
 // NewDistanceSurface initializes DistanceSurface relative to cell
-func NewDistanceSurface(cellID int, mapSize model.MapSize) *DistanceSurface {
+func NewDistanceSurface(cellID int, mapSize imodel.MapSizeGetter) *DistanceSurface {
 	var surface DistanceSurface
 	surface.mapSize = mapSize
 	if cellID < 1 || cellID > surface.mapSize.LastCellID() {
@@ -41,14 +41,14 @@ type cell struct {
 	id int
 }
 
-func (c cell) offsetCoord(mapSize model.MapSize) offsetCoord {
+func (c cell) offsetCoord(mapSize imodel.MapSizeGetter) offsetCoord {
 	return offsetCoord{
-		x: (c.id - 1) % mapSize.Width,
-		y: int(math.Floor(float64(c.id-1) / float64(mapSize.Width))),
+		x: (c.id - 1) % mapSize.Width(),
+		y: int(math.Floor(float64(c.id-1) / float64(mapSize.Width()))),
 	}
 }
 
-func (c cell) cubeCoord(mapSize model.MapSize) cubeCoord {
+func (c cell) cubeCoord(mapSize imodel.MapSizeGetter) cubeCoord {
 	return c.offsetCoord(mapSize).cubeCoord()
 }
 

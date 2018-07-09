@@ -1,8 +1,8 @@
 package helpers
 
-import "aiservice/model"
+import "aiservice/model/imodel"
 
 type Planets struct {
-	selfPlanets    []model.Planet
-	foreignPlanets []model.Planet
+	selfPlanets    []imodel.PlanetGetter
+	foreignPlanets []imodel.PlanetGetter
 }

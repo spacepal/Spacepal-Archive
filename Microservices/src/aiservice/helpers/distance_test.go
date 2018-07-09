@@ -59,25 +59,25 @@ var cellConvCases = []struct {
 }{
 	{
 		id:      1,
-		mapSize: model.MapSize{Width: 10, Height: 10},
+		mapSize: model.MapSize{MapWidth: 10, MapHeight: 10},
 		cell:    cell{1},
 		coord:   offsetCoord{x: 0, y: 0},
 	},
 	{
 		id:      2,
-		mapSize: model.MapSize{Width: 4, Height: 3},
+		mapSize: model.MapSize{MapWidth: 4, MapHeight: 3},
 		cell:    cell{5},
 		coord:   offsetCoord{x: 0, y: 1},
 	},
 	{
 		id:      3,
-		mapSize: model.MapSize{Width: 4, Height: 3},
+		mapSize: model.MapSize{MapWidth: 4, MapHeight: 3},
 		cell:    cell{10},
 		coord:   offsetCoord{x: 1, y: 2},
 	},
 	{
 		id:      4,
-		mapSize: model.MapSize{Width: 4, Height: 3},
+		mapSize: model.MapSize{MapWidth: 4, MapHeight: 3},
 		cell:    cell{12},
 		coord:   offsetCoord{x: 3, y: 2},
 	},
@@ -97,7 +97,7 @@ var distanceSurfaceCase = struct {
 	from    int
 	to      map[int]int
 }{
-	mapSize: model.MapSize{Width: 4, Height: 3},
+	mapSize: model.MapSize{MapWidth: 4, MapHeight: 3},
 	from:    5,
 	to: map[int]int{
 		1:  1,
@@ -116,10 +116,10 @@ var distanceSurfaceCase = struct {
 }
 
 func TestDistanceSurface(t *testing.T) {
-	if NewDistanceSurface(-1, model.MapSize{Width: 10, Height: 10}) != nil {
+	if NewDistanceSurface(-1, model.MapSize{MapWidth: 10, MapHeight: 10}) != nil {
 		t.Fatal("NewDistanceSurface(-1, 10, 10) != nil")
 	}
-	if NewDistanceSurface(101, model.MapSize{Width: 10, Height: 10}) != nil {
+	if NewDistanceSurface(101, model.MapSize{MapWidth: 10, MapHeight: 10}) != nil {
 		t.Fatal("NewDistanceSurface(101, 10, 10) != nil")
 	}
 	var c = distanceSurfaceCase
