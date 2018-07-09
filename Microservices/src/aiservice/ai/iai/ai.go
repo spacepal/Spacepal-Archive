@@ -1,8 +1,15 @@
 package iai
 
-import "aiservice/model/imodel"
+import (
+	"aiservice/helpers/ihelpers"
+	"aiservice/model/imodel"
+)
 
 // MoveMaker is an interface for artificial intelligence end turn
 type MoveMaker interface {
-	MakeMove(imodel.InGetter, int) []imodel.TaskGetter
+	MakeMove(
+		planets ihelpers.PlanetsGetter,
+		globStat ihelpers.GlobStatGetter,
+		mapSize imodel.MapSizeGetter,
+	) []imodel.TaskGetter
 }
