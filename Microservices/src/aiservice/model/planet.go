@@ -29,6 +29,11 @@ func (planet *Planet) NormalizedPower() float64 {
 	return planet.normalizedProd() * planet.normalizedKill()
 }
 
+// IsNeutral checks that planet doesn't have owner
+func (planet *Planet) IsNeutral() bool {
+	return planet.Owner == constants.NeutralOwnerID
+}
+
 // check validates Planet model
 func (planet Planet) check(mapSize MapSize) error {
 	minCell, maxCell := 1, mapSize.LastCellID()
