@@ -1,14 +1,17 @@
 package ai
 
-import "aiservice/model"
+import (
+	"aiservice/model"
+	"aiservice/model/imodel"
+)
 
-// BaseAI is a simple artificial intelligence
-type BaseAI struct {
+// Base is a simple AI
+type Base struct {
 	factors model.Factors
 }
 
-// DoTurn makes a move
-func (b BaseAI) DoTurn(in model.In, aiPlayer int) []model.Task {
+// MakeMove : end turn by AI
+func (b Base) MakeMove(in imodel.InGetter, aiPlayer int) []imodel.TaskGetter {
 	// @todo
-	return make([]model.Task, 0)
+	return make([]imodel.TaskGetter, 0)
 }

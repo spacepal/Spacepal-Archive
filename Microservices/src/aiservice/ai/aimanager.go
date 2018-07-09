@@ -1,48 +1,30 @@
 package ai
 
-import "aiservice/model"
-
-// IAI is an interface of artificial intelligence
-type IAI interface {
-	DoTurn(model.In, int) []model.Task
-}
-
-// ManagerRegister is an interface of artificial intelligence registration
-type ManagerRegister interface {
-	Register(string, IAI)
-	IsRegistered(string) bool
-}
-
-// ManagerGetter is an interface for getting artificial intelligences
-type ManagerGetter interface {
-	Get(string) IAI
-	All() []string
-	Count() int
-}
+import "aiservice/ai/iai"
 
 // Manager registers all AI
 type Manager struct {
-	all map[string]IAI
+	all map[string]iai.MoveMaker
 }
 
 // NewManager creates NewManager
 func NewManager() *Manager {
-	return &Manager{make(map[string]IAI)}
+	return &Manager{make(map[string]iai.MoveMaker)}
 }
 
 // Register adds AI to the manager
-func (a *Manager) Register(name string, ai IAI) {
+func (a *Manager) Register(name string, ai iai.MoveMaker) {
 	a.all[name] = ai
 }
 
-// IsRegistered checks that AI is already registered
-func (a *Manager) IsRegistered(name string) (ok bool) {
+// Check tests that AI is already registered
+func (a *Manager) Check(name string) (ok bool) {
 	_, ok = a.all[name]
 	return
 }
 
 // Get returns AI by name
-func (a *Manager) Get(name string) IAI {
+func (a *Manager) Get(name string) iai.MoveMaker {
 	return a.all[name]
 }
 

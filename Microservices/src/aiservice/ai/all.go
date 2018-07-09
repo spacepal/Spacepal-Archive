@@ -1,6 +1,8 @@
 package ai
 
+import "aiservice/ai/iai"
+
 // RegisterAll adds all AI's to the manager
-func RegisterAll(r ManagerRegister) {
-	r.Register("base", BaseAI{})
+func RegisterAll(r iai.ManagerRegister) {
+	r.Register("base", Base{})
 }

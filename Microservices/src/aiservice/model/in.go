@@ -1,6 +1,9 @@
 package model
 
-import "errors"
+import (
+	"aiservice/ai/iai"
+	"errors"
+)
 
 // MapSize stores size of game-grid
 type MapSize struct {
@@ -28,7 +31,7 @@ type In struct {
 }
 
 // Check validates In model
-func (in In) Check() error {
+func (in In) Check(manager iai.ManagerChecker) error {
 	if len(in.AIPlayers) == 0 {
 		return errors.New("No AI players")
 	}
@@ -36,7 +39,7 @@ func (in In) Check() error {
 		return errors.New("Map size must be positive")
 	}
 	for _, ai := range in.AIPlayers {
-		if err := ai.check(); err != nil {
+		if err := ai.check(manager); err != nil {
 			return err
 		}
 	}

@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"aiservice/ai"
+	"aiservice/ai/iai"
 	"aiservice/model"
 	"encoding/json"
 	"net/http"
@@ -9,11 +9,11 @@ import (
 
 // AINamesHandler handles request for AI names list
 type AINamesHandler struct {
-	manager ai.ManagerGetter
+	manager iai.ManagerGetter
 }
 
 // NewAINamesHandler creates new AINamesHandler
-func NewAINamesHandler(manager ai.ManagerGetter) *AINamesHandler {
+func NewAINamesHandler(manager iai.ManagerGetter) *AINamesHandler {
 	return &AINamesHandler{manager}
 }
 

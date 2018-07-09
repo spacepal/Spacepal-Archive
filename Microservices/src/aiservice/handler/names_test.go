@@ -34,7 +34,7 @@ func TestAINamesHandler(t *testing.T) {
 			out.Count, manager.Count())
 	}
 	for _, aiName := range out.All {
-		if !manager.IsRegistered(aiName) {
+		if !manager.Check(aiName) {
 			t.Fatalf("Name %s is not found", aiName)
 		}
 	}
