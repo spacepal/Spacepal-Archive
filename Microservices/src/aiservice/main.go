@@ -4,7 +4,7 @@ import (
 	"aiservice/ai"
 	"aiservice/ai/list"
 	"aiservice/constants"
-	"aiservice/handler"
+	"aiservice/server"
 	"flag"
 	"net/http"
 
@@ -16,9 +16,9 @@ func main() {
 	flag.Parse()
 	var aiManager = ai.NewManager()
 	list.RegisterAll(aiManager)
-	http.Handle("/ai/names", handler.NewAINamesHandler(aiManager))
+	http.Handle("/ai/names", server.NewAINamesHandler(aiManager))
 	var turnHander = ai.NewTurnHandler(aiManager)
 	go turnHander.Start()
-	http.Handle("/ai/do", handler.NewDoHandler(turnHander))
+	http.Handle("/ai/do", server.NewDoHandler(turnHander))
 	log.Fatal(http.ListenAndServe(*addr, nil))
 }
