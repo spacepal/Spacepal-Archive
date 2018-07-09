@@ -41,6 +41,9 @@ func (in In) Check(manager iai.ManagerChecker) error {
 	if len(in.ArtIntPlayers) == 0 {
 		return errors.New("No AI players")
 	}
+	if len(in.AllPlanets) == 0 {
+		return errors.New("No planets")
+	}
 	if !in.MapGridSize.isValid() {
 		return errors.New("Map size must be positive")
 	}
