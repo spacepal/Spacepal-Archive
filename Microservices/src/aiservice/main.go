@@ -12,7 +12,7 @@ import (
 func main() {
 	var addr = flag.String("addr", constants.Address, "address to serve")
 	flag.Parse()
-	http.Handle("/ai/do", new(handler.MainHandler))
+	http.Handle("/ai/do", new(handler.DoHandler))
 	http.Handle("/ai/names", new(handler.AINamesHandler))
 	log.Fatal(http.ListenAndServe(*addr, nil))
 }

@@ -9,11 +9,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// MainHandler handles request for move-action
-type MainHandler struct {
+// DoHandler handles request for move-action
+type DoHandler struct {
 }
 
-func (h *MainHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *DoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	if r.Method != "POST" {
 		http.Error(w,
