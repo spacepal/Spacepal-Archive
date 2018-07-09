@@ -1,11 +1,5 @@
 package model
 
-// Factors is a behavior model of AI
-type Factors struct {
-	Redistribution Factor
-	Attack         Factor
-}
-
 // Factor contains coefficients for determining score
 type Factor struct {
 	quantity    float64
