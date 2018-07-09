@@ -1,6 +1,7 @@
 package model
 
-// AITypesOut represents a model of response with all registered AI types
-type AITypesOut struct {
-	Types []string `json:"aiTypes"`
+// AINamesOut represents a model of response with all registered AI names
+type AINamesOut struct {
+	All   []string `json:"all"`
+	Count int      `json:"count"`
 }

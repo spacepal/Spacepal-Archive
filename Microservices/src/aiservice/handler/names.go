@@ -7,11 +7,17 @@ import (
 	"net/http"
 )
 
-// AITypesHandler handles request for AI types list
-type AITypesHandler struct {
+// AINamesHandler handles request for AI names list
+type AINamesHandler struct {
+	manager ai.ManagerGetter
 }
 
-func (h *AITypesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+// NewAINamesHandler creates new AINamesHandler
+func NewAINamesHandler(manager ai.ManagerGetter) *AINamesHandler {
+	return &AINamesHandler{manager}
+}
+
+func (h *AINamesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	if r.Method != "GET" {
 		http.Error(w,
@@ -19,9 +25,9 @@ func (h *AITypesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			http.StatusMethodNotAllowed)
 		return
 	}
-	var out model.AITypesOut
-	for aiType := range ai.AITypes {
-		out.Types = append(out.Types, aiType)
+	var out = model.AINamesOut{
+		All:   h.manager.All(),
+		Count: h.manager.Count(),
 	}
 	raw, err := json.Marshal(out)
 	if err != nil {
