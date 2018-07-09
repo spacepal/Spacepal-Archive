@@ -36,6 +36,7 @@ func (h *DoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		log.Error("handler.main.go: ", err)
 		return
 	}
+	h.handler.Handle(in)
 	log.Print(in)
 	w.Write([]byte("hello world"))
 }
