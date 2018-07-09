@@ -13,7 +13,7 @@ type AINamesHandler struct {
 }
 
 // NewAINamesHandler creates new AINamesHandler
-func NewAINamesHandler(manager iai.ManagerGetter) *AINamesHandler {
+func NewAINamesHandler(manager iai.ManagerGetter) http.Handler {
 	return &AINamesHandler{manager}
 }
 

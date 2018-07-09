@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"aiservice/helpers/ihelpers"
 	"aiservice/model/imodel"
 	"math"
 )
@@ -22,7 +23,7 @@ func (gs GlobStat) MidShips() int {
 }
 
 // NewGlobStat creates store of game statistic
-func NewGlobStat(planets []imodel.PlanetGetter) *GlobStat {
+func NewGlobStat(planets []imodel.PlanetGetter) ihelpers.GlobStatGetter {
 	var maxVal = float64(1)
 	var powers = make(map[int]float64)
 	var maxShips = 1

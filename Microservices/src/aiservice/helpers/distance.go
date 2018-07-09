@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"aiservice/helpers/ihelpers"
 	"aiservice/model/imodel"
 	"math"
 )
@@ -13,7 +14,8 @@ type DistanceSurface struct {
 }
 
 // NewDistanceSurface initializes DistanceSurface relative to cell
-func NewDistanceSurface(cellID int, mapSize imodel.MapSizeGetter) *DistanceSurface {
+func NewDistanceSurface(cellID int,
+	mapSize imodel.MapSizeGetter) ihelpers.DistanceCalculator {
 	var surface DistanceSurface
 	surface.mapSize = mapSize
 	if cellID < 1 || cellID > surface.mapSize.LastCellID() {
