@@ -26,7 +26,7 @@ func (gs GlobStat) MidShips() int {
 func NewGlobStat(planets []imodel.PlanetGetter) ihelpers.GlobStatGetter {
 	var maxVal = float64(1)
 	var powers = make(map[int]float64)
-	var maxShips = 1
+	var maxShips = 1 // safe for dividing by zero
 	for _, p := range planets {
 		if power, ok := powers[p.Owner()]; ok {
 			powers[p.Owner()] = power + p.NormalizedPower()
