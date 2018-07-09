@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"aiservice/model"
 	"testing"
 )
 
@@ -50,54 +51,33 @@ func TestCubeCoordinatesDistance(t *testing.T) {
 	}
 }
 
-var mapSizeValidationCases = []struct {
-	id      int
-	valid   bool
-	mapSize mapSize
-}{
-	{id: 1, valid: true, mapSize: mapSize{width: 10, height: 10}},
-	{id: 2, valid: true, mapSize: mapSize{width: 100, height: 1}},
-	{id: 3, valid: false, mapSize: mapSize{width: -10, height: 10}},
-	{id: 4, valid: false, mapSize: mapSize{width: 10, height: -10}},
-	{id: 5, valid: false, mapSize: mapSize{width: -10, height: -101}},
-}
-
-func TestMapSizeValidation(t *testing.T) {
-	for _, c := range mapSizeValidationCases {
-		get := c.mapSize.isValid()
-		if c.valid != get {
-			t.Error("Invalid case: ", c.id, "; want: ", c.valid, ", get: ", get)
-		}
-	}
-}
-
 var cellConvCases = []struct {
 	id      int
-	mapSize mapSize
+	mapSize model.MapSize
 	cell    cell
 	coord   offsetCoord
 }{
 	{
 		id:      1,
-		mapSize: mapSize{width: 10, height: 10},
+		mapSize: model.MapSize{Width: 10, Height: 10},
 		cell:    cell{1},
 		coord:   offsetCoord{x: 0, y: 0},
 	},
 	{
 		id:      2,
-		mapSize: mapSize{width: 4, height: 3},
+		mapSize: model.MapSize{Width: 4, Height: 3},
 		cell:    cell{5},
 		coord:   offsetCoord{x: 0, y: 1},
 	},
 	{
 		id:      3,
-		mapSize: mapSize{width: 4, height: 3},
+		mapSize: model.MapSize{Width: 4, Height: 3},
 		cell:    cell{10},
 		coord:   offsetCoord{x: 1, y: 2},
 	},
 	{
 		id:      4,
-		mapSize: mapSize{width: 4, height: 3},
+		mapSize: model.MapSize{Width: 4, Height: 3},
 		cell:    cell{12},
 		coord:   offsetCoord{x: 3, y: 2},
 	},
@@ -113,14 +93,12 @@ func TestCellConversions(t *testing.T) {
 }
 
 var distanceSurfaceCase = struct {
-	mapWidth  int
-	mapHeight int
-	from      int
-	to        map[int]int
+	mapSize model.MapSize
+	from    int
+	to      map[int]int
 }{
-	mapWidth:  4,
-	mapHeight: 3,
-	from:      5,
+	mapSize: model.MapSize{Width: 4, Height: 3},
+	from:    5,
 	to: map[int]int{
 		1:  1,
 		2:  1,
@@ -138,17 +116,14 @@ var distanceSurfaceCase = struct {
 }
 
 func TestDistanceSurface(t *testing.T) {
-	if NewDistanceSurface(1, -10, 10) != nil {
-		t.Fatal("NewDistanceSurface(1, -10, 10) != nil")
-	}
-	if NewDistanceSurface(-1, 10, 10) != nil {
+	if NewDistanceSurface(-1, model.MapSize{Width: 10, Height: 10}) != nil {
 		t.Fatal("NewDistanceSurface(-1, 10, 10) != nil")
 	}
-	if NewDistanceSurface(101, 10, 10) != nil {
+	if NewDistanceSurface(101, model.MapSize{Width: 10, Height: 10}) != nil {
 		t.Fatal("NewDistanceSurface(101, 10, 10) != nil")
 	}
 	var c = distanceSurfaceCase
-	var s = NewDistanceSurface(c.from, c.mapWidth, c.mapHeight)
+	var s = NewDistanceSurface(c.from, c.mapSize)
 	if s == nil {
 		t.Fatal("s == nil")
 	}

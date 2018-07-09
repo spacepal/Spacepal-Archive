@@ -29,9 +29,9 @@ func (planet *Planet) NormalizedPower() float64 {
 	return planet.normalizedProd() * planet.normalizedKill()
 }
 
-// Check validates Planet model
-func (planet Planet) Check(mapWidth, mapHeight int) error {
-	minCell, maxCell := 1, mapWidth*mapHeight
+// check validates Planet model
+func (planet Planet) check(mapSize MapSize) error {
+	minCell, maxCell := 1, mapSize.LastCellID()
 	if planet.Cell < minCell || planet.Cell > maxCell {
 		return errors.New(
 			fmt.Sprint("CellID out of range. PlanetID: ", planet.ID))

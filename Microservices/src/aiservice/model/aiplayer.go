@@ -13,7 +13,7 @@ type AIPlayer struct {
 }
 
 // Check validates AIPlayer model
-func (ai AIPlayer) Check() error {
+func (ai AIPlayer) check() error {
 	if _, ok := constants.AITypes[ai.Type]; !ok {
 		return errors.New(
 			fmt.Sprint("Invalid AI type. PlayerID:", ai.Player))
