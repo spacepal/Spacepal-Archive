@@ -18,6 +18,7 @@ func main() {
 	list.RegisterAll(aiManager)
 	http.Handle("/ai/names", handler.NewAINamesHandler(aiManager))
 	var turnHander = ai.NewTurnHandler(aiManager)
+	go turnHander.Start()
 	http.Handle("/ai/do", handler.NewDoHandler(turnHander))
 	log.Fatal(http.ListenAndServe(*addr, nil))
 }
