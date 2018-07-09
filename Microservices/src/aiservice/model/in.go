@@ -5,24 +5,6 @@ import (
 	"errors"
 )
 
-// MapSize stores size of game-grid
-type MapSize struct {
-	Width  int `json:"width"`
-	Height int `json:"height"`
-}
-
-// LastCellID returns ID of last hex-cell
-func (m MapSize) LastCellID() int {
-	if !m.isValid() {
-		return -1
-	}
-	return m.Width * m.Height
-}
-
-func (m MapSize) isValid() bool {
-	return m.Width > 0 && m.Height > 0
-}
-
 // In is a model of game
 type In struct {
 	AIPlayers []AIPlayer `json:"aiPlayers"`

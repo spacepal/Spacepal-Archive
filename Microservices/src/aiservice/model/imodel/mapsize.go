@@ -4,4 +4,5 @@ package imodel
 type MapSizeGetter interface {
 	Width() int
 	Height() int
+	LastCellID() int
 }
