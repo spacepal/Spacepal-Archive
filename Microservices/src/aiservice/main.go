@@ -2,6 +2,7 @@ package main
 
 import (
 	"aiservice/ai"
+	"aiservice/ai/list"
 	"aiservice/constants"
 	"aiservice/handler"
 	"flag"
@@ -14,7 +15,7 @@ func main() {
 	var addr = flag.String("addr", constants.Address, "address to serve")
 	flag.Parse()
 	var aiManager = ai.NewManager()
-	ai.RegisterAll(aiManager)
+	list.RegisterAll(aiManager)
 	http.Handle("/ai/names", handler.NewAINamesHandler(aiManager))
 	var turnHander = ai.NewTurnHandler(aiManager)
 	http.Handle("/ai/do", handler.NewDoHandler(turnHander))
