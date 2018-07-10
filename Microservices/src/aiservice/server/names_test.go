@@ -48,7 +48,7 @@ func TestAINamesNotMehtodAllowed(t *testing.T) {
 		t.Fatal(err)
 	}
 	if r.StatusCode != http.StatusMethodNotAllowed {
-		t.Fatalf("Only status, get: %d, want: %d",
+		t.Fatalf("Invalid status code, get: %d, want: %d",
 			r.StatusCode, http.StatusMethodNotAllowed)
 	}
 }
