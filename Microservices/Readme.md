@@ -1,6 +1,7 @@
 # Microservice for SpacePal
 ## Description
 * **aiservice** is a microservice that make a move for a computer-player
+* **fakeserver** emulates game between bots
 
 ## Build
 
