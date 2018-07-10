@@ -13,16 +13,16 @@ type GameParams struct {
 // Check validates GameParams
 func (p *GameParams) Check() error {
 	if p.PlayersCount < 2 {
-		return errors.New("Invalid count of players")
+		return errors.New("GameParams: Invalid count of players")
 	}
 	if p.MapWidth <= 0 || p.MapHeight <= 0 {
-		return errors.New("Map size is negative")
+		return errors.New("GameParams: Map size is negative")
 	}
 	if p.PlayersCount > p.PlanetsCount {
-		return errors.New("There is no place for players")
+		return errors.New("GameParams: There is no place for players")
 	}
 	if p.PlanetsCount > p.MapWidth*p.MapHeight {
-		return errors.New("There is no place for planets")
+		return errors.New("GameParams: There is no place for planets")
 	}
 	return nil
 }
