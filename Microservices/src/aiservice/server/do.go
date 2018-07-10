@@ -13,11 +13,15 @@ import (
 // DoHandler handles request for move-action
 type DoHandler struct {
 	handler iai.Handler
+	manager iai.ManagerChecker
 }
 
 // NewDoHandler is a factory method for DoHandler
-func NewDoHandler(handler iai.Handler) http.Handler {
-	return &DoHandler{handler}
+func NewDoHandler(
+	handler iai.Handler,
+	manager iai.ManagerChecker,
+) http.Handler {
+	return &DoHandler{handler, manager}
 }
 
 func (h *DoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -33,8 +37,14 @@ func (h *DoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		http.Error(w,
 			fmt.Sprintf("400 - Bad request. Error: %v.", err),
 			http.StatusBadRequest)
-		log.Error("handler.main.go: ", err)
+		log.Error("handler.do.go: ", err)
 		return
+	}
+	if err := in.Check(h.manager); err != nil {
+		http.Error(w,
+			fmt.Sprintf("406 - Not Acceptable. Error: %v.", err),
+			http.StatusNotAcceptable)
+		log.Error("handler.do.go: ", err)
 	}
 	h.handler.Handle(in)
 	log.Print(in)
