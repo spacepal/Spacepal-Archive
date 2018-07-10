@@ -6,7 +6,10 @@ import (
 	"aiservice/helpers"
 	"aiservice/model"
 	"aiservice/model/imodel"
+	"bytes"
 	"encoding/json"
+	"errors"
+	"net/http"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -44,13 +47,37 @@ func (h TurnHandler) process(in imodel.InGetter) {
 		}
 		out.Players = append(out.Players, player)
 	}
-	// @todo: send back
+	go func() { // send back
+		err := h.asyncResponse(in.CallbackURL(), out)
+		if err != nil {
+			log.Error("ai/handler.go (async response error): ", err)
+		} else {
+			log.Info("ai/handler.go tasks are successfully sent")
+			log.Info(out)
+		}
+	}()
+}
+
+func (h TurnHandler) asyncResponse(url string, out model.TasksOut) error {
 	raw, err := json.Marshal(out)
 	if err != nil {
-		log.Print(raw)
-	} else {
-		log.Error(err)
+		return err
 	}
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(raw))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != 200 {
+		return errors.New("Invalid response status: " + resp.Status)
+	}
+	return nil
 }
 
 // Start goroutine for turn processing
