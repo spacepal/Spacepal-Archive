@@ -17,7 +17,7 @@ const capitalProd = 10  // default production of capital
 const capitalKill = 0.4 // default kill percentage of capital
 
 // Planet is a model of game planet on map-grid
-type Planet struct {
+type planet struct {
 	PlanetID          int     `json:"id"`
 	OwnerID           int     `json:"ownerID"`
 	CellID            int     `json:"cellID"`
@@ -27,8 +27,8 @@ type Planet struct {
 	ShipsCount        int     `json:"ships"`
 }
 
-func newNeutralPlanet(planetID, cellID int) Planet {
-	var p Planet
+func newNeutralPlanet(planetID, cellID int) planet {
+	var p planet
 	p.setRndKillPerc()
 	p.setRndProduction()
 	p.InitialProduction = p.Production
@@ -36,11 +36,11 @@ func newNeutralPlanet(planetID, cellID int) Planet {
 	p.CellID = cellID
 	p.PlanetID = planetID
 	p.ShipsCount = p.Production
-	return Planet{}
+	return p
 }
 
 // setCapital sets capital status for planet
-func (p *Planet) setCapital(owner int) {
+func (p *planet) setCapital(owner int) {
 	p.InitialProduction = capitalProd
 	p.Production = p.InitialProduction
 	p.KillPercentage = capitalKill
@@ -49,7 +49,7 @@ func (p *Planet) setCapital(owner int) {
 }
 
 // DecreaseShipsCount reduces a count of ships by value
-func (p *Planet) DecreaseShipsCount(byValue int) {
+func (p *planet) DecreaseShipsCount(byValue int) {
 	p.ShipsCount -= byValue
 	if p.ShipsCount < 0 {
 		log.Error("Ships count is negative!")
@@ -59,12 +59,12 @@ func (p *Planet) DecreaseShipsCount(byValue int) {
 
 // IncProduction increases production
 // it used for cumulative production game mode
-func (p *Planet) IncProduction() {
+func (p *planet) IncProduction() {
 	p.Production++
 }
 
 // ChangeOwner changes owner of planet
-func (p *Planet) ChangeOwner(ownerID int) {
+func (p *planet) ChangeOwner(ownerID int) {
 	if p.OwnerID == neutralPlanetID {
 		p.setCapital(ownerID)
 	} else {
@@ -73,26 +73,22 @@ func (p *Planet) ChangeOwner(ownerID int) {
 	}
 }
 
-func (p *Planet) setRndKillPerc() {
+func (p *planet) setRndKillPerc() {
 	var kill = rand.NormFloat64()*killDev + killMean
 	kill = math.Min(math.Max(kill, 0), 1)
 	p.KillPercentage = kill
 }
 
-func (p *Planet) setRndProduction() {
+func (p *planet) setRndProduction() {
 	var prod = rand.NormFloat64()*prodDev + prodMean
 	prod = math.Max(prod, prodMin)
 	p.Production = int(prod)
 }
 
-// GenPlanets returns a slice of random neutral planets
-func GenPlanets(count, mapWidth, mapHeight int) []Planet {
-	if count < 0 || mapWidth < 0 || mapHeight < 0 ||
-		count > mapWidth*mapHeight {
-		return nil
-	}
-	cellIDs := rand.Perm(mapWidth * mapHeight)
-	planets := make([]Planet, count)
+// genPlanets generates a slice of random neutral planets
+func (g *Game) genPlanets() []planet {
+	cellIDs := rand.Perm(g.params.MapWidth * g.params.MapHeight)
+	planets := make([]planet, g.params.PlanetsCount)
 	for i := range planets {
 		planets[i] = newNeutralPlanet(i, cellIDs[i])
 	}
