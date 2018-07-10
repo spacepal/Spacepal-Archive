@@ -4,10 +4,12 @@ import (
 	"aiservice/ai/iai"
 	"aiservice/model/imodel"
 	"errors"
+	"net/url"
 )
 
 // In is a model of game
 type In struct {
+	Callback      string     `json:"callback"`
 	ArtIntPlayers []AIPlayer `json:"aiPlayers"`
 	MapGridSize   MapSize    `json:"map"`
 	AllPlanets    []Planet   `json:"planets"`
@@ -20,6 +22,11 @@ func (in In) AIPlayers() []imodel.AIPlayerGetter {
 		players[i] = p
 	}
 	return players
+}
+
+// CallbackURL returns a url to send an asynchronous response
+func (in In) CallbackURL() string {
+	return in.Callback
 }
 
 // MapSize returns size of map grid
@@ -38,6 +45,9 @@ func (in In) Planets() []imodel.PlanetGetter {
 
 // Check validates In model
 func (in In) Check(manager iai.ManagerChecker) error {
+	if _, err := url.Parse(in.Callback); err != nil {
+		return errors.New("Callback URL is invalid")
+	}
 	if len(in.ArtIntPlayers) == 0 {
 		return errors.New("No AI players")
 	}
