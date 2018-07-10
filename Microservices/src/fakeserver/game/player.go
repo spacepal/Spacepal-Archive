@@ -2,37 +2,35 @@ package game
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 )
 
 const aiNamesURL = "http://localhost:3131/ai/names"
 
 // Player is a model of game AI member
-type Player struct {
+type player struct {
 	PlayerID int    `json:"playerID"`
 	AIName   string `json:"aiName"`
 }
 
-// GenPlayers returns a list of random players
-func GenPlayers(count int) ([]Player, error) {
-	if count <= 0 {
-		return nil, nil
-	}
+// genPlayers generates a list of random players
+func (g *Game) genPlayers() error {
 	names, err := getAINames()
 	if err != nil {
-		return nil, err
+		return err
 	}
 	if len(names) == 0 {
-		return nil, nil
+		return errors.New("AI not found")
 	}
-	players := make([]Player, count)
-	for i := 0; i < count; i++ {
-		players[i] = Player{
+	g.players = make([]player, g.params.PlayersCount)
+	for i := 0; i < g.params.PlayersCount; i++ {
+		g.players[i] = player{
 			PlayerID: i + 1,
 			AIName:   "name",
 		}
 	}
-	return players, nil
+	return nil
 }
 
 type aiNames struct {
