@@ -6,7 +6,9 @@ import (
 	"aiservice/constants"
 	"aiservice/server"
 	"flag"
+	"math/rand"
 	"net/http"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -21,4 +23,8 @@ func main() {
 	go turnHander.Start()
 	http.Handle("/ai/do", server.NewDoHandler(turnHander, aiManager))
 	log.Fatal(http.ListenAndServe(*addr, nil))
+}
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
 }
