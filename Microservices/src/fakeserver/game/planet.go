@@ -52,7 +52,8 @@ func (p *planet) setCapital(owner int) {
 func (p *planet) DecreaseShipsCount(byValue int) {
 	p.ShipsCount -= byValue
 	if p.ShipsCount < 0 {
-		log.Error("Ships count is negative!")
+		log.Errorf("planet.go DecreaseShipsCount(%d): Ships count is negative!",
+			byValue)
 		p.ShipsCount = 0
 	}
 }

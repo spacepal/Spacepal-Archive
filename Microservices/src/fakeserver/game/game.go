@@ -43,22 +43,20 @@ func (g *Game) EndTurn(tasks []model.Task) {
 // pushTask append a new task if is valid
 func (g *Game) pushTask(task model.Task) {
 	if err := task.Check(); err != nil {
-		log.Error(err)
+		log.Error("game.go pushTask(): ", err, " [", task, "]")
 		return
 	}
 	if task.From > len(g.planets) {
-		log.Info("pushTask(): Invalid task ", task)
-		log.Error("invalid From planetID")
+		log.Error("game.go pushTask(): invalid From planetID [", task, "]")
 		return
 	}
 	if task.To > len(g.planets) {
-		log.Info("pushTask(): Invalid task ", task)
-		log.Error("invalid To planetID")
+		log.Error("game.go pushTask(): invalid To in task [", task, "]")
 		return
 	}
 	if owner := task.Player; owner != g.planets[task.From].OwnerID {
-		log.Info("pushTask(): Invalid task: ", task)
-		log.Errorf("The player %d does not own planet %d", owner, task.From)
+		log.Errorf("game.go pushTask(): The player$%d does not own planet$%d [%v]",
+			owner, task.From, task)
 		return
 	}
 	g.tasks[g.lastTaskID] = task

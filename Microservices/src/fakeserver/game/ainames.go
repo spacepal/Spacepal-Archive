@@ -5,6 +5,8 @@ import (
 	"errors"
 	"math/rand"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 )
 
 const aiNamesURL = "http://localhost:3131/ai/names"
@@ -37,5 +39,6 @@ func newAiNames() (*aiNames, error) {
 	if names.Count == 0 {
 		return nil, errors.New("aiservice doesn't have any AI")
 	}
+	log.Info("ainames.go: Available AIs: ", names.All)
 	return &names, nil
 }
