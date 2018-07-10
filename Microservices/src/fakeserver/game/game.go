@@ -1,42 +1,26 @@
 package game
 
-import "errors"
+import (
+	"fakeserver/game/igame"
+	"fakeserver/game/model"
+)
 
+// Game emulates fake game
 type Game struct {
-	params  GameParams
-	planets []planet
-	players []player
-	turn    int
+	params     model.GameParams
+	planets    []planet
+	players    []player
+	turn       int
+	tasks      map[int]model.Task // ships in space
+	lastTaskID int
 }
 
-type GameParams struct {
-	MapWidth, MapHeight    int
-	ProductionAfterCapture bool
-	PlayersCount           int
-	PlanetsCount           int
-}
-
-func (p *GameParams) check() error {
-	if p.PlayersCount < 2 {
-		return errors.New("Invalid count of players")
-	}
-	if p.MapWidth <= 0 || p.MapHeight <= 0 {
-		return errors.New("Map size is negative")
-	}
-	if p.PlayersCount > p.PlanetsCount {
-		return errors.New("There is no place for players")
-	}
-	if p.PlanetsCount > p.MapWidth*p.MapHeight {
-		return errors.New("There is no place for planets")
-	}
-	return nil
-}
-
-func NewGame(params GameParams) (*Game, error) {
-	if err := params.check(); err != nil {
+// NewGame creates a new implementation of game
+func NewGame(params model.GameParams) (igame.Game, error) {
+	if err := params.Check(); err != nil {
 		return nil, err
 	}
-	g := Game{params: params, turn: 1}
+	g := Game{params: params, turn: 1, lastTaskID: 0}
 	g.genPlanets()
 	if err := g.genPlayers(); err != nil {
 		return nil, err
@@ -44,6 +28,15 @@ func NewGame(params GameParams) (*Game, error) {
 	return &g, nil
 }
 
-func (g *Game) endTurn(tasks Task) {
+// EndTurn processes turn of game
+func (g *Game) EndTurn(tasks []model.Task) {
+	for _, task := range tasks {
+		g.pushTask(task)
+	}
 	g.turn++
+}
+
+func (g *Game) pushTask(task model.Task) {
+	g.tasks[g.lastTaskID] = task
+	g.lastTaskID++
 }

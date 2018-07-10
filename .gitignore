@@ -90,6 +90,9 @@ Microservices/production/*
 Microservices/src/aiservice/bin/*
 Microservices/src/aiservice/vendor
 !Microservices/src/aiservice
+Microservices/src/fakeserver/bin/*
+Microservices/src/fakeserver/vendor
+!Microservices/src/fakeserver
 !.keep
 
 
