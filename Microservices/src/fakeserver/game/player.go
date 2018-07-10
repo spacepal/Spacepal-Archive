@@ -15,7 +15,7 @@ func (g *Game) genPlayers() error {
 	g.players = make([]player, g.params.PlayersCount)
 	for i := 0; i < g.params.PlayersCount; i++ {
 		g.players[i] = player{
-			PlayerID: i + 1,
+			PlayerID: i,
 			AIName:   aiNames.PickRandom(),
 		}
 	}
