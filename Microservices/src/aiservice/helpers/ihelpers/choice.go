@@ -8,5 +8,5 @@ import (
 // ChoiceMaker is an interface for PlanetChoiceMaker
 type ChoiceMaker interface {
 	MakeChoice(planets []imodel.PlanetGetter, main imodel.PlanetGetter,
-		factor ilist.FactorGetter) imodel.PlanetGetter
+		factor ilist.FactorGetter) (planet imodel.PlanetGetter, distance int)
 }

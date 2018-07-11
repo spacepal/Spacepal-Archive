@@ -13,8 +13,9 @@ type choiceMaker struct {
 }
 
 type planetScore struct {
-	planet imodel.PlanetGetter
-	score  float64
+	planet   imodel.PlanetGetter
+	score    float64
+	distance int
 }
 
 func newPlanetScore(
@@ -25,9 +26,9 @@ func newPlanetScore(
 ) planetScore {
 
 	// Calculates score
-	var distance = float64(distanceCalc.Calculate(target.Cell()))
+	var distance = distanceCalc.Calculate(target.Cell())
 	var normalizedShips = float64(target.Ships()) / float64(globStat.MidShips())
-	var score = factor.Distance() * distance
+	var score = factor.Distance() * float64(distance)
 	score += factor.Kill() * target.NormalizedKill()
 	if !target.IsNeutral() {
 		score += factor.PlayerPower() * globStat.PlayerPower(target.Owner())
@@ -36,8 +37,9 @@ func newPlanetScore(
 	score += factor.Prod() * target.NormalizedProd()
 	score += factor.Ships() * normalizedShips
 	return planetScore{
-		planet: target,
-		score:  score,
+		planet:   target,
+		score:    score,
+		distance: distance,
 	}
 }
 
@@ -75,10 +77,10 @@ func (cm PlanetChoiceMaker) MakeChoice(
 	planets []imodel.PlanetGetter,
 	main imodel.PlanetGetter,
 	factor ilist.FactorGetter,
-) imodel.PlanetGetter {
+) (imodel.PlanetGetter, int) {
 
 	if len(planets) == 0 {
-		return nil
+		return nil, 0
 	}
 	distanceSurface := NewDistanceSurface(main.Cell(), cm.mapSize)
 	planetScores := make([]planetScore, len(planets))
@@ -87,7 +89,7 @@ func (cm PlanetChoiceMaker) MakeChoice(
 	}
 	sort.Sort(sort.Reverse(byScore(planetScores)))
 	var i = cm.calculateIndex(len(planetScores), factor.Random())
-	return planetScores[i].planet
+	return planetScores[i].planet, planetScores[i].distance
 }
 
 // calculateIndex gets the count of planets and random factor (that is deviation)

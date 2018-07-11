@@ -4,11 +4,11 @@ import "errors"
 
 // Task is a
 type Task struct {
-	Player int `json:"playerID"`
+	Player int `json:"player"`
 	From   int `json:"from"`
 	To     int `json:"to"`
 	Count  int `json:"count"`
-	Steps  int `json:"-"`
+	Steps  int `json:"steps"`
 }
 
 // Check validates Task

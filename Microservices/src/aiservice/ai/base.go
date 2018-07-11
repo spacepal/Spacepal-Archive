@@ -36,12 +36,16 @@ func (b Base) safeCreateTask(
 	main imodel.PlanetGetter,
 	target imodel.PlanetGetter,
 	quantity float64,
-	tasks *[]imodel.TaskGetter) {
+	tasks *[]imodel.TaskGetter,
+	playerID, distance int,
+) {
 	if target == nil {
 		return
 	}
 	shipsCount := float64(main.Ships()) * quantity
-	task := model.NewTask(main.ID(), target.ID(), int(shipsCount))
+	task := model.NewTask(playerID,
+		main.ID(), target.ID(),
+		int(shipsCount), distance)
 	*tasks = append(*tasks, task)
 }
 
@@ -57,14 +61,14 @@ func (b Base) MakeMove(
 		if main.Ships() == 0 {
 			continue
 		}
-		var planetToAttack = chooser.MakeChoice(
+		var planetToAttack, attackDist = chooser.MakeChoice(
 			planets.Foreign(), main, b.attack)
 		b.safeCreateTask(main, planetToAttack,
-			b.attack.Quantity(), &tasks)
-		var planetToRedistribute = chooser.MakeChoice(
+			b.attack.Quantity(), &tasks, main.Owner(), attackDist)
+		var planetToRedistribute, redisDist = chooser.MakeChoice(
 			planets.Self(), main, b.redistribution)
 		b.safeCreateTask(main, planetToRedistribute,
-			b.redistribution.Quantity(), &tasks)
+			b.redistribution.Quantity(), &tasks, main.Owner(), redisDist)
 	}
 	return tasks
 }
