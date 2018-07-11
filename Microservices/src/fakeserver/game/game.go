@@ -34,31 +34,67 @@ func NewGame(params model.GameParams) (igame.Game, error) {
 func (g *Game) EndTurn(tasks []model.Task) {
 	g.processShips()
 	for _, task := range tasks {
-		g.pushTask(task)
+		if g.pushTask(task) {
+			g.planets[task.From].ShipsCount -= task.Count
+		}
 	}
 	g.processPlanets()
 	g.turn++
 }
 
+// IsOver checks game end
+func (g *Game) IsOver() bool {
+	var activePlayers = make(map[int]bool)
+	for _, p := range g.planets {
+		if !p.IsNeutral() {
+			activePlayers[p.OwnerID] = true
+		}
+	}
+	for _, t := range g.tasks {
+		activePlayers[t.Player] = true
+	}
+	return len(activePlayers) <= 1
+}
+
+// Players returns all members
+func (g *Game) Players() []igame.Player {
+	g.recalculatePlayerStat()
+	players := make([]igame.Player, len(g.players))
+	for i, p := range g.players {
+		players[i] = p
+	}
+	return players
+}
+
+// Planets returns all generated planets
+func (g Game) Planets() []igame.Planet {
+	planets := make([]igame.Planet, len(g.planets))
+	for i, p := range g.planets {
+		planets[i] = p
+	}
+	return planets
+}
+
 // pushTask append a new task if is valid
-func (g *Game) pushTask(task model.Task) {
+func (g *Game) pushTask(task model.Task) bool {
 	if err := task.Check(); err != nil {
 		log.Error("game.go pushTask(): ", err, " [", task, "]")
-		return
+		return false
 	}
 	if task.From > len(g.planets) {
 		log.Error("game.go pushTask(): invalid From planetID [", task, "]")
-		return
+		return false
 	}
 	if task.To > len(g.planets) {
 		log.Error("game.go pushTask(): invalid To in task [", task, "]")
-		return
+		return false
 	}
 	if owner := task.Player; owner != g.planets[task.From].OwnerID {
 		log.Errorf("game.go pushTask(): The player$%d does not own planet$%d [%v]",
 			owner, task.From, task)
-		return
+		return false
 	}
 	g.tasks[g.lastTaskID] = task
 	g.lastTaskID++
+	return true
 }

@@ -10,7 +10,7 @@ GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
 
 BINPATH=./bin
-BINNAME=aiservice
+BINNAME=fakeserver
 GOMAIN=main.go
 
 all: deps test build clean
