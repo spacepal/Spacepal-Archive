@@ -109,7 +109,7 @@ func main() {
 		log.Fatal(gameProxy.StartServ())
 	}()
 
-	for game.IsOver() {
+	for !game.IsOver() {
 		fmt.Print("Press [enter] for end turn")
 		fmt.Scanln()
 		printPlayers(game)
