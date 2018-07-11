@@ -6,14 +6,17 @@ import (
 
 // Task represents an action per turn
 type Task struct {
+	PlayerID   int `json:"player"`
 	FromID     int `json:"from"`
 	ToID       int `json:"to"`
 	ShipsCount int `json:"count"`
+	Distance   int `json:"steps"`
 }
 
 // NewTask is the Task-factory method
-func NewTask(from, to, ships int) imodel.TaskGetter {
-	return &Task{FromID: from, ToID: to, ShipsCount: ships}
+func NewTask(player, from, to, ships, distance int) imodel.TaskGetter {
+	return &Task{PlayerID: player, FromID: from, ToID: to,
+		ShipsCount: ships, Distance: distance}
 }
 
 // From returns id of planet from where ships are sent

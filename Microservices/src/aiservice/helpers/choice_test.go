@@ -67,20 +67,20 @@ func TestPlanetChoiceMaker(t *testing.T) {
 	}
 
 	for i, p := range planets {
-		planet := chooser.MakeChoice(planets, p, FakeFactor{})
+		planet, _ := chooser.MakeChoice(planets, p, FakeFactor{})
 		if planet == nil {
 			t.Log("The PlanetChoiceMaker doesn't make a choice")
 			t.Error("planet[", i, "] == nil")
 		}
 	}
 
-	empty := chooser.MakeChoice([]imodel.PlanetGetter{}, planets[0], FakeFactor{})
+	empty, _ := chooser.MakeChoice([]imodel.PlanetGetter{}, planets[0], FakeFactor{})
 	if empty != nil {
 		t.Log("The planet from empty collection is not equal to nil")
 		t.Error("empty != nil")
 	}
 
-	one := chooser.MakeChoice(planets[:1], planets[1], FakeFactor{})
+	one, _ := chooser.MakeChoice(planets[:1], planets[1], FakeFactor{})
 	if one != planets[0] {
 		t.Log("The planet from collection with only one planet is not selected")
 		t.Error("one != planets[0]")
