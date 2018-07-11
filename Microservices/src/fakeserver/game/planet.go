@@ -39,6 +39,8 @@ func newNeutralPlanet(planetID, cellID int) planet {
 	return p
 }
 
+func (p planet) IsNeutral() bool { return p.OwnerID == neutralPlanetID }
+
 // setCapital sets capital status for planet
 func (p *planet) setCapital(owner int) {
 	p.InitialProduction = capitalProd
