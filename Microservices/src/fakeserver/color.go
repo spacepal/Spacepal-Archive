@@ -2,10 +2,10 @@ package main
 
 import "fmt"
 
-const redColor = "\033[31"
-const blueColor = "\033[34"
-const greenColor = "\033[32"
-const purpleColor = "\033[35"
+const redColor = "\033[31 "
+const blueColor = "\033[34 "
+const greenColor = "\033[32 "
+const purpleColor = "\033[35 "
 const resetAll = "\033[0m"
 
 type color string

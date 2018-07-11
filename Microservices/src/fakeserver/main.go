@@ -105,9 +105,11 @@ func main() {
 	if gameProxy == nil {
 		log.Fatal("game proxy is nil")
 	}
-	go log.Fatal(gameProxy.StartServ())
+	go func() {
+		log.Fatal(gameProxy.StartServ())
+	}()
 
-	for !game.IsOver() {
+	for game.IsOver() {
 		fmt.Print("Press [enter] for end turn")
 		fmt.Scanln()
 		printPlayers(game)
