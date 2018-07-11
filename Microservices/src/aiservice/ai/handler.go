@@ -36,16 +36,12 @@ func (h TurnHandler) Handle(in imodel.InGetter) {
 func (h TurnHandler) process(in imodel.InGetter) {
 	var globStat = helpers.NewGlobStat(in.Planets())
 	var out model.TasksOut
-	out.Players = make([]model.TasksOfPlayer, 0)
+	out.Tasks = make([]imodel.TaskGetter, 0)
 	for _, p := range in.AIPlayers() {
 		planets := helpers.NewPlanets(in.Planets(), p.Player())
 		bot := h.manager.Get(p.Name())
 		tasks := bot.MakeMove(planets, globStat, in.MapSize())
-		player := model.TasksOfPlayer{
-			Player: p.Player(),
-			Tasks:  tasks,
-		}
-		out.Players = append(out.Players, player)
+		out.Tasks = append(out.Tasks, tasks...)
 	}
 	go func() { // send back
 		err := h.asyncResponse(in.CallbackURL(), out)

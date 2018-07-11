@@ -83,21 +83,23 @@ func TestAIHandler(t *testing.T) {
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			defer func() { rCh <- true }() // unlock test
 			var outModel = struct {
-				Players []struct {
-					ID    int `json:"id"`
-					Tasks []struct {
-						From  int `json:"from"`
-						To    int `json:"to"`
-						Count int `json:"count"`
-					} `json:"tasks"`
-				} `json:"players"`
+				Tasks []struct {
+					Player int `json:"player"`
+					From   int `json:"from"`
+					To     int `json:"to"`
+					Count  int `json:"count"`
+				} `json:"tasks"`
 			}{}
 			if err := json.NewDecoder(r.Body).Decode(&outModel); err != nil {
 				t.Fatal(err)
 			}
-			if len(outModel.Players) != aiPlayersCount {
-				t.Fatalf("Invalid count of AI players; want: %d, get: %d",
-					aiPlayersCount, len(outModel.Players))
+			players := make(map[int]bool)
+			for _, t := range outModel.Tasks {
+				players[t.Player] = true
+			}
+			if len(players) != aiPlayersCount {
+				t.Fatalf("Not all players have made a move; players count, want: %d, get: %d",
+					aiPlayersCount, len(players))
 			}
 		}))
 	defer ts.Close()

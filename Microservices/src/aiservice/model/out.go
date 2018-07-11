@@ -12,11 +12,5 @@ type AINamesOut struct {
 
 // TasksOut represents a model of response with moves of players
 type TasksOut struct {
-	Players []TasksOfPlayer `json:"players"`
-}
-
-// TasksOfPlayer containts tasks of a player
-type TasksOfPlayer struct {
-	Player int                 `json:"id"`
-	Tasks  []imodel.TaskGetter `json:"tasks"`
+	Tasks []imodel.TaskGetter `json:"tasks"`
 }
