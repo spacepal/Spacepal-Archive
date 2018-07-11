@@ -4,7 +4,7 @@ package game
 type player struct {
 	ShipsCount int     `json:"-"`
 	Power      float64 `json:"-"`
-	MemberID   int     `json:"id"`
+	MemberID   int     `json:"playerID"`
 	AIName     string  `json:"aiName"`
 }
 
