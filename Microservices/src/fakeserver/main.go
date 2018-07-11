@@ -18,7 +18,6 @@ import (
 const aiDoURL = "http://localhost:3131/ai/do"
 const servAddr = "localhost:3531"
 const callbackURL = "fake/callback?gameID=1"
-const timeoutDuration = 15 * time.Second
 
 type prox struct {
 	lock chan bool
@@ -56,10 +55,7 @@ func (p *prox) StartServ() error {
 func (p *prox) tasksHandle(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	defer func() {
-		select {
-		case p.lock <- true:
-		default:
-		}
+		p.lock <- true
 	}()
 	if err := json.NewDecoder(r.Body).Decode(&p.in); err != nil {
 		p.in.Tasks = nil
@@ -75,20 +71,21 @@ func (p *prox) EndTurn() error {
 	if err != nil {
 		return err
 	}
-	r, err := http.Post(aiDoURL, "application/json", bytes.NewBuffer(raw))
+	var r *http.Response
+	go func() {
+		r, err = http.Post(aiDoURL, "application/json", bytes.NewBuffer(raw))
+		if err == nil {
+			defer r.Body.Close()
+			if r.StatusCode != http.StatusOK {
+				var errMsg = make([]byte, 256)
+				r.Body.Read(errMsg)
+				err = errors.New("Invalid http-status: " + string(errMsg))
+			}
+		}
+	}()
+	<-p.lock
 	if err != nil {
 		return err
-	}
-	defer r.Body.Close()
-	if r.StatusCode != http.StatusOK {
-		var errMsg = make([]byte, 256)
-		r.Body.Read(errMsg)
-		return errors.New("Invalid http-status: " + string(errMsg))
-	}
-	select {
-	case <-p.lock:
-	case <-time.After(timeoutDuration):
-		return errors.New("Timeout")
 	}
 	p.game.EndTurn(p.in.Tasks)
 	return nil
@@ -121,7 +118,7 @@ func main() {
 		// fmt.Scanln()
 		err := gameProxy.EndTurn()
 		if err != nil {
-			log.Error(err)
+			log.Fatal(err)
 		}
 	}
 	log.Print("The game is end")
