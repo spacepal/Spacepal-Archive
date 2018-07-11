@@ -30,7 +30,7 @@ type prox struct {
 			Width  int `json:"width"`
 			Height int `json:"height"`
 		} `json:"map"`
-		AllPlanets []igame.Planet `json:"planets"`
+		Planets []igame.Planet `json:"planets"`
 	}
 	in struct {
 		Tasks []model.Task `json:"tasks"`
@@ -69,6 +69,8 @@ func (p *prox) tasksHandle(w http.ResponseWriter, r *http.Request) {
 }
 
 func (p *prox) EndTurn() error {
+	p.out.Players = p.game.Players()
+	p.out.Planets = p.game.Planets()
 	raw, err := json.Marshal(p.out)
 	if err != nil {
 		return err
@@ -79,7 +81,9 @@ func (p *prox) EndTurn() error {
 	}
 	defer r.Body.Close()
 	if r.StatusCode != http.StatusOK {
-		return errors.New("Invalid http-status: " + r.Status)
+		var errMsg = make([]byte, 256)
+		r.Body.Read(errMsg)
+		return errors.New("Invalid http-status: " + string(errMsg))
 	}
 	select {
 	case <-p.lock:
@@ -110,11 +114,15 @@ func main() {
 	}()
 
 	for !game.IsOver() {
-		fmt.Println("Press [enter] for end turn")
-		fmt.Println()
 		log.Info("Turn: ", game.TurnNumber())
-		fmt.Scanln()
 		printPlayers(game)
+		printPlanets(game)
+		// fmt.Println("Press [enter] for end turn")
+		// fmt.Scanln()
+		err := gameProxy.EndTurn()
+		if err != nil {
+			log.Error(err)
+		}
 	}
 	log.Print("The game is end")
 }
