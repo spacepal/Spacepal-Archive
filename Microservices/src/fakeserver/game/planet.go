@@ -97,10 +97,10 @@ func (p *planet) setRndProduction() {
 
 // genPlanets generates a slice of random neutral planets
 func (g *Game) genPlanets() {
-	cellIDs := rand.Perm(g.params.MapWidth * g.params.MapHeight)
+	cellIDs := rand.Perm(g.params.MapWidth*g.params.MapHeight - 1)
 	planets := make([]planet, g.params.PlanetsCount)
 	for i := range planets {
-		planets[i] = newNeutralPlanet(i, cellIDs[i])
+		planets[i] = newNeutralPlanet(i, cellIDs[i]+1)
 	}
 	g.planets = planets
 }
