@@ -27,6 +27,10 @@ func NewGame(params model.GameParams) (igame.Game, error) {
 	if err := g.genPlayers(); err != nil {
 		return nil, err
 	}
+	for i, player := range g.players {
+		log.Print(g.planets)
+		g.planets[i].ChangeOwner(player.MemberID)
+	}
 	return &g, nil
 }
 
