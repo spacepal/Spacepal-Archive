@@ -83,8 +83,8 @@ func TestBase(t *testing.T) {
 	if tasks == nil {
 		t.Fatal("The Base AI doesn't make a turn")
 	}
-	if len(tasks) != len(planets.Self())*2 { // *2 - attack and redistribution
-		t.Fatalf("Invalid count of returned tasks, get: %d, want: %d",
+	if len(tasks) < len(planets.Self()) { //
+		t.Fatalf("Invalid count of returned tasks, get: %d < %d ",
 			len(tasks), len(planets.Self())*2)
 	}
 	for _, task := range tasks {
