@@ -42,6 +42,39 @@ func (g *Game) EndTurn(tasks []model.Task) {
 	g.turn++
 }
 
+// IsOver checks game end
+func (g *Game) IsOver() bool {
+	var activePlayers = make(map[int]bool)
+	for _, p := range g.planets {
+		if !p.IsNeutral() {
+			activePlayers[p.OwnerID] = true
+		}
+	}
+	for _, t := range g.tasks {
+		activePlayers[t.Player] = true
+	}
+	return len(activePlayers) <= 1
+}
+
+// Players returns all members
+func (g *Game) Players() []igame.Player {
+	g.recalculatePlayerStat()
+	players := make([]igame.Player, len(g.players))
+	for i, p := range g.players {
+		players[i] = p
+	}
+	return players
+}
+
+// Planets returns all generated planets
+func (g Game) Planets() []igame.Planet {
+	planets := make([]igame.Planet, len(g.planets))
+	for i, p := range g.planets {
+		planets[i] = p
+	}
+	return planets
+}
+
 // pushTask append a new task if is valid
 func (g *Game) pushTask(task model.Task) bool {
 	if err := task.Check(); err != nil {
