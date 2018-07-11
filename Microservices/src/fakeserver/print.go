@@ -7,7 +7,7 @@ import (
 
 func printPlayers(g igame.Game) {
 	players := g.Players()
-	fmt.Println("\n\n*** Players")
+	fmt.Println("\n*** Players")
 	for _, p := range players {
 		fmt.Printf("%s%d\t%s\tScore: %f\tShips: %d\n",
 			"player$",

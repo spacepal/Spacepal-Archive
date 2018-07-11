@@ -110,7 +110,9 @@ func main() {
 	}()
 
 	for !game.IsOver() {
-		fmt.Print("Press [enter] for end turn")
+		fmt.Println("Press [enter] for end turn")
+		fmt.Println()
+		log.Info("Turn: ", game.TurnNumber())
 		fmt.Scanln()
 		printPlayers(game)
 	}

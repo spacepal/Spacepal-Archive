@@ -28,7 +28,6 @@ func NewGame(params model.GameParams) (igame.Game, error) {
 		return nil, err
 	}
 	for i, player := range g.players {
-		log.Print(g.planets)
 		g.planets[i].ChangeOwner(player.MemberID)
 	}
 	return &g, nil
@@ -44,6 +43,11 @@ func (g *Game) EndTurn(tasks []model.Task) {
 	}
 	g.processPlanets()
 	g.turn++
+}
+
+// TurnNumber returns current game turn
+func (g Game) TurnNumber() int {
+	return g.turn
 }
 
 // IsOver checks game end

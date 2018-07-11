@@ -8,4 +8,5 @@ type Game interface {
 	Players() []Player
 	Planets() []Planet
 	IsOver() bool
+	TurnNumber() int
 }
