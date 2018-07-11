@@ -38,13 +38,16 @@ func (g *Game) processAttack(t model.Task) {
 			t.To, t.Count)
 		killPerc = g.planets[t.From].KillPercentage
 		g.planets[t.To].OwnerID = t.Player
+		g.planets[t.To].Production = g.planets[t.To].InitialProduction
 	}
 	g.planets[t.To].ShipsCount = int(math.Ceil(result / killPerc))
 }
 
-// processPlanets processes planets
 func (g *Game) processPlanets() {
 	for id, p := range g.planets {
-		log.Print("@todo processPlanets ", id, p)
+		if !p.IsNeutral() {
+			g.planets[id].IncProduction()
+		}
+		g.planets[id].ShipsCount += p.Production
 	}
 }
