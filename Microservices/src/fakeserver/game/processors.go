@@ -37,8 +37,7 @@ func (g *Game) processAttack(t model.Task) {
 		log.Info("The player$", t.Player, " captured planet by %d ship(s)$",
 			t.To, t.Count)
 		killPerc = g.planets[t.From].KillPercentage
-		g.planets[t.To].OwnerID = t.Player
-		g.planets[t.To].Production = g.planets[t.To].InitialProduction
+		g.planets[t.To].ChangeOwner(t.Player)
 	}
 	g.planets[t.To].ShipsCount = int(math.Ceil(result / killPerc))
 }
