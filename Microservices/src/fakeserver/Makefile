@@ -11,7 +11,7 @@ GOGET=$(GOCMD) get
 
 BINPATH=./bin
 BINNAME=fakeserver
-GOMAIN=main.go
+GOMAIN=main.go color.go print.go
 
 all: deps test build clean
 build:
