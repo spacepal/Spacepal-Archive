@@ -22,7 +22,12 @@ func NewGame(params model.GameParams) (igame.Game, error) {
 	if err := params.Check(); err != nil {
 		return nil, err
 	}
-	g := Game{params: params, turn: 1, lastTaskID: 0}
+	g := Game{
+		params:     params,
+		turn:       1,
+		lastTaskID: 0,
+		tasks:      make(map[int]model.Task),
+	}
 	g.genPlanets()
 	if err := g.genPlayers(); err != nil {
 		return nil, err
