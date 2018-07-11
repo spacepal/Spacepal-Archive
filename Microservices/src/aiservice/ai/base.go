@@ -46,6 +46,9 @@ func (b Base) safeCreateTask(
 		return
 	}
 	shipsCount := float64(main.Ships()) * quantity
+	if shipsCount == 0 {
+		return
+	}
 	task := model.NewTask(playerID,
 		main.ID(), target.ID(),
 		int(shipsCount), distance)
