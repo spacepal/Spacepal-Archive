@@ -42,6 +42,9 @@ func (b Base) safeCreateTask(
 	if target == nil {
 		return
 	}
+	if target.ID() == main.ID() {
+		return
+	}
 	shipsCount := float64(main.Ships()) * quantity
 	task := model.NewTask(playerID,
 		main.ID(), target.ID(),
