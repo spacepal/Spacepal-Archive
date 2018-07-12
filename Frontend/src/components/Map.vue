@@ -6,7 +6,7 @@
       @mousedown="mousedown"
       @mousemove="mousemove"
       @mouseup="mouseup"
-      @mousewheel="mousewheel"
+      @wheel="mousewheel"
       :class="canvasClass"
       ref="canvas"></canvas>
     <Window type="confirm" ref="taskWindow" title="Create task"
@@ -180,8 +180,8 @@ export default {
       }
     },
     mousewheel (event) {
-      let { wheelDelta } = event
-      let delta = wheelDelta / Math.abs(wheelDelta)
+      let { deltaY } = event
+      let delta = -deltaY / Math.abs(deltaY)
       this.scaleSurface(1.0 + delta * 0.1)
       this.tick()
       event.preventDefault()
