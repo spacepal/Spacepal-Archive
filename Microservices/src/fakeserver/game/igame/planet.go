@@ -14,4 +14,5 @@ type Planet interface {
 	Kill() float64
 	Ships() int
 	IsNeutral() bool
+	String() string
 }

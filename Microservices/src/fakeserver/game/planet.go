@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"math"
 	"math/rand"
 
@@ -35,7 +36,7 @@ func newNeutralPlanet(planetID, cellID int) planet {
 	p.OwnerID = neutralPlanetID
 	p.CellID = cellID
 	p.PlanetID = planetID
-	p.ShipsCount = p.Production
+	p.ShipsCount = capitalProd
 	return p
 }
 
@@ -47,6 +48,14 @@ func (p planet) InitalProd() int { return p.InitialProduction }
 func (p planet) Kill() float64   { return p.KillPercentage }
 func (p planet) Ships() int      { return p.ShipsCount }
 func (p planet) IsNeutral() bool { return p.OwnerID == neutralPlanetID }
+func (p planet) String() string {
+	player := "neutral"
+	if !p.IsNeutral() {
+		player = fmt.Sprint("player$", p.OwnerID)
+	}
+	return fmt.Sprintf("{Planet#%d %s cell: %d kill: %f prod: %d ships: %d}",
+		p.PlanetID, player, p.CellID, p.KillPercentage, p.Production, p.ShipsCount)
+}
 
 // setCapital sets capital status for planet
 func (p *planet) setCapital(owner int) {

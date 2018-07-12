@@ -1,6 +1,9 @@
 package model
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 // Task is a
 type Task struct {
@@ -9,6 +12,11 @@ type Task struct {
 	To     int `json:"to"`
 	Count  int `json:"count"`
 	Steps  int `json:"steps"`
+}
+
+func (t Task) String() string {
+	return fmt.Sprintf("{Task player$%d from %d to %d ships %d steps %d }",
+		t.Player, t.From, t.To, t.Count, t.Steps)
 }
 
 // Check validates Task
