@@ -44,9 +44,11 @@ func (g *Game) processAttack(t model.Task) {
 
 func (g *Game) processPlanets() {
 	for id, p := range g.planets {
-		if !p.IsNeutral() {
+		if p.IsNeutral() {
+			g.planets[id].ShipsCount += capitalProd
+		} else {
 			g.planets[id].IncProduction()
+			g.planets[id].ShipsCount += p.Production
 		}
-		g.planets[id].ShipsCount += p.Production
 	}
 }
