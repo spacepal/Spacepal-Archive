@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
+	"sync"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -20,7 +21,7 @@ const servAddr = "localhost:3531"
 const callbackURL = "fake/callback?gameID=1"
 
 type prox struct {
-	lock chan bool
+	wg   sync.WaitGroup
 	game igame.Game
 	out  struct { // it's a buffer struct
 		Callback string         `json:"callback"`
@@ -38,7 +39,6 @@ type prox struct {
 
 func newProx(game igame.Game, params model.GameParams) *prox {
 	var p = prox{}
-	p.lock = make(chan bool)
 	p.game = game
 	p.out.Callback = fmt.Sprintf("http://%s/%s", servAddr, callbackURL)
 	p.out.MapSize.Width = params.MapWidth
@@ -54,14 +54,13 @@ func (p *prox) StartServ() error {
 
 func (p *prox) tasksHandle(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	defer func() {
-		p.lock <- true
-	}()
+	defer p.wg.Done()
 	if err := json.NewDecoder(r.Body).Decode(&p.in); err != nil {
 		p.in.Tasks = nil
 		log.Error(err)
 		return
 	}
+	log.Info(p.in.Tasks)
 }
 
 func (p *prox) EndTurn() error {
@@ -72,18 +71,17 @@ func (p *prox) EndTurn() error {
 		return err
 	}
 	var r *http.Response
-	go func() {
-		r, err = http.Post(aiDoURL, "application/json", bytes.NewBuffer(raw))
-		if err == nil {
-			defer r.Body.Close()
-			if r.StatusCode != http.StatusOK {
-				var errMsg = make([]byte, 256)
-				r.Body.Read(errMsg)
-				err = errors.New("Invalid http-status: " + string(errMsg))
-			}
+	p.wg.Add(1)
+	r, err = http.Post(aiDoURL, "application/json", bytes.NewBuffer(raw))
+	if err == nil {
+		defer r.Body.Close()
+		if r.StatusCode != http.StatusOK {
+			var errMsg = make([]byte, 256)
+			r.Body.Read(errMsg)
+			err = errors.New("Invalid http-status: " + string(errMsg))
 		}
-	}()
-	<-p.lock
+	}
+	p.wg.Wait()
 	if err != nil {
 		return err
 	}
@@ -96,7 +94,7 @@ func main() {
 		MapHeight:    6,
 		MapWidth:     10,
 		PlayersCount: 4,
-		PlanetsCount: 20,
+		PlanetsCount: 40,
 	}
 	game, err := game.NewGame(gameParams)
 	if err != nil {
@@ -114,8 +112,8 @@ func main() {
 		log.Info("Turn: ", game.TurnNumber())
 		printPlayers(game)
 		printPlanets(game)
-		// fmt.Println("Press [enter] for end turn")
-		// fmt.Scanln()
+		fmt.Println("Press [enter] for end turn")
+		fmt.Scanln()
 		err := gameProxy.EndTurn()
 		if err != nil {
 			log.Fatal(err)
