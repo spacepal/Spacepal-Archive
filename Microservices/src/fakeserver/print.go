@@ -23,13 +23,7 @@ func printPlanets(g igame.Game) {
 	planets := g.Planets()
 	fmt.Println("\n*** Planets")
 	for _, p := range planets {
-		fmt.Printf("planet$%d   \tProd: %d   \tKill: %f   \tShips: %d   \tOwner: %d\n",
-			p.ID(),
-			p.Prod(),
-			p.Kill(),
-			p.Ships(),
-			p.Owner(),
-		)
+		fmt.Println(p)
 	}
 	fmt.Println()
 }
