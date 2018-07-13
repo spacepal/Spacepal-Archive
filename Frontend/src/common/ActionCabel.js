@@ -10,7 +10,7 @@ export default class ActionCabel {
       this._okResolvePromise = resolve
       this._okRejectPromise = reject
       this._cable = ActionCable.createConsumer(WS_SERVER)
-      this._cable.subscriptions.create({
+      this._gameRoom = this._cable.subscriptions.create({
         channel: GAME_CHANNEL,
         room: `games:${gameID}`
       },
@@ -65,6 +65,6 @@ export default class ActionCabel {
     return this._okPromise
   }
   endTurn (fleets) {
-    this._cable.perform(END_TURN_ACTION, { fleets })
+    this._gameRoom.perform(END_TURN_ACTION, { fleets })
   }
 }
