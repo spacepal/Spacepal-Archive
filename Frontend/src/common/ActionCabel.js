@@ -9,16 +9,16 @@ export default class ActionCabel {
     this._okPromise = new Promise((resolve, reject) => {
       this._okResolvePromise = resolve
       this._okRejectPromise = reject
-    })
-    this._cable = ActionCable.createConsumer(WS_SERVER)
-    this._cable.subscriptions.create({
-      channel: GAME_CHANNEL,
-      room: `games:${gameID}`
-    },
-    {
-      connected: this.onConnected,
-      received: this.onReceived,
-      disconnected: this.onDisconnected
+      this._cable = ActionCable.createConsumer(WS_SERVER)
+      this._cable.subscriptions.create({
+        channel: GAME_CHANNEL,
+        room: `games:${gameID}`
+      },
+      {
+        connected: this.onConnected.bind(this),
+        received: this.onReceived.bind(this),
+        disconnected: this.onDisconnected.bind(this)
+      })
     })
   }
   onConnected () {

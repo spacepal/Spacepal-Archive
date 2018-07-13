@@ -13,7 +13,7 @@ const service = {
       })
     },
     create (data) {
-      return axios.post(API_URL + 'games', { data })
+      return axios.post(API_URL + 'games', { data }, { withCredentials: true })
     },
     join (gameID, pinCode, username) {
       return axios.put(`${API_URL}games/${gameID}/join`, {
@@ -21,10 +21,10 @@ const service = {
           pinCode,
           username
         }
-      })
+      }, { withCredentials: true })
     },
     logout (gameID) {
-      return axios.delete(`${API_URL}games/${gameID}/player`)
+      return axios.delete(`${API_URL}games/${gameID}/player`, {}, { withCredentials: true })
     }
   }
 }
