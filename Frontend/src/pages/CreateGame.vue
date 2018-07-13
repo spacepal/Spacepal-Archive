@@ -104,8 +104,16 @@ export default {
   },
   methods: {
     setRandom () {
-      this.pref.username = Faker.name.firstName()
-      this.pref.gamename = Faker.company.companyName()
+      let username = ''
+      let gamename = ''
+      while (username.length > 32 || username.length === 0) {
+        username = Faker.name.firstName()
+      }
+      while (gamename.length > 32 || gamename.length === 0) {
+        gamename = Faker.company.companyName()
+      }
+      this.pref.username = username
+      this.pref.gamename = gamename
       this.pref.map.width = Faker.random.number({
         min: 5,
         max: 32
