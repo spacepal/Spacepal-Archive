@@ -31,7 +31,7 @@ export default {
     },
     memberInfo () {
       let isArtificialIntelligence = false
-      let username = 'neutral'
+      let username = (this.id === -1 ? 'loading...' : 'neutral')
       let color = Colors['neutral'].bg
       let m = this.member(this.memberID)
       if (m) {
