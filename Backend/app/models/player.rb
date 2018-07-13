@@ -20,7 +20,7 @@ class Player < Ohm::Model
   collection :planets, :Planet
   collection :fleets, :Fleet
   reference :game, :Game
-
+  
   attribute :is_admin 
   attribute :name
   attribute :color_id, lambda { |x| x.to_i }

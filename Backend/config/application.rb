@@ -15,6 +15,7 @@ require "action_cable/engine"
 require_relative "../lib/common.rb"
 require_relative "../lib/creation.rb"
 require_relative "../lib/deletion.rb"
+require_relative "../lib/test_broadcast.rb"
 # require "sprockets/railtie"
 require "rails/test_unit/railtie"
 
@@ -26,10 +27,13 @@ module Backend
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
+    config.action_cable.mount_path = '/websocket'
+    config.action_cable.allowed_request_origins = [ %r{.*} ]
+    config.middleware.use ActionDispatch::Cookies  
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins '*'
-        resource '*', headers: :any, methods: [:get, :post, :delete, :options, :put]
+        origins 'localhost:8080'
+        resource '*', headers: :any, credentials: true, methods: [:get, :post, :delete, :options, :put]
       end
     end
     # Settings in config/environments/* take precedence over those specified here.

@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
 
-  
+  namespace :test do
+    get 'cookies/get'
+    get 'cookies/set'
+    get 'cookies/del'
+  end
   namespace :api do
     get 'games' => 'game#index'
     post 'games' => 'game#create'
