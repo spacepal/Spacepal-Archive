@@ -151,12 +151,12 @@ class Game < Ohm::Model
     end
   end
 
-  def remove_player player_name
+  def remove_player player_id
     if self.players.size == 1
       Deletion.delete_game self
       return nil
     else
-      self.players.delete Player.find_by(name: player_name)
+      self.players.delete Player[player_id]
       self
     end
   end
