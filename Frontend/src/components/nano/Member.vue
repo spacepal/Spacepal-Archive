@@ -36,7 +36,9 @@ export default {
       let m = this.member(this.memberID)
       if (m) {
         ({ username, color, isArtificialIntelligence } = m)
-        color = Colors[color].bg
+        if (Colors[color] !== undefined) {
+          color = Colors[color].bg
+        }
       }
       return {
         style: { color },
