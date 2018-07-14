@@ -4,6 +4,7 @@ import (
 	"aiservice/ai/iai"
 	"aiservice/model/imodel"
 	"errors"
+	"fmt"
 	"net/url"
 )
 
@@ -48,21 +49,32 @@ func (in In) Check(manager iai.ManagerChecker) error {
 	if _, err := url.Parse(in.Callback); err != nil {
 		return errors.New("Callback URL is invalid")
 	}
-	if len(in.ArtIntPlayers) == 0 {
-		return errors.New("No AI players")
+	if len(in.ArtIntPlayers) < 2 {
+		return errors.New("Invalid count of players")
 	}
-	if len(in.AllPlanets) == 0 {
-		return errors.New("No planets")
+	if len(in.AllPlanets) < len(in.ArtIntPlayers) {
+		return errors.New("Invalid count of planets")
 	}
 	if !in.MapGridSize.isValid() {
 		return errors.New("Map size must be positive")
 	}
+	players := make(map[int]bool)
 	for _, ai := range in.ArtIntPlayers {
 		if err := ai.check(manager); err != nil {
 			return err
 		}
+		if _, ok := players[ai.PlayerID]; ok {
+			return errors.New(fmt.Sprint("Player ID: ", ai.PlayerID, " is not unique"))
+		}
+		players[ai.PlayerID] = true
 	}
+	planetIDs := make(map[int]bool)
 	for _, planet := range in.AllPlanets {
+		if _, ok := planetIDs[planet.PlanetID]; ok {
+			return errors.New(fmt.Sprint("Planet ID: ",
+				planet.PlanetID, " is not unique"))
+		}
+		planetIDs[planet.PlanetID] = true
 		if err := planet.check(in.MapGridSize); err != nil {
 			return err
 		}
