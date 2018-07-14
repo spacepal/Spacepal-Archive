@@ -8,14 +8,14 @@ import (
 	"aiservice/model/imodel"
 )
 
-// Base is a simple AI
-type Base struct {
+// Acceptor is a simple AI
+type Acceptor struct {
 	redistribution ilist.FactorGetter
 	attack         ilist.FactorGetter
 }
 
-// NewBase is a factory method for Base AI
-func NewBase(
+// NewAcceptor is a factory method for Base AI
+func NewAcceptor(
 	redistribution ilist.FactorGetter,
 	attack ilist.FactorGetter,
 ) iai.MoveMaker {
@@ -25,32 +25,36 @@ func NewBase(
 	if redistribution.Quantity()+attack.Quantity() > 1 {
 		panic("The sum of the quantities is grater than 1")
 	}
-	return &Base{
+	return &Acceptor{
 		redistribution: redistribution,
 		attack:         attack,
 	}
 }
 
 // MakeMove : end turn by AI
-func (b Base) MakeMove(
+func (b Acceptor) MakeMove(
 	planets ihelpers.PlanetsGetter,
 	globStat ihelpers.GlobStatGetter,
 	mapSize imodel.MapSizeGetter,
 ) []imodel.TaskGetter {
+	if len(planets.Self()) == 0 {
+		return nil
+	}
 	var chooser = helpers.NewPlanetChoiceMaker(globStat, mapSize)
+	var main, _ = chooser.MakeChoice(
+		planets.Foreign(), planets.Self()[0], b.redistribution)
 	var tasks = make([]imodel.TaskGetter, 0)
-	for _, main := range planets.Self() {
-		if main.Ships() == 0 {
+	for _, current := range planets.Self() {
+		if current.ID() == main.ID() {
+			continue
+		}
+		if current.Ships() == 0 {
 			continue
 		}
 		var planetToAttack, attackDist = chooser.MakeChoice(
 			planets.Foreign(), main, b.attack)
-		safeCreateTask(main, planetToAttack,
+		safeCreateTask(current, planetToAttack,
 			b.attack.Quantity(), &tasks, attackDist)
-		var planetToRedistribute, redisDist = chooser.MakeChoice(
-			planets.Self(), main, b.redistribution)
-		safeCreateTask(main, planetToRedistribute,
-			b.redistribution.Quantity(), &tasks, redisDist)
 	}
 	return tasks
 }
