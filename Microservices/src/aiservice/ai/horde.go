@@ -44,6 +44,9 @@ func (b Horde) MakeMove(
 		planets.Self(), planets.Self()[0], b.redistribution)
 	var planetToAttack, _ = chooser.MakeChoice(
 		planets.Foreign(), main, b.attack)
+	if planetToAttack == nil {
+		return nil
+	}
 	var distanceSurface = helpers.NewDistanceSurface(
 		planetToAttack.Cell(), mapSize)
 	var tasks = make([]imodel.TaskGetter, 0)
