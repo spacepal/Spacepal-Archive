@@ -16,6 +16,7 @@ require_relative "../lib/common.rb"
 require_relative "../lib/creation.rb"
 require_relative "../lib/deletion.rb"
 require_relative "../lib/test_broadcast.rb"
+require_relative "../lib/core/core.rb"
 # require "sprockets/railtie"
 require "rails/test_unit/railtie"
 

@@ -1,6 +1,6 @@
 class Api::GameController < ApplicationController
+
   def index
-    cookies[:id] = 1
     arr = Game.get_all :offset => params[:offset], :limit => params[:limit]
     render :json => { games: arr, :count => $redis.zcard("game:ids") }
   end
@@ -10,7 +10,8 @@ class Api::GameController < ApplicationController
     data = self.game_params
     player = Creation.create_player data[:username]
     if !player.errors.empty?
-      render :json => { errors: player.errors.messages.values.flatten }
+      render :json => { errors: player.errors.messages.flatten }
+      return
     end
     flags = {}
     flags[:has_pin_code] = data[:flags][:hasPinCode]
@@ -22,11 +23,15 @@ class Api::GameController < ApplicationController
       data[:map], data[:playersLimit], data[:planetsCount],
       data[:pinCode], flags
     if game.errors.empty?
+      Creation.create_cells game
+      Creation.create_planets game
       cookies.encrypted[:player_id] = player.id
-      cookies.encrypted[:game_id] = game
-      render :json => { errors: nil, gameID: game.id, cookies: cookies.encrypted[:player_id] }
+      cookies.encrypted[:game_id] = game.id
+      render :json => { errors: nil, gameID: game.id }
+      return
     else
-      render :json => { errors: game.errors.messages.values.flatten }
+      render :json => { errors: game.errors.messages.flatten }
+      return
     end
   end
 
@@ -50,7 +55,7 @@ class Api::GameController < ApplicationController
         render :json => { errors: nil }
         return
       else
-        render :json => { errors: game.errors.messages.values.flatten }
+        render :json => { errors: game.errors.messages.flatten }
         return
       end
     else
@@ -60,14 +65,15 @@ class Api::GameController < ApplicationController
   end
 
   def leave
-    game = Game[cookies.encrypted[:game_id]].remove_player cookies.encrypted[:player_id]
-    cookies.delete :game_id, :player_id
+    game = Game[cookies.encrypted[:game_id]]
+    game&.remove_player cookies.encrypted[:player_id]
+    cookies.delete :game_id
+    cookies.delete :player_id
     render :json => { errors: [ nil ]}
   end
-
-
 
   def game_params
     params.require(:data).permit!
   end
+
 end

@@ -29,6 +29,8 @@ class Creation
   def self.create_player name, is_ai: false, ai_type: nil 
     player = Player.new
     player.name = name
+    player.is_end_turn = false
+    player.is_game_over = false
     player.is_admin = false
     player.color_id = Player::DEFAULT_COLOR
     player.is_ai = is_ai
@@ -49,7 +51,7 @@ class Creation
       end
     end
     cells.each { |cell| cell.game = game; cell.save }
-    game.cells.first.set_all_neighbors
+    #game.cells.first.set_all_neighbors
     if game.cells.count != game.width * game.height
       return false
     else

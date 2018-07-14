@@ -14,6 +14,10 @@ class Cell < Ohm::Model
   validates :coord_x, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 64, greater_than_or_equal_to: 1}
   validates :coord_y, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 64, greater_than_or_equal_to: 1}
 
+  def relative_id
+    return self.id.to_i - self.game.cells.first.id.to_i + 1
+  end
+
   def coord_x
     self.attributes[:coord_x].to_i
   end

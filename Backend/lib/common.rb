@@ -47,6 +47,35 @@ class String
     pp self
   end
 
+  def to_bool
+    return true if self == "true"
+    return false
+  end
+
   private 
+
+end
+
+class FalseClass
+
+  def to_bool 
+    self
+  end
+
+end
+
+class TrueClass
+
+  def to_bool
+    self
+  end
+
+end
+
+class NilClass
+
+  def to_bool
+    nil
+  end
 
 end

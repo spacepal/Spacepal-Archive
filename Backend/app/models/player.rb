@@ -21,10 +21,12 @@ class Player < Ohm::Model
   collection :fleets, :Fleet
   reference :game, :Game
   
-  attribute :is_admin 
+  attribute :is_admin, lambda { |x| x.to_bool }
   attribute :name
   attribute :color_id, lambda { |x| x.to_i }
-  attribute :is_ai
+  attribute :is_end_turn, lambda { |x| x.to_bool }
+  attribute :is_game_over, lambda { |x| x.to_bool }
+  attribute :is_ai, lambda { |x| x.to_bool }
   attribute :ai_type
 
   index :name
@@ -32,6 +34,8 @@ class Player < Ohm::Model
   validates_with PlayerValidator
   validates :name, presence: true, length: { in: 1..32 }
   validates :color_id, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: -1 }
+  validates :is_end_turn, inclusion: { in: [true, false] }
+  validates :is_game_over, inclusion: { in: [true, false] }
   validates :is_admin, inclusion: { in: [true, false] }
   validates :is_ai, inclusion: { in: [true, false] }
   validates :ai_type, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
@@ -40,7 +44,11 @@ class Player < Ohm::Model
     self.planets.size > 0 or self.fleets.size > 0
   end
 
-    def update hash
+  def make_admin
+    self.is_admin = true
+  end
+
+  def update hash
     obj = Player.new hash
     if obj.valid?
       super hash
