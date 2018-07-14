@@ -8,29 +8,30 @@ import (
 	"aiservice/model/imodel"
 )
 
-// Acceptor : planets collect ships on the one main planet
-// main planet attacks one foreign planet
-type Acceptor struct {
+// Horde : planets attack one planet
+// redistribution is used for getting main planet
+// over which distance'll be calculated
+type Horde struct {
 	redistribution ilist.FactorGetter
 	attack         ilist.FactorGetter
 }
 
-// NewAcceptor is a factory method for Acceptor AI
-func NewAcceptor(
+// NewHorde is a factory method for Horde AI
+func NewHorde(
 	redistribution ilist.FactorGetter,
 	attack ilist.FactorGetter,
 ) iai.MoveMaker {
 	if redistribution.Quantity() < 0 || attack.Quantity() < 0 {
 		panic("Quantity is negative")
 	}
-	return &Acceptor{
+	return &Horde{
 		redistribution: redistribution,
 		attack:         attack,
 	}
 }
 
 // MakeMove : end turn by AI
-func (b Acceptor) MakeMove(
+func (b Horde) MakeMove(
 	planets ihelpers.PlanetsGetter,
 	globStat ihelpers.GlobStatGetter,
 	mapSize imodel.MapSizeGetter,
@@ -41,24 +42,18 @@ func (b Acceptor) MakeMove(
 	var chooser = helpers.NewPlanetChoiceMaker(globStat, mapSize)
 	var main, _ = chooser.MakeChoice(
 		planets.Self(), planets.Self()[0], b.redistribution)
+	var planetToAttack, _ = chooser.MakeChoice(
+		planets.Foreign(), main, b.attack)
 	var distanceSurface = helpers.NewDistanceSurface(
-		main.Cell(), mapSize)
+		planetToAttack.Cell(), mapSize)
 	var tasks = make([]imodel.TaskGetter, 0)
 	for _, current := range planets.Self() {
-		// collect all ships on the main planet
-		if current.ID() == main.ID() {
-			continue
-		}
 		if current.Ships() == 0 {
 			continue
 		}
 		dist := distanceSurface.Calculate(current.Cell())
-		safeCreateTask(current, main,
-			b.redistribution.Quantity(), &tasks, dist)
+		safeCreateTask(current, planetToAttack,
+			b.attack.Quantity(), &tasks, dist)
 	}
-	var planetToAttack, attackDist = chooser.MakeChoice(
-		planets.Foreign(), main, b.attack)
-	safeCreateTask(main, planetToAttack,
-		b.attack.Quantity(), &tasks, attackDist)
 	return tasks
 }

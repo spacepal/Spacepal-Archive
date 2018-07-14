@@ -113,8 +113,8 @@ func main() {
 		log.Info("Turn: ", game.TurnNumber())
 		printPlayers(game)
 		printPlanets(game)
-		fmt.Println("Press [enter] for end turn")
-		fmt.Scanln()
+		// fmt.Println("Press [enter] for end turn")
+		// fmt.Scanln()
 		err := gameProxy.EndTurn()
 		if err != nil {
 			log.Fatal(err)

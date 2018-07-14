@@ -31,7 +31,7 @@ func RegisterAll(r iai.ManagerRegister) {
 		}))
 
 	r.Register("Zane", ai.NewAcceptor(
-		&factor{ // redistribution
+		&factor{ // for getting main planet
 			quantity:    +0.7,
 			random:      +0.0,
 			prod:        +1.0,
@@ -42,6 +42,28 @@ func RegisterAll(r iai.ManagerRegister) {
 			distance:    +0.0,
 		},
 		&factor{ // attack
+			quantity:    +1.0,
+			random:      +2.0,
+			prod:        +1.0,
+			kill:        +0.0,
+			power:       +0.0,
+			ships:       +0.0,
+			playerPower: +0.0,
+			distance:    -2.0,
+		}))
+
+	r.Register("Dick", ai.NewHorde(
+		&factor{ // for getting main planet
+			quantity:    +0.0,
+			random:      +0.0,
+			prod:        +10.0,
+			kill:        +0.0,
+			power:       +0.0,
+			ships:       +0.0,
+			playerPower: +0.0,
+			distance:    +0.0,
+		},
+		&factor{ // for getting target planet to attack
 			quantity:    +1.0,
 			random:      +2.0,
 			prod:        +1.0,
