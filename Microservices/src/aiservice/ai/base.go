@@ -5,7 +5,6 @@ import (
 	"aiservice/ai/list/ilist"
 	"aiservice/helpers"
 	"aiservice/helpers/ihelpers"
-	"aiservice/model"
 	"aiservice/model/imodel"
 )
 
@@ -32,29 +31,6 @@ func NewBase(
 	}
 }
 
-func (b Base) safeCreateTask(
-	main imodel.PlanetGetter,
-	target imodel.PlanetGetter,
-	quantity float64,
-	tasks *[]imodel.TaskGetter,
-	playerID, distance int,
-) {
-	if target == nil {
-		return
-	}
-	if target.ID() == main.ID() {
-		return
-	}
-	shipsCount := float64(main.Ships()) * quantity
-	if shipsCount == 0 {
-		return
-	}
-	task := model.NewTask(playerID,
-		main.ID(), target.ID(),
-		int(shipsCount), distance)
-	*tasks = append(*tasks, task)
-}
-
 // MakeMove : end turn by AI
 func (b Base) MakeMove(
 	planets ihelpers.PlanetsGetter,
@@ -69,12 +45,12 @@ func (b Base) MakeMove(
 		}
 		var planetToAttack, attackDist = chooser.MakeChoice(
 			planets.Foreign(), main, b.attack)
-		b.safeCreateTask(main, planetToAttack,
-			b.attack.Quantity(), &tasks, main.Owner(), attackDist)
+		safeCreateTask(main, planetToAttack,
+			b.attack.Quantity(), &tasks, attackDist)
 		var planetToRedistribute, redisDist = chooser.MakeChoice(
 			planets.Self(), main, b.redistribution)
-		b.safeCreateTask(main, planetToRedistribute,
-			b.redistribution.Quantity(), &tasks, main.Owner(), redisDist)
+		safeCreateTask(main, planetToRedistribute,
+			b.redistribution.Quantity(), &tasks, redisDist)
 	}
 	return tasks
 }

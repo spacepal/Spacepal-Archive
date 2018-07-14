@@ -2,7 +2,9 @@ package helpers
 
 import (
 	"aiservice/ai/list/ilist"
+	"aiservice/constants"
 	"aiservice/helpers/ihelpers"
+	"aiservice/helpers/norm"
 	"aiservice/model/imodel"
 	"math"
 	"math/rand"
@@ -27,8 +29,11 @@ func newPlanetScore(
 
 	// Calculates score
 	var distance = distanceCalc.Calculate(target.Cell())
-	var normalizedShips = float64(target.Ships()) / float64(globStat.MidShips())
-	var score = factor.Distance() * float64(distance)
+	var normalizedDistance = norm.Normalize(
+		float64(distance), float64(constants.MidDistance))
+	var normalizedShips = norm.Normalize(
+		float64(target.Ships()), float64(globStat.MidShips()))
+	var score = factor.Distance() * float64(normalizedDistance)
 	score += factor.Kill() * target.NormalizedKill()
 	if !target.IsNeutral() {
 		score += factor.PlayerPower() * globStat.PlayerPower(target.Owner())
@@ -88,7 +93,12 @@ func (cm PlanetChoiceMaker) MakeChoice(
 		planetScores[i] = newPlanetScore(p, factor, distanceSurface, cm.globStat)
 	}
 	sort.Sort(sort.Reverse(byScore(planetScores)))
-	var i = cm.calculateIndex(len(planetScores), factor.Random())
+
+	var randomFactor = factor.Random()
+	// for a weak player, the random factor is lower
+	randomFactor *= cm.globStat.RelatedScore(main.Owner())
+
+	var i = cm.calculateIndex(len(planetScores), randomFactor)
 	return planetScores[i].planet, planetScores[i].distance
 }
 

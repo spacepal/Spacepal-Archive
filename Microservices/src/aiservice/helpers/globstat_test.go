@@ -3,6 +3,7 @@ package helpers
 import (
 	"aiservice/model"
 	"aiservice/model/imodel"
+	"math"
 	"testing"
 )
 
@@ -37,8 +38,8 @@ var globStatCases = struct {
 		{id: 1, player: 0, power: 0},
 		{id: 2, player: -1, power: 0},
 		{id: 3, player: 1000, power: 0},
-		{id: 4, player: 1, power: 2.0},
-		{id: 5, player: 2, power: 0.25},
+		{id: 4, player: 1, power: 0.67},
+		{id: 5, player: 2, power: 0.27},
 	},
 	midShips: 8,
 }
@@ -55,7 +56,7 @@ func TestGlobStat(t *testing.T) {
 	for _, c := range globStatCases.cases {
 		get := gs.PlayerPower(c.player)
 		want := c.power
-		if get != want {
+		if math.Abs(get-want) > 0.1 {
 			t.Errorf("Invalid power for case: %d; want: %f, get: %f", c.id, want, get)
 		}
 	}

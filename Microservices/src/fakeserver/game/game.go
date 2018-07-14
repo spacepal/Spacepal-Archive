@@ -40,12 +40,12 @@ func NewGame(params model.GameParams) (igame.Game, error) {
 
 // EndTurn processes turn of game
 func (g *Game) EndTurn(tasks []model.Task) {
-	g.processShips()
 	for _, task := range tasks {
 		if g.pushTask(task) {
 			g.planets[task.From].ShipsCount -= task.Count
 		}
 	}
+	g.processShips()
 	g.processPlanets()
 	g.turn++
 }
