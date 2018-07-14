@@ -30,7 +30,7 @@ func RegisterAll(r iai.ManagerRegister) {
 			distance:    -2.0,
 		}))
 
-	r.Register("Zane", ai.NewBase(
+	r.Register("Zane", ai.NewAcceptor(
 		&factor{ // redistribution
 			quantity:    +0.7,
 			random:      +0.0,

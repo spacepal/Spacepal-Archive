@@ -22,9 +22,6 @@ func NewAcceptor(
 	if redistribution.Quantity() < 0 || attack.Quantity() < 0 {
 		panic("Quantity is negative")
 	}
-	if redistribution.Quantity()+attack.Quantity() > 1 {
-		panic("The sum of the quantities is grater than 1")
-	}
 	return &Acceptor{
 		redistribution: redistribution,
 		attack:         attack,
@@ -42,19 +39,25 @@ func (b Acceptor) MakeMove(
 	}
 	var chooser = helpers.NewPlanetChoiceMaker(globStat, mapSize)
 	var main, _ = chooser.MakeChoice(
-		planets.Foreign(), planets.Self()[0], b.redistribution)
+		planets.Self(), planets.Self()[0], b.redistribution)
+	var distanceSurface = helpers.NewDistanceSurface(
+		main.Cell(), mapSize)
 	var tasks = make([]imodel.TaskGetter, 0)
 	for _, current := range planets.Self() {
+		// collect all ships on the main planet
 		if current.ID() == main.ID() {
 			continue
 		}
 		if current.Ships() == 0 {
 			continue
 		}
-		var planetToAttack, attackDist = chooser.MakeChoice(
-			planets.Foreign(), main, b.attack)
-		safeCreateTask(current, planetToAttack,
-			b.attack.Quantity(), &tasks, attackDist)
+		dist := distanceSurface.Calculate(current.Cell())
+		safeCreateTask(current, main,
+			b.redistribution.Quantity(), &tasks, dist)
 	}
+	var planetToAttack, attackDist = chooser.MakeChoice(
+		planets.Foreign(), main, b.attack)
+	safeCreateTask(main, planetToAttack,
+		b.attack.Quantity(), &tasks, attackDist)
 	return tasks
 }
