@@ -12,7 +12,7 @@
         </template>
       </div>
     </Window>
-    <Toast glob />
+    <Toast ref="toast" glob />
   </div>
 </template>
 
@@ -55,7 +55,7 @@ export default {
     if (this.$store.getters['isPlayer']) {
       this.$store.dispatch('enableCable').catch(() => {
         this.$store.dispatch('logout').catch(err => {
-          this.$toast.show(err.message)
+          this.$refs.toast.show(err.message)
         })
         this.$router.push({
           name: 'GamesList'
