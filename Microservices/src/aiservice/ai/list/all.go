@@ -26,7 +26,7 @@ func RegisterAll(r iai.ManagerRegister) {
 			kill:        +0.4,
 			power:       +0.0,
 			ships:       -0.2,
-			playerPower: +1.0,
-			distance:    -0.8,
+			playerPower: +0.0,
+			distance:    -2.0,
 		}))
 }
