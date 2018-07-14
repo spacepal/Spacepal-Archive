@@ -1,4 +1,4 @@
-import { GAME_CHANNEL, WS_SERVER } from './constants.js'
+import { GAME_CHANNEL, PLAYERS_CHANNEL, WS_SERVER } from './constants.js'
 import ActionCable from 'actioncable'
 import store from '@/store'
 
@@ -23,7 +23,7 @@ export default class ActionCabel {
     })
   }
   onConnected () {
-    console.info('Action cable: connected')
+    console.info('Action cable: connnected')
   }
   onDisconnected () {
     console.info('Action cable: disconnected')
@@ -47,7 +47,7 @@ export default class ActionCabel {
       store.dispatch('game/setInfo', data.data)
     } else if (data.type === 'profile') {
       this._cable.subscriptions.create({
-        channel: GAME_CHANNEL,
+        channel: PLAYERS_CHANNEL,
         room: `players:${data.id}`
       },
       {
