@@ -47,7 +47,7 @@ export default class ActionCabel {
       store.dispatch('game/setInfo', data.data)
     } else if (data.type === 'profile') {
       this._cable.subscriptions.create({
-        channel: PLAYERS_CHANNEL,
+        channel: PLAYER_CHANNEL,
         room: `players:${data.id}`
       },
       {
