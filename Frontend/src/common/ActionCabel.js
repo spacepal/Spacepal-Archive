@@ -1,4 +1,4 @@
-import { GAME_CHANNEL, PLAYERS_CHANNEL, WS_SERVER } from './constants.js'
+import { GAME_CHANNEL, PLAYER_CHANNEL, WS_SERVER } from './constants.js'
 import ActionCable from 'actioncable'
 import store from '@/store'
 
