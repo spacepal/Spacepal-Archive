@@ -1,6 +1,8 @@
 import store from '@/store'
 import Colors from './Colors'
 
+const CAPITAL_COLOR_ID = 4
+
 class Cell {
   constructor ({ x, y }, a, i, degree = 2.0 / 3.0 * Math.PI) {
     this._id = i
@@ -93,6 +95,9 @@ class Cell {
       if (member) {
         text = member.username
         memberColor = Colors[member.color]
+      } else if (planet.isCapital) {
+        text = 'capital'
+        memberColor = Colors[CAPITAL_COLOR_ID]
       }
       ctx.fillStyle = memberColor.bg
     } else {
