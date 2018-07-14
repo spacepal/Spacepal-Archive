@@ -72,6 +72,7 @@ func (p *prox) EndTurn() error {
 	}
 	var r *http.Response
 	p.wg.Add(1)
+	log.Info(string(raw))
 	r, err = http.Post(aiDoURL, "application/json", bytes.NewBuffer(raw))
 	if err == nil {
 		defer r.Body.Close()
@@ -91,10 +92,10 @@ func (p *prox) EndTurn() error {
 
 func main() {
 	var gameParams = model.GameParams{
-		MapHeight:    6,
-		MapWidth:     10,
+		MapHeight:    4,
+		MapWidth:     4,
 		PlayersCount: 4,
-		PlanetsCount: 40,
+		PlanetsCount: 10,
 	}
 	game, err := game.NewGame(gameParams)
 	if err != nil {
