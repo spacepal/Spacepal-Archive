@@ -3,6 +3,7 @@ class Planet < Ohm::Model
   include ActiveModel::Validations
 
   DEFAULT_PRODUCTION = 10
+  NEUTRAL_PLAYER = -1
 
   reference :game, :Game
   reference :player, :Player
@@ -11,8 +12,8 @@ class Planet < Ohm::Model
   attribute :buff
   attribute :kill_perc , lambda { |x| x.to_f }
   attribute :production, lambda { |x| x.to_i }
-  attribute :ships , lambda { |x| x.to_i }
-  attribute :is_capital
+  attribute :ships, lambda { |x| x.to_i }
+  attribute :is_capital, lambda { |x| x.to_bool }
 
   validates :is_capital, inclusion: { in: [true, false] }
   validates :buff, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
@@ -25,6 +26,7 @@ class Planet < Ohm::Model
     self.set_kill_percent
     self.set_ships
     self.get_properties
+    self.player_id = NEUTRAL_PLAYER
     self.is_capital = false
     self
   end

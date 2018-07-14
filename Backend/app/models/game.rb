@@ -44,10 +44,10 @@ class Game < Ohm::Model
   attribute :planets_count, lambda { |x| x.to_i }
   attribute :players_limit, lambda { |x| x.to_i }
   attribute :step, lambda { |x| x.to_i }
-  attribute :accumulative 
-  attribute :buffs 
-  attribute :pirates 
-  attribute :production_after_capture 
+  attribute :accumulative, lambda { |x| x.to_bool }
+  attribute :buffs, lambda { |x| x.to_bool }
+  attribute :pirates, lambda { |x| x.to_bool }
+  attribute :production_after_capture, lambda { |x| x.to_bool }
 
   index :step
 
@@ -62,6 +62,12 @@ class Game < Ohm::Model
   validates :buffs, inclusion: { in: [true, false, "true", "false"] }
   validates :pirates, inclusion: { in: [true, false, "true", "false"] }
   validates :production_after_capture, inclusion: { in: [true, false, "true", "false"] }
+
+  def get_state
+    return 1 if self.is_room?
+    return 2 if self.is_playing?
+    return 3 if self.is_over?
+  end
 
   def is_room?
     self.step == Game::IS_ROOM
@@ -118,7 +124,7 @@ class Game < Ohm::Model
       el_hash[:id] = game.id
       el_hash[:creator] = game.get_creator.name
       el_hash[:name] = game.name
-      el_hash[:has_pin_code] = game.pin_code != ""
+      el_hash[:has_pin_code] = game.pin_code != nil 
       el_hash[:width] = game.width
       el_hash[:height] = game.height
       el_hash[:planets_count] = game.planets_count
@@ -152,13 +158,18 @@ class Game < Ohm::Model
   end
 
   def remove_player player_id
-    if self.players.size == 1
+    if self.players.count == 1
       Deletion.delete_game self
       return nil
     else
       self.players.delete Player[player_id]
+      self.make_new_admin
       self
     end
+  end
+
+  def make_new_admin
+    self.players.first.make_admin
   end
 
   def playername_is_uniq player_name
