@@ -45,10 +45,10 @@ const mutations = {
     state.sync[syncType] = true
   },
   ENABLE_CABLE (state) {
-    let cable = new ActionCabel(state.gameID)
+    let cable = new ActionCabel(state.gameID.gameID)
     state.cable.set(state.gameID, cable)
   },
-  LOGIN (state, gameID) {
+  LOGIN (state, { gameID }) {
     state.gameID = gameID
   },
   LOGOUT (state) {
@@ -104,16 +104,25 @@ const actions = {
     }
     commit('SYNC_SET', syncType)
   },
-  logout ({ commit, dispatch }) {
+  logout ({ commit, dispatch, state }) {
+    let gID = state.gameID
     dispatch('reset')
     localStorage.removeItem(STORAGE_GAME_ID)
     commit('LOGOUT')
-    return dispatch('game/logout')
+    return dispatch('game/logout', gID)
   },
   login ({ commit }, gameID) {
     localStorage.setItem(STORAGE_GAME_ID, gameID)
     commit('LOGIN', { gameID })
     commit('ENABLE_CABLE')
+  },
+  shuffleMap ({ state, getters }) {
+    if (!state.sync.profile || !state.sync.game ||
+        !state.profile.isCreator || !getters['game/isRoom']) {
+      return false
+    }
+    state.sync.planets = false
+    state.cable.get(state.gameID).shuffleMap()
   }
 }
 

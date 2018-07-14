@@ -50,11 +50,11 @@ const actions = {
     dispatch('lock', null, { root: true })
     rootState.cable.get(rootState.gameID).endTurn(fleets)
   },
-  logout ({ rootState }) {
-    if (rootState.gameID === null) {
+  logout (_, gameID) {
+    if (gameID === null) {
       return new Promise((resolve) => resolve())
     }
-    return Service.game.logout(rootState.gameID)
+    return Service.game.logout(gameID)
   }
 }
 
