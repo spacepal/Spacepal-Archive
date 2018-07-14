@@ -20,6 +20,10 @@ func (g *Game) processShips() {
 				g.processAttack(t)
 			}
 			delete(g.tasks, id)
+		} else if t.Steps < 0 {
+			log.Panic("processors.go: Invalid count of steps")
+		} else {
+			g.tasks[id] = t
 		}
 	}
 }
@@ -31,11 +35,11 @@ func (g *Game) processAttack(t model.Task) {
 	result := math.Abs(attackPower - defensePower)
 	killPerc := g.planets[t.To].KillPercentage
 	if attackPower < defensePower {
-		log.Info("Player$%d ships (%d) lost on the planet$%d",
+		log.Infof("Player$%d ships (%d) lost on the planet$%d",
 			t.Player, t.Count, t.To)
 	} else {
-		log.Info("The player$", t.Player, " captured planet by %d ship(s)$",
-			t.To, t.Count)
+		log.Infof("The player$%d captured planet by %d ship(s)$%d",
+			t.Player, t.To, t.Count)
 		killPerc = g.planets[t.From].KillPercentage
 		g.planets[t.To].ChangeOwner(t.Player)
 	}

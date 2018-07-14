@@ -109,17 +109,20 @@ func main() {
 		log.Fatal(gameProxy.StartServ())
 	}()
 
+	log.Warn("[Start]")
+	printPlayers(game)
+	printPlanets(game)
 	for !game.IsOver() {
-		log.Info("Turn: ", game.TurnNumber())
-		printPlayers(game)
-		printPlanets(game)
-		// fmt.Println("Press [enter] for end turn")
-		// fmt.Scanln()
 		err := gameProxy.EndTurn()
 		if err != nil {
 			log.Fatal(err)
 		}
+		fmt.Println()
+		log.Warn("[Turn: ", game.TurnNumber(), "]")
+		printPlayers(game)
+		printPlanets(game)
 	}
+	log.Warn("Turn: ", game.TurnNumber())
 	log.Print("The game is end")
 }
 
