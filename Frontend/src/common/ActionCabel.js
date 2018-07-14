@@ -3,13 +3,14 @@ import ActionCable from 'actioncable'
 import store from '@/store'
 
 const END_TURN_ACTION = 'end_turn'
+const SHUFFLE_ACTION = 'shuffle'
 
 export default class ActionCabel {
   constructor (gameID) {
+    this._cable = ActionCable.createConsumer(WS_SERVER)
     this._okPromise = new Promise((resolve, reject) => {
       this._okResolvePromise = resolve
       this._okRejectPromise = reject
-      this._cable = ActionCable.createConsumer(WS_SERVER)
       this._gameRoom = this._cable.subscriptions.create({
         channel: GAME_CHANNEL,
         room: `games:${gameID}`
@@ -26,15 +27,19 @@ export default class ActionCabel {
   }
   onDisconnected () {
     console.info('Action cable: disconnected')
-    this._okRejectPromise(false)
+    if (typeof this._okResolvePromise === 'function') {
+      this._okRejectPromise(false)
+    }
   }
   onReceived (data) {
     console.info(`Action cable: data recieved`)
     console.info(data)
-    if (data.type === 'error') {
+    if (data.type === 'error' && typeof this._okRejectPromise === 'function') {
       this._okRejectPromise(false)
-    } else {
+      this._okRejectPromise = undefined
+    } else if (typeof this._okResolvePromise === 'function') {
       this._okResolvePromise(true)
+      this._okResolvePromise = undefined
     }
     if (data.type === 'players') {
       store.dispatch('setMembers', data.data.players)
@@ -53,7 +58,7 @@ export default class ActionCabel {
       store.dispatch('setProfile', data.data)
     } else if (data.type === 'fleets') {
       store.dispatch('fleets/set', data.data.fleets)
-    } else if (data.type === 'fleets') {
+    } else if (data.type === 'planets') {
       store.dispatch('setPlanets', data.data.planets)
     } else if (data.type === 'turn_ended') {
       store.dispatch('reset')
@@ -63,6 +68,9 @@ export default class ActionCabel {
   }
   get isOk () {
     return this._okPromise
+  }
+  shuffleMap () {
+    this._gameRoom.perform(SHUFFLE_ACTION)
   }
   endTurn (fleets) {
     this._gameRoom.perform(END_TURN_ACTION, { fleets })
