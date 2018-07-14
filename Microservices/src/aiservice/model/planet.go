@@ -2,6 +2,7 @@ package model
 
 import (
 	"aiservice/constants"
+	"aiservice/helpers/norm"
 	"errors"
 	"fmt"
 )
@@ -49,12 +50,12 @@ func (planet Planet) Ships() int {
 
 // NormalizedProd returns normalized value of production
 func (planet Planet) NormalizedProd() float64 {
-	return float64(planet.Production) / constants.MidProd
+	return norm.Normalize(float64(planet.Production), constants.MidProd)
 }
 
 // NormalizedKill returns normalized value of kill percentage
 func (planet Planet) NormalizedKill() float64 {
-	return planet.KillPercentage / constants.MidKill
+	return norm.Normalize(planet.KillPercentage, constants.MidKill)
 }
 
 // NormalizedPower returns normalized value of power (Kill * Prod)
