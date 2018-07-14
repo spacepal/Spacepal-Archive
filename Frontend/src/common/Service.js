@@ -24,7 +24,7 @@ const service = {
       }, { withCredentials: true })
     },
     logout (gameID) {
-      return axios.delete(`${API_URL}games/${gameID}/player`, {}, { withCredentials: true })
+      return axios.delete(`${API_URL}games/${gameID}/player`, { withCredentials: true })
     }
   }
 }
