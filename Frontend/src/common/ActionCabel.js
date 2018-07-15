@@ -4,6 +4,7 @@ import store from '@/store'
 
 const END_TURN_ACTION = 'end_turn'
 const SHUFFLE_ACTION = 'shuffle'
+const START_ACTION = 'start_game'
 
 export default class ActionCabel {
   constructor (gameID) {
@@ -74,5 +75,8 @@ export default class ActionCabel {
   }
   endTurn (fleets) {
     this._gameRoom.perform(END_TURN_ACTION, { fleets })
+  }
+  start (fleets) {
+    this._gameRoom.perform(START_ACTION, { fleets })
   }
 }
