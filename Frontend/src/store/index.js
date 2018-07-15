@@ -48,7 +48,7 @@ const mutations = {
     state.sync[syncType] = false
   },
   ENABLE_CABLE (state) {
-    let cable = new ActionCabel(state.gameID.gameID)
+    let cable = new ActionCabel(state.gameID)
     state.cable.set(state.gameID, cable)
   },
   LOGIN (state, { gameID }) {
