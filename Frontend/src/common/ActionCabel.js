@@ -8,18 +8,19 @@ const START_ACTION = 'start_game'
 
 export default class ActionCabel {
   constructor (gameID) {
+    let self = this
     this._cable = ActionCable.createConsumer(WS_SERVER)
     this._okPromise = new Promise((resolve, reject) => {
-      this._okResolvePromise = resolve
-      this._okRejectPromise = reject
-      this._gameRoom = this._cable.subscriptions.create({
+      self._okResolvePromise = resolve
+      self._okRejectPromise = reject
+      self._gameRoom = this._cable.subscriptions.create({
         channel: GAME_CHANNEL,
         room: `games:${gameID}`
       },
       {
-        connected: this.onConnected.bind(this),
-        received: this.onReceived.bind(this),
-        disconnected: this.onDisconnected.bind(this)
+        connected: this.onConnected.bind(self),
+        received: this.onReceived.bind(self),
+        disconnected: this.onDisconnected.bind(self)
       })
     })
   }
@@ -49,12 +50,12 @@ export default class ActionCabel {
     } else if (data.type === 'profile') {
       this._cable.subscriptions.create({
         channel: PLAYER_CHANNEL,
-        room: `players:${data.id}`
+        room: `players:${data.data.id}`
       },
       {
-        connected: this.onConnected,
-        received: this.onReceived,
-        disconnected: this.onDisconnected
+        connected: this.onConnected.bind(this),
+        received: this.onReceived.bind(this),
+        disconnected: this.onDisconnected.bind(this)
       })
       store.dispatch('setProfile', data.data)
     } else if (data.type === 'fleets') {

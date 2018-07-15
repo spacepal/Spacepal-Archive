@@ -154,7 +154,7 @@ export default {
     },
     joinConfirm () {
       this.$refs.loader.show()
-      this.$store.dispatch('game/join', this.join).then(gameID => {
+      this.$store.dispatch('game/join', this.join).then(() => {
         this.$refs.loader.hide()
         this.$router.push({ name: 'Game' })
       }).catch(err => {
