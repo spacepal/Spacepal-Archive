@@ -4,7 +4,7 @@ class GameChannel < ApplicationCable::Channel
     game = Player[current_player.id].game
     core = Core.new
     stream_from ("games:" + game.id.to_s)
-    core.transmit_all_data ("games:" + game.id.to_s), current_player.id
+    core.broadcast_all_data ("games:" + game.id.to_s), game.id, current_player.id
     # stream_from "some_channel"
   end
 

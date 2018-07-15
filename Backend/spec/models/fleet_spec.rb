@@ -6,6 +6,7 @@ RSpec.describe Fleet, type: :model do
     fleet.kill_perc = 0.5
     fleet.status = Fleet::DEFAULT_STATUS
     fleet.ships = 100
+    fleet.cell_from_id = 5
     expect(fleet).to be_valid
   end
   it "not saves with invalid props" do

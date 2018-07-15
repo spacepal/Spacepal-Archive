@@ -27,7 +27,7 @@ RSpec.describe Game, type: :model do
   it "is valid with valid attributes" do
     game = Game.new
     game.name = "game"
-    game.width = 10
+    game.width = 15
     game.height = 10
     game.planets_count = 50
     game.players_limit = 8
@@ -36,5 +36,36 @@ RSpec.describe Game, type: :model do
     game.pirates = true
     game.production_after_capture = true
     expect(game).to be_valid
+  end
+  it "add player when one" do
+    player = Creation.create_player "Jack"
+    game = Creation.create_game(
+      player , "game_1", 
+      { width: 5, height: 5 },
+      3, 5, "1234", { has_pin_code: false,
+      buffs: false, production_after_capture: false,
+      pirates: false, accumulative: false })
+    game.add_player "John"
+    expect(game.players.count).to eq(2)
+    Deletion.delete_game game
+  end
+  it "remove player when more than one" do
+    player = Creation.create_player "Jack"
+    game = Creation.create_game(
+      player , "game_1", 
+      { width: 5, height: 5 },
+      3, 5, "1234", { has_pin_code: false,
+      buffs: false, production_after_capture: false,
+      pirates: false, accumulative: false })
+    game.add_player "Mike"
+    game.remove_player player.id
+    player.delete
+    player = nil
+    game_id = game.id
+    game = nil
+    game = Game[game_id]
+    expect(game.players.count).to eq(1)
+    expect(game.players.first.is_admin).to be true
+    Deletion.delete_game game
   end
 end

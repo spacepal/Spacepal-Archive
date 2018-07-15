@@ -11,7 +11,6 @@ class Fleet < Ohm::Model
   attribute :kill_perc, lambda { |x| x.to_f }
   attribute :status
   attribute :ships, lambda { |x| x.to_i }
-  attribute :step_from
   attribute :cell_from_id
   list :way, :Cell
 
@@ -19,7 +18,6 @@ class Fleet < Ohm::Model
   validates :status, presence: true, inclusion: { in: %w(aggressive deffensive avoiding)}
   validates :ships, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :cell_from_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
-  validates :step_from, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   def kill_perc
     self.attributes[:kill_perc].to_f

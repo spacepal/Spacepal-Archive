@@ -58,10 +58,10 @@ class Game < Ohm::Model
   validates :height, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 64, greater_than_or_equal_to: 2}
   validates :planets_count, presence: true, numericality: { only_integer: true }
   validates :players_limit, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 8, greater_than_or_equal_to: 2  }
-  validates :accumulative, inclusion: { in: [true, false, "true", "false"] }
-  validates :buffs, inclusion: { in: [true, false, "true", "false"] }
-  validates :pirates, inclusion: { in: [true, false, "true", "false"] }
-  validates :production_after_capture, inclusion: { in: [true, false, "true", "false"] }
+  validates :accumulative, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
+  validates :buffs, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
+  validates :pirates, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
+  validates :production_after_capture, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
 
   def get_state
     return 1 if self.is_room?
@@ -144,16 +144,17 @@ class Game < Ohm::Model
       if self.playername_is_uniq player_name
         pl = Creation.create_player player_name
         if pl.id
-          self.players << pl
-          true
+          pl.game = self
+          pl.save
+          pl
         end
       else
         self.errors.add :player_name, "the name is already used"
-        false
+        nil
       end
     else
       self.errors.add :players_limit, "no place for new player"
-      false
+      nil
     end
   end
 
@@ -162,7 +163,10 @@ class Game < Ohm::Model
       Deletion.delete_game self
       return nil
     else
-      self.players.delete Player[player_id]
+      pl = Player[player_id]
+      pl.game = nil
+      pl.save
+      pl = nil
       self.make_new_admin
       self
     end
