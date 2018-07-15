@@ -8,12 +8,20 @@ module BroadcastModule
   PLANETS_TYPE = :planets
   NOTIFICATION_TYPE = :notifications
 
-  def broadcast_all_data room, game_id, player_id
+  def broadcast_all_data room, game_id, player_id = nil
     self.broadcast_game(room, game_id)
-    self.broadcast_player(player_id)
     self.broadcast_players(room, game_id)
-    self.broadcast_fleets(room, player_id)
     self.broadcast_planets(room, game_id)
+    if !player_id
+      Game[game_id].players.each do |player|
+        player_id = player.id
+        self.broadcast_player(player_id)
+        self.broadcast_fleets(player_id)
+      end
+    else
+      self.broadcast_player(player_id)
+      self.broadcast_fleets(player_id)
+    end
   end
 
   def transmitted_player player_id
@@ -52,7 +60,6 @@ module BroadcastModule
 
   def broadcast_player player_id
     player = Player[player_id]
-    player.is_end_turn
     _hash = {
       id: player_id.to_i,
       username: player.name,
@@ -80,7 +87,7 @@ module BroadcastModule
     ActionCable.server.broadcast(room, { type: PLAYERS_TYPE, data: { PLAYERS_TYPE => arr }})
   end
 
-  def broadcast_fleets room, player_id
+  def broadcast_fleets player_id
     fleets = Player[player_id].fleets
     arr = fleets&.map do |fleet|
       {
@@ -90,7 +97,7 @@ module BroadcastModule
         stepsLeft: fleet.way.count
       }
     end
-    ActionCable.server.broadcast(room, { type: FLEETS_TYPE, data: { FLEETS_TYPE => arr }})
+    ActionCable.server.broadcast("players:#{player_id}", { type: FLEETS_TYPE, data: { FLEETS_TYPE => arr }})
   end
 
   def broadcast_planets room, game_id

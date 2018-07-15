@@ -12,10 +12,13 @@ class GameChannel < ApplicationCable::Channel
   #cheats
 
   def start_game
-    game = Player[current_player.id].game
+    # назначить игрокам планеты
+    ActionCable.server.broadcast("players:71", { type: "type", data: "_hash" })
+    player = current_player 
+    game = Player[player.id].game
     core = Core.new
     core.start_game game.id
-    core.broadcast_all_data ("games:" + game.id.to_s), game.id, current_player.id
+    core.broadcast_all_data ("games:" + game.id.to_s), game.id, player.id
   end
 
   def shuffle

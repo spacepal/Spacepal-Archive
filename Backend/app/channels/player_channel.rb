@@ -1,4 +1,5 @@
 class PlayerChannel < ApplicationCable::Channel
+ 
   def subscribed
     player = Player[current_player.id]
     core = Core.new

@@ -64,6 +64,11 @@ class Game < Ohm::Model
   validates :pirates, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
   validates :production_after_capture, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
 
+  def get_capital_planets
+    arr = self.planets.map { |planet| planet if planet.is_capital }
+    arr.compact
+  end
+
   def get_state
     return 1 if self.is_room?
     return 2 if self.is_playing?
@@ -99,13 +104,8 @@ class Game < Ohm::Model
   end
 
   def shuffle_map
-    "IN SHUFFLE".ljust(70).color(:green).out
     self.planets.each { |planet| planet.cell_id = nil; planet.save }
     self.cells.each { |cell| cell.planet_id = nil; cell.save }
-    hash_ = {}
-    self.planets.each { |planet| hash_[planet&.id] = planet&.cell&.id}
-    "Planet_id -> Cell_id: ".color(:yellow).print_
-    hash_.to_s.color(:yellow).out
     cells_ids = self.cells.ids
     planets_ids = self.planets.ids
     cells_ids = cells_ids.shuffle.take self.planets_count
@@ -117,10 +117,6 @@ class Game < Ohm::Model
       planet.cell = cell
       planet.save
     end
-    hash_ = {}
-    self.planets.each { |planet| hash_[planet&.id] = planet&.cell&.id}
-    "Planet_id -> Cell_id: ".color(:yellow).print_
-    hash_.to_s.color(:yellow).out
   end
 
   def is_over?
