@@ -77,7 +77,7 @@ export default class ActionCabel {
   endTurn (fleets) {
     this._gameRoom.perform(END_TURN_ACTION, { fleets })
   }
-  start (fleets) {
-    this._gameRoom.perform(START_ACTION, { fleets })
+  start () {
+    this._gameRoom.perform(START_ACTION, { })
   }
 }

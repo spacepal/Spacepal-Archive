@@ -33,7 +33,8 @@ export default {
       isRoom: 'game/isRoom',
       isGame: 'game/isGame',
       isLocked: 'isLocked',
-      sync: 'sync'
+      sync: 'sync',
+      players: 'members'
     }),
     regenBtnClass () {
       return this.sync.planets ? '' : 'disabled'
@@ -42,8 +43,8 @@ export default {
       return this.canStart ? '' : 'disabled'
     },
     canStart () {
-      return this.sync.profile && this.isCreator &&
-        this.sync.players && this.players.length >= 2
+      return this.sync.profile && this.sync.members &&
+        this.isCreator && Object.keys(this.players).length >= 2
     }
   },
   methods: {

@@ -42,8 +42,12 @@ const actions = {
     })
   },
   start ({ rootGetters, rootState }) {
-    if (rootGetters.sync.profile && rootGetters.isCreator &&
-      rootGetters.planets.length > 2) {
+    if (rootGetters.sync.game &&
+      rootGetters.sync.profile &&
+      rootGetters.sync.members &&
+      rootGetters.isCreator &&
+      Object.keys(rootGetters.members).length >= 2 &&
+      rootGetters['game/isRoom']) {
       rootState.cable.get(rootState.gameID).start()
       return true
     }
