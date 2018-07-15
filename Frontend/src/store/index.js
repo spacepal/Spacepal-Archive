@@ -44,6 +44,9 @@ const mutations = {
   SYNC_SET (state, syncType) {
     state.sync[syncType] = true
   },
+  SYNC_UNSET (state, syncType) {
+    state.sync[syncType] = false
+  },
   ENABLE_CABLE (state) {
     let cable = new ActionCabel(state.gameID.gameID)
     state.cable.set(state.gameID, cable)
@@ -85,6 +88,9 @@ const actions = {
     dispatch('events/clear')
     commit('SYNC_RESET')
   },
+  syncUnset ({ commit }, syncType) {
+    commit('SYNC_UNSET', syncType)
+  },
   syncSet ({ state, commit, dispatch, getters }, syncType) {
     if (state.endTurnLock &&
       state.sync.game &&
@@ -116,12 +122,12 @@ const actions = {
     commit('LOGIN', { gameID })
     commit('ENABLE_CABLE')
   },
-  shuffleMap ({ state, getters }) {
+  shuffleMap ({ state, getters, dispatch }) {
     if (!state.sync.profile || !state.sync.game ||
-        !state.profile.isCreator || !getters['game/isRoom']) {
+      !getters['isCreator'] || !getters['game/isRoom']) {
       return false
     }
-    state.sync.planets = false
+    dispatch('syncUnset', 'planets')
     state.cable.get(state.gameID).shuffleMap()
   }
 }
