@@ -166,7 +166,7 @@ class Game < Ohm::Model
       pl = Player[player_id]
       pl.game = nil
       pl.save
-      pl = nil
+      pl.delete
       self.make_new_admin
       self
     end
