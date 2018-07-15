@@ -43,14 +43,16 @@ export default {
       return this.canStart ? '' : 'disabled'
     },
     canStart () {
-      return this.sync.profile && this.sync.members &&
+      return this.sync.game && this.sync.profile && this.sync.members &&
         this.isCreator && Object.keys(this.players).length >= 2
     }
   },
   methods: {
     start () {
       if (this.canStart) {
-        this.$store.dispatch('game/start')
+        if (this.$store.dispatch('game/start')) {
+          this.$store.dispatch('syncUnset', 'game')
+        }
       }
     },
     endTurn () {
