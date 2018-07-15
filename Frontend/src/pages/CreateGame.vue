@@ -111,7 +111,7 @@ export default {
       this.$refs.gamename.regenerate()
       this.pref.map.width = Faker.random.number({
         min: 5,
-        max: 32
+        max: 12
       })
       this.pref.map.height = Faker.random.number({
         min: 5,
