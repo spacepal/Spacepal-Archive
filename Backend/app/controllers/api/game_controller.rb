@@ -73,7 +73,9 @@ class Api::GameController < ApplicationController
       cookies.delete :game_id
       cookies.delete :player_id
       if game
+        core.broadcast_player game.get_creator.id
         core.broadcast_players ("games:" + game.id.to_s), game.id
+        core.broadcast_game ("games:" + game.id.to_s), game.id
       end
       render :json => { errors: [ nil ]}
     else

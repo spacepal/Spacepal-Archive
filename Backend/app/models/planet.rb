@@ -15,7 +15,7 @@ class Planet < Ohm::Model
   attribute :ships, lambda { |x| x.to_i }
   attribute :is_capital, lambda { |x| x.to_bool }
 
-  validates :is_capital, inclusion: { in: [true, false] }
+  validates :is_capital, inclusion: { in: [true, false] }, allow_nil: true
   validates :buff, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
   validates :kill_perc, presence: true, numericality: { less_than: 1, greater_than: 0 }
   validates :production, presence: true, numericality: { only_integer: true, greater_than: 0 }

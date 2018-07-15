@@ -68,4 +68,7 @@ RSpec.describe Game, type: :model do
     expect(game.players.first.is_admin).to be true
     Deletion.delete_game game
   end
+  it "shuffles map" do
+    
+  end
 end

@@ -31,6 +31,7 @@ class Game < Ohm::Model
 
   IS_ROOM = 0
   IS_OVER = -1
+  FIRST_STEP = 1
 
   collection :fleets, :Fleet
   collection :planets, :Planet
@@ -69,6 +70,10 @@ class Game < Ohm::Model
     return 3 if self.is_over?
   end
 
+  def start_game
+    self.step = Game::FIRST_STEP
+  end
+
   def is_room?
     self.step == Game::IS_ROOM
   end
@@ -93,20 +98,29 @@ class Game < Ohm::Model
     self.attributes[:step].to_i
   end
 
-  def get_map
-
-  end
-
   def shuffle_map
-    self.planets.each { |planet| planet.cell_id = nil }
-    self.cells.each { |cell| cell.planet_id = nil }
+    "IN SHUFFLE".ljust(70).color(:green).out
+    self.planets.each { |planet| planet.cell_id = nil; planet.save }
+    self.cells.each { |cell| cell.planet_id = nil; cell.save }
+    hash_ = {}
+    self.planets.each { |planet| hash_[planet&.id] = planet&.cell&.id}
+    "Planet_id -> Cell_id: ".color(:yellow).print_
+    hash_.to_s.color(:yellow).out
     cells_ids = self.cells.ids
-    cells_ids = cells_ids.shuffle.take game.planets_count
+    planets_ids = self.planets.ids
+    cells_ids = cells_ids.shuffle.take self.planets_count
     cells_ids.each_with_index do  |cell_id, index|
-      self.cells[cell_id].planet = self.planets[index]
-      self.cells[cell_id].save
+      cell = self.cells[cell_id]
+      planet = self.planets[planets_ids[index]]
+      cell.planet = self.planets[index]
+      cell.save
+      planet.cell = cell
+      planet.save
     end
-    self.get_map
+    hash_ = {}
+    self.planets.each { |planet| hash_[planet&.id] = planet&.cell&.id}
+    "Planet_id -> Cell_id: ".color(:yellow).print_
+    hash_.to_s.color(:yellow).out
   end
 
   def is_over?
