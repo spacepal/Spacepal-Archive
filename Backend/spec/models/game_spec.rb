@@ -71,4 +71,18 @@ RSpec.describe Game, type: :model do
   it "shuffles map" do
     
   end
+  it "gets capitals to players" do 
+    player = Creation.create_player "Jack"
+    game = Creation.create_game(
+      player , "game_1", 
+      { width: 5, height: 5 },
+      3, 5, "1234", { has_pin_code: false,
+      buffs: false, production_after_capture: false,
+      pirates: false, accumulative: false })
+    Creation.create_cells game
+    Creation.create_planets game
+    game.add_player "Mike"
+    game.get_planets_to_players
+    expect(!game.players.first.planets.empty?).to be true
+  end
 end

@@ -69,6 +69,14 @@ class Game < Ohm::Model
     arr.compact
   end
 
+  def get_planets_to_players
+    capitals = self.get_capital_planets
+    self.players.each_with_index do |player, index|
+      capitals[index].player = player
+      capitals[index].save
+    end
+  end
+
   def get_state
     return 1 if self.is_room?
     return 2 if self.is_playing?

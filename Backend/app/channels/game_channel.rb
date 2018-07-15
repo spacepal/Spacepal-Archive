@@ -12,8 +12,6 @@ class GameChannel < ApplicationCable::Channel
   #cheats
 
   def start_game
-    # назначить игрокам планеты
-    ActionCable.server.broadcast("players:71", { type: "type", data: "_hash" })
     player = current_player 
     game = Player[player.id].game
     core = Core.new

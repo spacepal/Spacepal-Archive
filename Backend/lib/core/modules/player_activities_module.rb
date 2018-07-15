@@ -2,6 +2,7 @@ module PlayerActivitiesModule
 
   def start_game game_id
     game = Game[game_id]
+    game.get_planets_to_players
     game.start_game
   end
 
