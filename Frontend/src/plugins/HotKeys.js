@@ -1,6 +1,13 @@
 const HotKeysPlugin = {
   install (Vue) {
     let registeredHotkeys = new Set()
+    let isEnabled = true
+    Vue.prototype.$disableHotKeys = () => {
+      isEnabled = false
+    }
+    Vue.prototype.$enableHotKeys = () => {
+      isEnabled = true
+    }
     Vue.mixin({
       mounted: function () {
         if (!Array.isArray(this.hotKeys)) {
@@ -9,6 +16,9 @@ const HotKeysPlugin = {
         registeredHotkeys.add(this.hotKeys)
         this._hotKeysEvent = (e) => {
           this.hotKeys.forEach((key) => {
+            if (!isEnabled && key.code.startsWith('Key')) {
+              return
+            }
             if (!key.ctrl === e.ctrlKey) {
               return
             }

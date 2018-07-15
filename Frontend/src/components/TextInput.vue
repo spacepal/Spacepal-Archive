@@ -1,8 +1,9 @@
 <template>
-  <div @mousewheel="mousewheel" class="field" :class="labelClass + ' ' + statusClass">
+  <div @wheel="mousewheel" class="field" :class="labelClass + ' ' + statusClass">
     <div class="label" v-if="hasLabel">{{label}}</div>
     <input ref="inp" :type="type" :maxlength="maxLength" :min="minimum" :max="maximum"
-      v-model="text" :placeholder="value" @focus="$event.target.select()">
+      v-model="text" :placeholder="value" @blur="enableHotKeys"
+      @focus="$event.target.select(); disableHotKeys()">
     <div class="counter" v-show="text.length !== 0" v-if="hasCounter">
       {{text.length}}\{{max}}
     </div>
@@ -42,6 +43,10 @@ export default {
     enableValidation: {
       type: Boolean,
       default: true
+    },
+    generator: {
+      type: Function,
+      default: undefined
     }
   },
   mounted () {
@@ -55,7 +60,8 @@ export default {
     return {
       text: '',
       isLabelOut: false,
-      statusClass: ''
+      statusClass: '',
+      lastGenerated: ''
     }
   },
   computed: {
@@ -85,11 +91,25 @@ export default {
     }
   },
   methods: {
+    enableHotKeys () {
+      this.$enableHotKeys()
+    },
+    disableHotKeys () {
+      this.$disableHotKeys()
+    },
     forceInput () {
       this.text = this.value
     },
     focus () {
       this.$refs.inp.focus()
+    },
+    regenerate () {
+      if (this.generator !== undefined &&
+        (this.lastGenerated === this.text || this.text === '')) {
+        let val = this.generator().next().value
+        this.text = val
+        this.lastGenerated = val
+      }
     },
     mousewheel (event) {
       if (this.type === TYPE_NUMBER) {
@@ -97,12 +117,15 @@ export default {
           this.text = this.value
           return false
         }
-        let val = this.text + event.wheelDelta / Math.abs(event.wheelDelta)
+        let val = this.text - event.deltaY / Math.abs(event.deltaY)
         if (val >= this.min && val <= this.max) {
           this.text = val
         }
-        return false
+      } else if (this.type === TYPE_TEXT) {
+        this.regenerate()
       }
+      event.preventDefault()
+      return false
     },
     isValid () {
       if (!this.enableValidation) {

@@ -16,15 +16,22 @@
     </div>
     <Window ref="confirm" type="confirm" @confirm="joinConfirm"
       title="Confirm action" :enabled="join.isValid">
-      Do you want to join game #{{ join.gameID }}?
-      <Form ref="joinForm" class="withoutborder">
-        <TextInput label="Username" v-model="join.username" ref="usernameInput"
-          type="text" validate='^[0-9A-Za-z_-]*$' :min="1" :max="32"
-          @change="checkJoinForm" />
-        <TextInput label="Pincode" v-if="join.hasPinCode" v-model="join.pinCode"
-          type="text" :min="4" :max="4" validate='^[0-9]+$'
-          :enableValidation="join.hasPinCode" @change="checkJoinForm" />
-      </Form>
+      <template>
+        Do you want to join game #{{ join.gameID }}?
+        <Form ref="joinForm" class="withoutborder">
+          <TextInput label="Username" v-model="join.username" ref="usernameInput"
+            type="text" validate='^[0-9A-Za-z_-]*$' :min="1" :max="32"
+            @change="checkJoinForm" :generator="usernameGenerator" />
+          <TextInput label="Pincode" v-if="join.hasPinCode" v-model="join.pinCode"
+            type="text" :min="4" :max="4" validate='^[0-9]+$'
+            :enableValidation="join.hasPinCode" @change="checkJoinForm" />
+        </Form>
+      </template>
+      <template slot="footer">
+        <div class="button" @click="setRandom">
+          <span class="mdi mdi-dice-multiple mdi-24px"> </span>
+        </div>
+      </template>
     </Window>
     <FullPreloader ref="loader"></FullPreloader>
   </div>
@@ -39,6 +46,10 @@ import TextInput from '../components/TextInput.vue'
 import FullPreloader from '../components/FullPreloader.vue'
 import Form from '../components/Form.vue'
 import Service from '../common/Service.js'
+import { UsernameGenerator } from '../common/Generators.js'
+
+const REFRESH_TIMEOUT = 5000
+
 export default {
   name: 'GamesList',
   components: {
@@ -120,13 +131,27 @@ export default {
       hotKeys: [
         { code: 'KeyN', method: this.goToCreate, description: 'Create game' },
         { code: 'KeyC', method: this.goToCreate, description: 'Create game' }
-      ]
+      ],
+      usernameGenerator: () => UsernameGenerator,
+      offset: 0
     }
   },
   mounted () {
-    this.refresh(0)
+    let silent = false
+    let refreshFunc = () => {
+      this.refresh(this.offset, silent)
+      silent = true
+      this._refreshTimer = setTimeout(refreshFunc, REFRESH_TIMEOUT)
+    }
+    refreshFunc()
+  },
+  beforeDestroy () {
+    clearTimeout(this._refreshTimer)
   },
   methods: {
+    setRandom () {
+      this.$refs.usernameInput.regenerate()
+    },
     joinConfirm () {
       this.$refs.loader.show()
       this.$store.dispatch('game/join', this.join).then(gameID => {
@@ -145,18 +170,21 @@ export default {
         name: 'CreateGame'
       })
     },
-    refresh (offset) {
-      this.isLoading = true
+    refresh (offset, silent = false) {
+      this.isLoading = !silent
       Service.game.all(offset, this.limit).then((resp) => {
         this.isLoading = false
         this.total = resp.data.count
         this.rows = resp.data.games
       }).catch((resp) => {
-        this.$toast('Connection error')
+        if (!silent) {
+          this.$toast('Connection error')
+        }
         console.error(resp)
       })
     },
     pageChanged (pageInfo) {
+      this.offset = pageInfo.offset
       this.refresh(pageInfo.offset)
     },
     rowClicked ({row, i}) {

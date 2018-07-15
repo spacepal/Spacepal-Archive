@@ -2,10 +2,10 @@
   <div id="create-page" class="flex-vertical">
     <GameTitle></GameTitle>
     <Form ref="form">
-      <TextInput v-model="pref.username" label="Username"
-        validate='^[0-9A-Za-z_-]*$' :min="1"
+      <TextInput v-model="pref.username" label="Username" ref="username"
+        validate='^[0-9A-Za-z_-]*$' :min="1" :generator="usernameGen"
         :max="32" @change="checkForm" />
-      <TextInput v-model="pref.gamename"
+      <TextInput v-model="pref.gamename" :generator="gamenameGen" ref="gamename"
         label="Game name" :max="32" @change="checkForm" />
       <div class="flex-horizontal">
         <TextInput v-model="pref.map.width" label="Map width"
@@ -65,6 +65,7 @@ import SwitchBox from '../components/SwitchBox.vue'
 import FullPreloader from '../components//FullPreloader.vue'
 import Form from '../components/Form.vue'
 import Faker from 'faker'
+import { UsernameGenerator, GameNameGenerator } from '../common/Generators.js'
 
 export default {
   name: 'CreateGame',
@@ -77,6 +78,8 @@ export default {
   },
   data () {
     return {
+      usernameGen: () => UsernameGenerator,
+      gamenameGen: () => GameNameGenerator,
       createButtonClass: 'disabled',
       pref: {
         username: '',
@@ -104,16 +107,8 @@ export default {
   },
   methods: {
     setRandom () {
-      let username = ''
-      let gamename = ''
-      while (username.length > 32 || username.length === 0) {
-        username = Faker.name.firstName()
-      }
-      while (gamename.length > 32 || gamename.length === 0) {
-        gamename = Faker.company.companyName()
-      }
-      this.pref.username = username
-      this.pref.gamename = gamename
+      this.$refs.username.regenerate()
+      this.$refs.gamename.regenerate()
       this.pref.map.width = Faker.random.number({
         min: 5,
         max: 32

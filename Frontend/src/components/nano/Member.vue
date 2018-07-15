@@ -11,6 +11,7 @@ import Colors from '../../common/Colors'
 
 const ICO_PLAYER = 'mdi-account'
 const ICO_AI = 'mdi-desktop-classic'
+const ICO_ADMIN = 'mdi-account-settings-variant'
 
 export default {
   name: 'Member',
@@ -31,19 +32,26 @@ export default {
     },
     memberInfo () {
       let isArtificialIntelligence = false
+      let isCreator = false
       let username = (this.id === -1 ? 'loading...' : 'neutral')
       let color = Colors['neutral'].bg
       let m = this.member(this.memberID)
       if (m) {
-        ({ username, color, isArtificialIntelligence } = m)
+        ({ username, color, isArtificialIntelligence, isCreator } = m)
         if (Colors[color] !== undefined) {
           color = Colors[color].bg
         }
       }
+      let icon = ICO_PLAYER
+      if (isArtificialIntelligence) {
+        icon = ICO_AI
+      } else if (isCreator) {
+        icon = ICO_ADMIN
+      }
       return {
         style: { color },
         username,
-        icon: isArtificialIntelligence ? ICO_AI : ICO_PLAYER
+        icon
       }
     }
   }
