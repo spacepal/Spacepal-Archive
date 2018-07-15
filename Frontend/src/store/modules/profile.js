@@ -26,6 +26,9 @@ const actions = {
 const getters = {
   profile (state) {
     return state.profile
+  },
+  isCreator (state) {
+    return state.profile.isCreator || false
   }
 }
 

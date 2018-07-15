@@ -1,7 +1,7 @@
 <template>
   <div class="active-buttons flex-horizontal">
-    <template v-if="isAdmin && isRoom">
-      <span class="button" @click="start">Start</span>
+    <template v-if="isCreator && isRoom">
+      <span class="button" @click="start" :class="startBtnClass">Start</span>
       <span class="button" @click="regenerateMap" :class="regenBtnClass">Regen</span>
     </template>
     <span class="button" v-if='!isLocked' @click="endTurn">End turn</span>
@@ -28,29 +28,38 @@ export default {
   },
   computed: {
     ...mapGetters({
-      profile: 'profile',
+      isCreator: 'isCreator',
       isLoggedIn: 'isPlayer',
       isRoom: 'game/isRoom',
       isGame: 'game/isGame',
       isLocked: 'isLocked',
       sync: 'sync'
     }),
-    isAdmin () {
-      return this.profile.isCreator
-    },
     regenBtnClass () {
       return this.sync.planets ? '' : 'disabled'
+    },
+    startBtnClass () {
+      return this.canStart ? '' : 'disabled'
+    },
+    canStart () {
+      return this.sync.profile && this.isCreator &&
+        this.sync.players && this.players.length >= 2
     }
   },
   methods: {
     start () {
-      console.warn('ActionButtons.vue: @todo start()')
+      if (this.canStart) {
+        this.$store.dispatch('game/start')
+      }
     },
     endTurn () {
       this.$store.dispatch('game/endTurn')
     },
     regenerateMap () {
-      if (!this.sync.planets || !this.$store.dispatch('shuffleMap')) {
+      if (!this.sync.planets) {
+        return false
+      }
+      if (!this.$store.dispatch('shuffleMap')) {
         this.$toast('Map isn\'t regenerated')
       }
     },

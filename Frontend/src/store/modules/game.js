@@ -41,6 +41,14 @@ const actions = {
       return resp.data.gameID
     })
   },
+  start ({ rootGetters, rootState }) {
+    if (rootGetters.sync.profile && rootGetters.isCreator &&
+      rootGetters.planets.length > 2) {
+      rootState.cable.get(rootState.gameID).start()
+      return true
+    }
+    return false
+  },
   endTurn ({ dispatch, rootState, rootGetters }) {
     if (rootGetters.isLocked) {
       console.warn('game.endTurn is locked')
