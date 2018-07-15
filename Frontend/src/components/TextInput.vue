@@ -103,9 +103,10 @@ export default {
     focus () {
       this.$refs.inp.focus()
     },
-    regenerate () {
-      if (this.generator !== undefined &&
-        (this.lastGenerated === this.text || this.text === '')) {
+    regenerate (force = false) {
+      let canGenerate = this.generator !== undefined &&
+        (this.lastGenerated === this.text || this.text === '')
+      if (canGenerate || force) {
         let val = this.generator().next().value
         this.text = val
         this.lastGenerated = val

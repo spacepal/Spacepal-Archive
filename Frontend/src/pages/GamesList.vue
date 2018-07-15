@@ -150,7 +150,7 @@ export default {
   },
   methods: {
     setRandom () {
-      this.$refs.usernameInput.regenerate()
+      this.$refs.usernameInput.regenerate(true)
     },
     joinConfirm () {
       this.$refs.loader.show()
