@@ -118,7 +118,11 @@ export default {
           return false
         }
         let val = this.text - event.deltaY / Math.abs(event.deltaY)
-        if (val >= this.min && val <= this.max) {
+        if (val > this.max) {
+          this.text = this.max
+        } else if (val < this.min) {
+          this.text = this.min
+        } else {
           this.text = val
         }
       } else if (this.type === TYPE_TEXT) {
