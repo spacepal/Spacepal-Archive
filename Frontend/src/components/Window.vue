@@ -16,15 +16,15 @@
           </div>
           <div id="control">
             <template v-if="isConfirm">
+              <div class="button" @click="close">Cancel</div>
               <div class="button" @click="confirm" :class="confirmClass">
                 Confirm
               </div>
-              <div class="button" @click="close">Cancel</div>
             </template>
             <template v-if="isAlert">
               <div class="button" @click="confirm">Ok</div>
             </template>
-            <template slot="footer"></template>
+            <slot name="footer"></slot>
           </div>
         </div>
       </div>
