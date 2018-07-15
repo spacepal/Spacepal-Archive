@@ -48,6 +48,8 @@ import Form from '../components/Form.vue'
 import Service from '../common/Service.js'
 import { UsernameGenerator } from '../common/Generators.js'
 
+const REFRESH_TIMEOUT = 5000
+
 export default {
   name: 'GamesList',
   components: {
@@ -130,11 +132,21 @@ export default {
         { code: 'KeyN', method: this.goToCreate, description: 'Create game' },
         { code: 'KeyC', method: this.goToCreate, description: 'Create game' }
       ],
-      usernameGenerator: () => UsernameGenerator
+      usernameGenerator: () => UsernameGenerator,
+      offset: 0
     }
   },
   mounted () {
-    this.refresh(0)
+    let silent = false
+    let refreshFunc = () => {
+      this.refresh(this.offset, silent)
+      silent = true
+      this._refreshTimer = setTimeout(refreshFunc, REFRESH_TIMEOUT)
+    }
+    refreshFunc()
+  },
+  beforeDestroy () {
+    clearTimeout(this._refreshTimer)
   },
   methods: {
     setRandom () {
@@ -158,18 +170,21 @@ export default {
         name: 'CreateGame'
       })
     },
-    refresh (offset) {
-      this.isLoading = true
+    refresh (offset, silent = false) {
+      this.isLoading = !silent
       Service.game.all(offset, this.limit).then((resp) => {
         this.isLoading = false
         this.total = resp.data.count
         this.rows = resp.data.games
       }).catch((resp) => {
-        this.$toast('Connection error')
+        if (!silent) {
+          this.$toast('Connection error')
+        }
         console.error(resp)
       })
     },
     pageChanged (pageInfo) {
+      this.offset = pageInfo.offset
       this.refresh(pageInfo.offset)
     },
     rowClicked ({row, i}) {
