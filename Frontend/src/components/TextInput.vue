@@ -2,7 +2,8 @@
   <div @mousewheel="mousewheel" class="field" :class="labelClass + ' ' + statusClass">
     <div class="label" v-if="hasLabel">{{label}}</div>
     <input ref="inp" :type="type" :maxlength="maxLength" :min="minimum" :max="maximum"
-      v-model="text" :placeholder="value" @focus="$event.target.select()">
+      v-model="text" :placeholder="value" @blur="enableHotKeys"
+      @focus="$event.target.select(); disableHotKeys()">
     <div class="counter" v-show="text.length !== 0" v-if="hasCounter">
       {{text.length}}\{{max}}
     </div>
@@ -85,6 +86,12 @@ export default {
     }
   },
   methods: {
+    enableHotKeys () {
+      this.$enableHotKeys()
+    },
+    disableHotKeys () {
+      this.$disableHotKeys()
+    },
     forceInput () {
       this.text = this.value
     },
