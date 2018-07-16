@@ -10,7 +10,7 @@
         </template>
         <template v-for="m in members">
           <Member :key="m.username + '_1'" :id="m.id"></Member>
-          <span :key="m.username + '_2'" v-if="!m.isGameOver"></span>
+          <span :key="m.username + '_2'" v-if="m.isGameOver"></span>
           <template v-else>
             <span :key="m.username + '_3'" v-if='m.isEndTurn'
               class="mdi mdi-radiobox-marked mdi-16px">
