@@ -2,7 +2,7 @@ class PlayerValidator < ActiveModel::Validator
   
   def validate record
     if record.is_ai
-      if !record.ai_type
+      unless record.ai_type
         record.errors.add :ai_type, "must been defined when if is ai"
       end
     end

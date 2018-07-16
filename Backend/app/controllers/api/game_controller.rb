@@ -9,7 +9,7 @@ class Api::GameController < ApplicationController
     request.remote_ip.to_s.color("yellow").out
     data = self.game_params
     player = Creation.create_player data[:username]
-    if !player.errors.empty?
+    unless player.errors.empty?
       render :json => { errors: player.errors.messages.flatten }
       return
     end
@@ -39,12 +39,12 @@ class Api::GameController < ApplicationController
     game_id = params[:id].to_i
     data = self.game_params
     game = Game[game_id]
-    if !game
+    unless game
       render :json => { errors: ["can't find game with id " + game.id.to_s] }
     end
-    if game.is_room?
+    if game.room?
       if game.pin_code
-        if data[:pinCode] != game.pin_code
+        unless data[:pinCode] == game.pin_code
           render :json => { errors: ["the pin code is wrong"] }
           return
         end

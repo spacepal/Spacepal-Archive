@@ -1,4 +1,4 @@
-module BroadcastModule
+module Broadcastable
 
   END_TURN_TYPE = :turn_ended
   GAME_TYPE = :game
@@ -12,15 +12,15 @@ module BroadcastModule
     self.broadcast_game(room, game_id)
     self.broadcast_players(room, game_id)
     self.broadcast_planets(room, game_id)
-    if !player_id
+    if player_id
+      self.broadcast_player(player_id)
+      self.broadcast_fleets(player_id)
+    else
       Game[game_id].players.each do |player|
         player_id = player.id
         self.broadcast_player(player_id)
         self.broadcast_fleets(player_id)
       end
-    else
-      self.broadcast_player(player_id)
-      self.broadcast_fleets(player_id)
     end
   end
 

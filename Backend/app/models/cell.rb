@@ -88,7 +88,6 @@ class Cell < Ohm::Model
     calc_offset = lambda { |index| (index - first_id) % w }
     current_offset = calc_offset.call(this)
     next_offset = calc_offset.call(next_)
-    #("this = " + (this - first_id + 1).to_s + " next_ = " + (next_ - first_id + 1).to_s + " current_offset = " + current_offset.to_s + " next_offset = " + next_offset.to_s).color("orange").out
     if next_.between?(first_id, last_id) and 
       (current_offset - next_offset).abs < 2
       Cell[next_]  

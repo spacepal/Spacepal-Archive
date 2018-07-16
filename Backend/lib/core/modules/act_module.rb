@@ -1,4 +1,4 @@
-module PlayerActivitiesModule
+module Actable
 
   def start_game game_id
     game = Game[game_id]

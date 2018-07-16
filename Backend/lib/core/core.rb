@@ -1,12 +1,12 @@
 require_relative 'modules/broadcast_module.rb'
-require_relative 'modules/player_activities_module.rb'
-require_relative 'modules/game_module.rb'
+require_relative 'modules/act_module.rb'
+require_relative 'modules/play_module.rb'
 
 #общий класс
 class Core
 
-  include BroadcastModule
-  include PlayerActivitiesModule
-  include GameModule
+  include Broadcastable
+  include Actable
+  include Playable
 
 end

@@ -17,7 +17,7 @@ class GameValidator < ActiveModel::Validator
       return
     else
       res = func.call record
-      if !res
+      unless res
         record.errors[:base] << error_msg
       end
     end
@@ -78,20 +78,20 @@ class Game < Ohm::Model
   end
 
   def get_state
-    return 1 if self.is_room?
-    return 2 if self.is_playing?
-    return 3 if self.is_over?
+    return 1 if self.room?
+    return 2 if self.playing?
+    return 3 if self.over?
   end
 
   def start_game
     self.step = Game::FIRST_STEP
   end
 
-  def is_room?
+  def room?
     self.step == Game::IS_ROOM
   end
 
-  def is_playing?
+  def playing?
     self.step != Game::IS_ROOM and self.step != Game::IS_OVER 
   end
 
@@ -127,7 +127,7 @@ class Game < Ohm::Model
     end
   end
 
-  def is_over?
+  def over?
     self.step == Game::IS_OVER
   end
 
