@@ -6,6 +6,8 @@ RSpec.describe Player, type: :model do
     player = Player.new
     player.is_admin = true
     player.name = "1"
+    player.is_end_turn = false
+    player.is_game_over = false
     player.color_id = Player::DEFAULT_COLOR
     player.is_ai = false
     expect(player.valid?).to be true
@@ -16,11 +18,14 @@ RSpec.describe Player, type: :model do
     player.name = "1"
     player.color_id = Player::DEFAULT_COLOR
     player.is_ai = false
+    player.is_end_turn = false
+    player.is_game_over = false
     player.save
     fleet = Fleet.new
     fleet.kill_perc = 0.4
     fleet.status = Fleet::DEFAULT_STATUS
     fleet.ships = 10
+    fleet.cell_from_id = 4
     fleet.player = player
     fleet.save
     player.save

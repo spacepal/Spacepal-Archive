@@ -31,6 +31,7 @@ class Game < Ohm::Model
 
   IS_ROOM = 0
   IS_OVER = -1
+  FIRST_STEP = 1
 
   collection :fleets, :Fleet
   collection :planets, :Planet
@@ -58,15 +59,19 @@ class Game < Ohm::Model
   validates :height, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 64, greater_than_or_equal_to: 2}
   validates :planets_count, presence: true, numericality: { only_integer: true }
   validates :players_limit, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 8, greater_than_or_equal_to: 2  }
-  validates :accumulative, inclusion: { in: [true, false, "true", "false"] }
-  validates :buffs, inclusion: { in: [true, false, "true", "false"] }
-  validates :pirates, inclusion: { in: [true, false, "true", "false"] }
-  validates :production_after_capture, inclusion: { in: [true, false, "true", "false"] }
+  validates :accumulative, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
+  validates :buffs, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
+  validates :pirates, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
+  validates :production_after_capture, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
 
   def get_state
     return 1 if self.is_room?
     return 2 if self.is_playing?
     return 3 if self.is_over?
+  end
+
+  def start_game
+    self.step = Game::FIRST_STEP
   end
 
   def is_room?
@@ -93,20 +98,29 @@ class Game < Ohm::Model
     self.attributes[:step].to_i
   end
 
-  def get_map
-
-  end
-
   def shuffle_map
-    self.planets.each { |planet| planet.cell_id = nil }
-    self.cells.each { |cell| cell.planet_id = nil }
+    "IN SHUFFLE".ljust(70).color(:green).out
+    self.planets.each { |planet| planet.cell_id = nil; planet.save }
+    self.cells.each { |cell| cell.planet_id = nil; cell.save }
+    hash_ = {}
+    self.planets.each { |planet| hash_[planet&.id] = planet&.cell&.id}
+    "Planet_id -> Cell_id: ".color(:yellow).print_
+    hash_.to_s.color(:yellow).out
     cells_ids = self.cells.ids
-    cells_ids = cells_ids.shuffle.take game.planets_count
+    planets_ids = self.planets.ids
+    cells_ids = cells_ids.shuffle.take self.planets_count
     cells_ids.each_with_index do  |cell_id, index|
-      self.cells[cell_id].planet = self.planets[index]
-      self.cells[cell_id].save
+      cell = self.cells[cell_id]
+      planet = self.planets[planets_ids[index]]
+      cell.planet = self.planets[index]
+      cell.save
+      planet.cell = cell
+      planet.save
     end
-    self.get_map
+    hash_ = {}
+    self.planets.each { |planet| hash_[planet&.id] = planet&.cell&.id}
+    "Planet_id -> Cell_id: ".color(:yellow).print_
+    hash_.to_s.color(:yellow).out
   end
 
   def is_over?
@@ -144,16 +158,17 @@ class Game < Ohm::Model
       if self.playername_is_uniq player_name
         pl = Creation.create_player player_name
         if pl.id
-          self.players << pl
-          true
+          pl.game = self
+          pl.save
+          pl
         end
       else
         self.errors.add :player_name, "the name is already used"
-        false
+        nil
       end
     else
       self.errors.add :players_limit, "no place for new player"
-      false
+      nil
     end
   end
 
@@ -162,7 +177,10 @@ class Game < Ohm::Model
       Deletion.delete_game self
       return nil
     else
-      self.players.delete Player[player_id]
+      pl = Player[player_id]
+      pl.game = nil
+      pl.save
+      pl.delete
       self.make_new_admin
       self
     end

@@ -34,10 +34,10 @@ class Player < Ohm::Model
   validates_with PlayerValidator
   validates :name, presence: true, length: { in: 1..32 }
   validates :color_id, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: -1 }
-  validates :is_end_turn, inclusion: { in: [true, false] }
-  validates :is_game_over, inclusion: { in: [true, false] }
-  validates :is_admin, inclusion: { in: [true, false] }
-  validates :is_ai, inclusion: { in: [true, false] }
+  validates :is_end_turn, inclusion: { in: [true, false] }, allow_nil: true
+  validates :is_game_over, inclusion: { in: [true, false] }, allow_nil: true
+  validates :is_admin, inclusion: { in: [true, false] }, allow_nil: true
+  validates :is_ai, inclusion: { in: [true, false] }, allow_nil: true
   validates :ai_type, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
 
   def has_fleets_or_planets
@@ -46,6 +46,7 @@ class Player < Ohm::Model
 
   def make_admin
     self.is_admin = true
+    self.save
   end
 
   def update hash

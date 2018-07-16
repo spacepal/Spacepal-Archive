@@ -33,4 +33,26 @@ class Deletion
     true
   end
 
+  def self.delete_planets game
+    planets = game.planets.to_a
+    if planets
+      planets.each do |planet| 
+        planet.cell_id = nil
+        planet.player_id = nil
+        planet.game_id = nil
+        planet.delete
+      end
+    end
+  end
+
+  def self.delete_cells game
+    cells = game.cells.to_a
+    if cells
+      cells.each do |cell| 
+        cell.planet_id = nil
+        cell.delete
+      end 
+    end
+  end
+
 end

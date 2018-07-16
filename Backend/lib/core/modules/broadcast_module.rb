@@ -8,21 +8,29 @@ module BroadcastModule
   PLANETS_TYPE = :planets
   NOTIFICATION_TYPE = :notifications
 
-  def transmit_all_data room, player_id
-    ActionCable.server.broadcast(room, self.transmitted_game(player_id))
-    ActionCable.server.broadcast(room, self.transmitted_player(player_id))
-    ActionCable.server.broadcast(room, self.transmitted_players(player_id))
-    ActionCable.server.broadcast(room, self.transmitted_fleets(player_id))
-    ActionCable.server.broadcast(room, self.transmitted_planets(player_id))
+  def broadcast_all_data room, game_id, player_id
+    self.broadcast_game(room, game_id)
+    self.broadcast_player(player_id)
+    self.broadcast_players(room, game_id)
+    self.broadcast_fleets(room, player_id)
+    self.broadcast_planets(room, game_id)
   end
 
-  def transmit_profile room, player_id
-    ActionCable.server.broadcast(room, self.transmitted_player(player_id))
-
+  def transmitted_player player_id
+    player = Player[player_id]
+    player.is_end_turn
+    _hash = {
+      id: player_id.to_i,
+      username: player.name,
+      isCreator: (player.is_admin or false),
+      isEndTurn: (player.is_end_turn or false),
+      isGameOver: (player.is_game_over or false)
+    }
+    return { type: PLAYER_TYPE, data: _hash }
   end
 
-  def transmitted_game player_id
-    game = Player[player_id].game
+  def broadcast_game room, game_id
+    game = Game[game_id]
     _hash = {
       id: game.id.to_i,
       name: game.name,
@@ -39,10 +47,10 @@ module BroadcastModule
       turnNumber: game.step,
       state: game.get_state # STATE_ROOM = 1; STATE_GAME = 2; STATE_END = 3
     }
-    return { type: GAME_TYPE, data: _hash }
+    ActionCable.server.broadcast(room, { type: GAME_TYPE, data: _hash })
   end  
 
-  def transmitted_player player_id
+  def broadcast_player player_id
     player = Player[player_id]
     player.is_end_turn
     _hash = {
@@ -52,26 +60,27 @@ module BroadcastModule
       isEndTurn: (player.is_end_turn or false),
       isGameOver: (player.is_game_over or false)
     }
-    return { type: PLAYER_TYPE, data: _hash }
+    ActionCable.server.broadcast("players:#{player_id}", { type: PLAYER_TYPE, data: _hash })
   end
 
-  def transmitted_players player_id
-    players = Player[player_id].game.players
+  def broadcast_players room, game_id
+    players = Game[game_id].players
     arr = players&.map do |player| 
       {
         id: player.id.to_i,
         color: player.color_id,
         username: player.name,
+        isCreator: (player.is_admin or false),
         isArtificialIntelligence: (player.is_ai or false),
         artificialIntelligenceType:  player.ai_type,
         isEndTurn: (player.is_end_turn or false),
         isGameOver: (player.is_game_over or false)
       }
     end
-    return { type: PLAYERS_TYPE, data: { PLAYERS_TYPE => arr }}
+    ActionCable.server.broadcast(room, { type: PLAYERS_TYPE, data: { PLAYERS_TYPE => arr }})
   end
 
-  def transmitted_fleets player_id
+  def broadcast_fleets room, player_id
     fleets = Player[player_id].fleets
     arr = fleets&.map do |fleet|
       {
@@ -81,11 +90,11 @@ module BroadcastModule
         stepsLeft: fleet.way.count
       }
     end
-    return { type: FLEETS_TYPE, data: { FLEETS_TYPE => arr }} 
+    ActionCable.server.broadcast(room, { type: FLEETS_TYPE, data: { FLEETS_TYPE => arr }})
   end
 
-  def transmitted_planets player_id
-    planets = Player[player_id].game.planets
+  def broadcast_planets room, game_id
+    planets = Game[game_id].planets
     arr = planets&.map do |planet|
       {
         id: planet.id.to_i,
@@ -97,7 +106,7 @@ module BroadcastModule
         isCapital: (planet.is_capital or false)
       }
     end
-    return { type: PLANETS_TYPE, data: { PLANETS_TYPE => arr }} 
+    ActionCable.server.broadcast(room, { type: PLANETS_TYPE, data: { PLANETS_TYPE => arr }})
   end
 
 end
