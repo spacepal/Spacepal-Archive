@@ -69,11 +69,23 @@ class Game < Ohm::Model
     arr.compact
   end
 
+  def make_planets_not_capitals
+    self.get_capital_planets.each { |planet| planet.is_capital = false; planet.save }
+  end
+
   def get_planets_to_players
     capitals = self.get_capital_planets
     self.players.each_with_index do |player, index|
       capitals[index].player = player
       capitals[index].save
+    end
+
+  end
+
+  def set_players_colors
+    self.players.each_with_index do |player, index|
+      player.color_id = index + 1
+      player.save
     end
   end
 
@@ -85,6 +97,7 @@ class Game < Ohm::Model
 
   def start_game
     self.step = Game::FIRST_STEP
+    self.save
   end
 
   def room?

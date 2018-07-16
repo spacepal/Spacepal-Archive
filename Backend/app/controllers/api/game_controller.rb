@@ -2,11 +2,10 @@ class Api::GameController < ApplicationController
 
   def index
     arr = Game.get_all :offset => params[:offset], :limit => params[:limit]
-    render :json => { games: arr, :count => $redis.zcard("game:ids") }
+    render :json => { games: arr, :count => Game.all.count }
   end
 
   def create
-    request.remote_ip.to_s.color("yellow").out
     data = self.game_params
     player = Creation.create_player data[:username]
     unless player.errors.empty?

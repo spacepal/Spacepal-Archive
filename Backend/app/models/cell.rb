@@ -80,8 +80,6 @@ class Cell < Ohm::Model
     arr_neigh.sort! { |el| el.id }
     arr_neigh.each { |el| cell.neighbors << el; cell.save }
     cell.save
-    #(n - first_id + 1).to_s.color("green").out
-    #(cell.neighbors.map { |m| m - first_id + 1 }).to_s.color("cyan").out      
   end
 
   def is_valid this, next_, first_id, last_id, w

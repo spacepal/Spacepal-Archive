@@ -105,8 +105,8 @@ module Broadcastable
     arr = planets&.map do |planet|
       {
         id: planet.id.to_i,
-        ownerID: (planet.player_id or -1), # player ID
-        cellID: planet.cell.relative_id, # 1 ... width * height
+        ownerID: (planet.player_id or -1).to_i, # player ID
+        cellID: planet.cell.relative_id.to_i, # 1 ... width * height
         production: planet.production,
         killPerc: planet.kill_perc,
         ships: planet.ships,
