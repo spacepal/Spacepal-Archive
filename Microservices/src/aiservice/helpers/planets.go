@@ -31,8 +31,8 @@ func NewPlanets(
 	}
 }
 
-// SelfByGroups returns planets seperated by zones
-func (p Planets) SelfByGroups(radius int) map[int][]imodel.PlanetGetter {
+// SelfGroups returns planets seperated by zones
+func (p Planets) SelfGroups(radius int) map[int][]imodel.PlanetGetter {
 	usedPlanets := make(map[int]bool)
 	zones := make(map[int][]imodel.PlanetGetter)
 	for _, self := range p.selfPlanets {
