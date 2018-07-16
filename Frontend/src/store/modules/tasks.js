@@ -99,9 +99,8 @@ const actions = {
     commit('ADD_TASK', { from, to, count })
     commit('INCREASE_ID')
   },
-  clear ({ commit, dispatch }) {
+  clear ({ commit }) {
     commit('CLEAR')
-    dispatch('syncSet', 'tasks', { root: true })
   }
 }
 

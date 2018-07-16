@@ -15,16 +15,17 @@ Vue.use(Vuex)
 const STORAGE_GAME_ID = 'game_id'
 const STORAGE_MENU_IS_SHOWED = 'menu_is_showed'
 
+var gID = localStorage.getItem(STORAGE_GAME_ID)
+
 const state = {
   cable: new Map(),
-  gameID: localStorage.getItem(STORAGE_GAME_ID),
+  gameID: (gID !== undefined ? parseInt(gID) : undefined),
   sync: {
     game: false,
     fleets: false,
     members: false,
     planets: false,
     profile: false,
-    tasks: false,
     events: false,
     autotasks: false // complete
   },
@@ -84,17 +85,17 @@ const actions = {
   },
   reset ({ commit, dispatch }) { // turn_ended from ActionCable
     dispatch('lock') // it does not matter
-    dispatch('tasks/clear')
     dispatch('events/clear')
+    dispatch('tasks/clear')
     commit('SYNC_RESET')
   },
   syncUnset ({ commit }, syncType) {
     commit('SYNC_UNSET', syncType)
   },
   syncSet ({ state, commit, dispatch, getters }, syncType) {
+    commit('SYNC_SET', syncType)
     if (state.endTurnLock &&
       state.sync.game &&
-      state.sync.tasks &&
       state.sync.profile &&
       state.sync.members &&
       state.sync.planets &&
@@ -104,11 +105,9 @@ const actions = {
       dispatch('unlock')
     }
     if (!state.sync.autotasks &&
-      !state.endTurnLock &&
-      state.sync.tasks) {
+      !state.endTurnLock) {
       dispatch('tasks/doAutoTasks')
     }
-    commit('SYNC_SET', syncType)
   },
   logout ({ commit, dispatch, state }) {
     let gID = state.gameID

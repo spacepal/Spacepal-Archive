@@ -60,7 +60,7 @@ const actions = {
     }
     let fleets = rootGetters['tasks/all']
     dispatch('lock', null, { root: true })
-    rootState.cable.get(rootState.gameID).endTurn(fleets)
+    rootState.cable.get(rootState.gameID).endTurn(Object.values(fleets))
   },
   logout (_, gameID) {
     if (gameID === null) {
