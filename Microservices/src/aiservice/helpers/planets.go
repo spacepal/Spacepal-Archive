@@ -6,10 +6,15 @@ import "aiservice/model/imodel"
 type Planets struct {
 	selfPlanets    []imodel.PlanetGetter
 	foreignPlanets []imodel.PlanetGetter
+	mapSize        imodel.MapSizeGetter
 }
 
 // NewPlanets creates new planets store
-func NewPlanets(planets []imodel.PlanetGetter, player int) *Planets {
+func NewPlanets(
+	planets []imodel.PlanetGetter,
+	mapSize imodel.MapSizeGetter,
+	player int,
+) *Planets {
 	var foreignPlanets = make([]imodel.PlanetGetter, 0)
 	var selfPlanets = make([]imodel.PlanetGetter, 0)
 	for _, p := range planets {
@@ -22,7 +27,35 @@ func NewPlanets(planets []imodel.PlanetGetter, player int) *Planets {
 	return &Planets{
 		selfPlanets:    selfPlanets,
 		foreignPlanets: foreignPlanets,
+		mapSize:        mapSize,
 	}
+}
+
+// SelfByGroups returns planets seperated by zones
+func (p Planets) SelfByGroups(radius int) map[int][]imodel.PlanetGetter {
+	usedPlanets := make(map[int]bool)
+	zones := make(map[int][]imodel.PlanetGetter)
+	for _, self := range p.selfPlanets {
+		if _, ok := usedPlanets[self.ID()]; ok {
+			continue
+		}
+		usedPlanets[self.ID()] = true
+		distSurf := NewDistanceSurface(self.Cell(), p.mapSize)
+		zoneID := self.ID()
+		zones[zoneID] = make([]imodel.PlanetGetter, 1)
+		zones[zoneID][0] = self
+		for _, union := range p.selfPlanets {
+			if _, ok := usedPlanets[self.ID()]; ok {
+				continue
+			}
+			if dist := distSurf.Calculate(union.Cell()); dist > radius {
+				continue
+			}
+			usedPlanets[union.ID()] = true
+			zones[zoneID] = append(zones[zoneID], union)
+		}
+	}
+	return zones
 }
 
 // Self returns planets of current player
