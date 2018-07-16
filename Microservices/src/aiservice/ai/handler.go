@@ -38,7 +38,7 @@ func (h TurnHandler) process(in imodel.InGetter) {
 	var out model.TasksOut
 	out.Tasks = make([]imodel.TaskGetter, 0)
 	for _, p := range in.AIPlayers() {
-		planets := helpers.NewPlanets(in.Planets(), p.Player())
+		planets := helpers.NewPlanets(in.Planets(), in.MapSize(), p.Player())
 		bot := h.manager.Get(p.Name())
 		tasks := bot.MakeMove(planets, globStat, in.MapSize())
 		out.Tasks = append(out.Tasks, tasks...)

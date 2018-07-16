@@ -92,10 +92,10 @@ func (p *prox) EndTurn() error {
 
 func main() {
 	var gameParams = model.GameParams{
-		MapHeight:    4,
-		MapWidth:     4,
+		MapHeight:    10,
+		MapWidth:     10,
 		PlayersCount: 4,
-		PlanetsCount: 10,
+		PlanetsCount: 80,
 	}
 	game, err := game.NewGame(gameParams)
 	if err != nil {

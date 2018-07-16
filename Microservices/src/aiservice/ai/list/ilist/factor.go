@@ -10,4 +10,5 @@ type FactorGetter interface {
 	Ships() float64
 	PlayerPower() float64
 	Distance() float64 // Must be negative
+	WithoutDistance() FactorGetter
 }

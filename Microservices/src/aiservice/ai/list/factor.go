@@ -1,5 +1,7 @@
 package list
 
+import "aiservice/ai/list/ilist"
+
 // factor contains coefficients for determining score
 type factor struct {
 	quantity    float64
@@ -10,6 +12,11 @@ type factor struct {
 	ships       float64
 	playerPower float64
 	distance    float64
+}
+
+func (f factor) WithoutDistance() ilist.FactorGetter {
+	f.distance = 0
+	return f
 }
 
 // Quantity of available ships

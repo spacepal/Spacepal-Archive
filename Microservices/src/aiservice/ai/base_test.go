@@ -68,7 +68,7 @@ func TestBase(t *testing.T) {
 		t.Fatal("NewBase returns nil")
 	}
 	globstat := helpers.NewGlobStat(baseTestPlanets)
-	planets := helpers.NewPlanets(baseTestPlanets, 2)
+	planets := helpers.NewPlanets(baseTestPlanets, baseTestMapSize, 2)
 
 	var allPlanets = map[int]bool{}
 	for _, p := range baseTestPlanets {
