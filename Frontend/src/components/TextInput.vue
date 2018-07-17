@@ -3,7 +3,7 @@
     <div class="label" v-if="hasLabel">{{label}}</div>
     <input ref="inp" :type="type" :maxlength="maxLength" :min="minimum" :max="maximum"
       v-model="text" :placeholder="value" @blur="enableHotKeys"
-      @focus="$event.target.select(); disableHotKeys()">
+      @focus="disableHotKeys($event)" @click="$event.target.select()">
     <div class="counter" v-show="text.length !== 0" v-if="hasCounter">
       {{text.length}}\{{max}}
     </div>
@@ -94,8 +94,9 @@ export default {
     enableHotKeys () {
       this.$enableHotKeys()
     },
-    disableHotKeys () {
+    disableHotKeys (e) {
       this.$disableHotKeys()
+      console.log(e)
     },
     forceInput () {
       this.text = this.value
