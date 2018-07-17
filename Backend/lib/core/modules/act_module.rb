@@ -13,4 +13,14 @@ module Actable
     game.shuffle_map
   end
 
+  def end_turn player, array_fleets_hash
+    "MODULE: end turn".color(:green).out
+    self.save_fleets(player, array_fleets_hash) unless array_fleets_hash.empty? 
+  end
+
+  def save_fleets player, array_fleets_hash
+    "MODULE: save_fleets".color(:green).out
+    Creation.create_fleets player, array_fleets_hash
+  end
+
 end

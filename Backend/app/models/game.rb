@@ -33,7 +33,6 @@ class Game < Ohm::Model
   IS_OVER = -1
   FIRST_STEP = 1
 
-  collection :fleets, :Fleet
   collection :planets, :Planet
   collection :players, :Player
   collection :cells, :Cell

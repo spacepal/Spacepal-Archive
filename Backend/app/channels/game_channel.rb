@@ -26,7 +26,12 @@ class GameChannel < ApplicationCable::Channel
     core.broadcast_planets ("games:" + game.id.to_s), game.id
   end
 
-  def end_turn
+  def end_turn data
+    data.to_s.color(:yellow).out
+    core = Core.new
+    "CHANNEL: end_turn".color(:green).out
+    core.end_turn current_player, data["fleets"]
+    "CHANNEL: finish".color(:green).out
     #TB.new Player[current_player.id].game.id
     #на входе json корабли и игрок_id
     #в либе пишу broadcast

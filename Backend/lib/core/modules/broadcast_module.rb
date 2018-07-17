@@ -75,7 +75,7 @@ module Broadcastable
     arr = players&.map do |player| 
       {
         id: player.id.to_i,
-        color: player.color_id,
+        color: player.color_id.to_i,
         username: player.name,
         isCreator: (player.is_admin or false),
         isArtificialIntelligence: (player.is_ai or false),
@@ -91,10 +91,10 @@ module Broadcastable
     fleets = Player[player_id].fleets
     arr = fleets&.map do |fleet|
       {
-        from: Cell[fleet.cell_from_id].planet.id.to_i, # planetID
-        to: fleet.way[-1].planet.id.to_i, # planetID
-        count: fleet.ships,
-        stepsLeft: fleet.way.count
+        from: fleet.planet_from_id.to_i, # planetID
+        to: fleet.planet_to_id.to_i, # planetID
+        count: fleet.ships.to_i,
+        stepsLeft: fleet.steps_left.to_i
       }
     end
     ActionCable.server.broadcast("players:#{player_id}", { type: FLEETS_TYPE, data: { FLEETS_TYPE => arr }})
@@ -107,9 +107,9 @@ module Broadcastable
         id: planet.id.to_i,
         ownerID: (planet.player_id or -1).to_i, # player ID
         cellID: planet.cell.relative_id.to_i, # 1 ... width * height
-        production: planet.production,
-        killPerc: planet.kill_perc,
-        ships: planet.ships,
+        production: planet.production.to_f,
+        killPerc: planet.kill_perc.to_f,
+        ships: planet.ships.to_i,
         isCapital: (planet.is_capital or false)
       }
     end

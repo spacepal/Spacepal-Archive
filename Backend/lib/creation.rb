@@ -80,8 +80,46 @@ class Creation
     game.planets.to_a
   end
 
-  def self.create_fleet
+  def self.create_fleets player, array_fleets_hash
+    "CREATION: create fleets"
+    array_fleets_hash.each do |fleet_hash|
+      p 'www'
+      (Creation.create_fleet(player,fleet_hash)).to_s.color(:yellow).out
+    end
+  end
+#{"fleets"=>[{"from"=>287, "to"=>289, "count"=>3}, 
+#{"from"=>287, "to"=>312, "count"=>3}], "action"=>"end_turn"}
+  def self.create_fleet player, fleet_hash
+    p fleet_hash
+    fleet = Fleet.new
+    p "1"
+    fleet.planet_from_id = fleet_hash["from"]
+    p "2"
+    fleet.planet_to_id = fleet_hash["to"]
+    p "3"
+    fleet.ships = fleet_hash["count"]
+    p "4"
+    fleet.kill_perc = Planet[fleet.planet_to_id] ?
+      Planet[fleet.planet_to_id].kill_perc :
+      nil
+    p "5"
+    fleet.steps_left = Creation.calculate_steps_left(
+        fleet.planet_from_id, fleet.planet_to_id)
+    p "6"
+    fleet.player = player ? player : Player[fleet_hash["player"]]
+    p "7"
+    if fleet.save
+      p "8.1"
+      fleet
+    else
+      p "8.2"
+      nil
+    end
+  end
 
+  def self.calculate_steps_left planet_from_id, planet_to_id
+    #todo
+    5
   end
 
 end

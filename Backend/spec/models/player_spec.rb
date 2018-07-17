@@ -23,9 +23,11 @@ RSpec.describe Player, type: :model do
     player.save
     fleet = Fleet.new
     fleet.kill_perc = 0.4
-    fleet.status = Fleet::DEFAULT_STATUS
+    #fleet.status = Fleet::DEFAULT_STATUS
     fleet.ships = 10
-    fleet.cell_from_id = 4
+    fleet.planet_from_id = 4
+    fleet.planet_to_id = 2
+    fleet.steps_left = 2
     fleet.player = player
     fleet.save
     player.save
