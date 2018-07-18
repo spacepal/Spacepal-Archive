@@ -3,6 +3,9 @@
     <div class="label" v-if="hasLabel">{{label}}</div>
     <input ref="inp" :type="type" :maxlength="maxLength" :min="minimum" :max="maximum"
       v-model="text" :placeholder="value" @blur="enableHotKeys"
+      @change="onChange($event.target.value)"
+      @keydown="onChange($event.target.value)"
+      @paste="onChange($event.target.value)"
       @focus="disableHotKeys($event)" @click="$event.target.select()">
     <div class="counter" v-show="text.length !== 0" v-if="hasCounter">
       {{text.length}}\{{max}}
@@ -157,11 +160,16 @@ export default {
     },
     revalidate () {
       this.statusClass = ''
-      if (this.isValid() && this.text.length !== 0) {
+      if (this.isValid() && this.text.length !== 0 &&
+        this.$refs.inp.validity.valid) {
         this.statusClass = 'field-valid'
         return true
       }
       return false
+    },
+    onChange (text) {
+      this.isLabelOut = (text + '').length !== 0 ||
+        this.$refs.inp.validity.badInput
     }
   },
   watch: {
@@ -169,7 +177,7 @@ export default {
       this.$emit('change')
     },
     text (newText) {
-      this.isLabelOut = this.text.length !== 0
+      this.onChange(newText)
       if (this.revalidate()) {
         this.$emit('input', (this.type === TYPE_NUMBER ? parseInt(newText) : newText))
       }
