@@ -44,8 +44,8 @@ class Creation
     game.height.times do |h|
       game.width.times do |w|
         cell = Cell.new
-        cell.coord_x = w + 1
-        cell.coord_y = h + 1
+        cell.x = w + 1
+        cell.y = h + 1
         cell.save
         cells << cell.clone
       end
@@ -81,45 +81,49 @@ class Creation
   end
 
   def self.create_fleets player, array_fleets_hash
-    "CREATION: create fleets"
     array_fleets_hash.each do |fleet_hash|
-      p 'www'
-      (Creation.create_fleet(player,fleet_hash)).to_s.color(:yellow).out
+      Creation.create_fleet player,fleet_hash
     end
   end
-#{"fleets"=>[{"from"=>287, "to"=>289, "count"=>3}, 
-#{"from"=>287, "to"=>312, "count"=>3}], "action"=>"end_turn"}
   def self.create_fleet player, fleet_hash
-    p fleet_hash
     fleet = Fleet.new
-    p "1"
     fleet.planet_from_id = fleet_hash["from"]
-    p "2"
     fleet.planet_to_id = fleet_hash["to"]
-    p "3"
     fleet.ships = fleet_hash["count"]
-    p "4"
     fleet.kill_perc = Planet[fleet.planet_to_id] ?
       Planet[fleet.planet_to_id].kill_perc :
       nil
-    p "5"
-    fleet.steps_left = Creation.calculate_steps_left(
+    fleet.steps_left = self.new.calculate_steps_left(
         fleet.planet_from_id, fleet.planet_to_id)
-    p "6"
     fleet.player = player ? player : Player[fleet_hash["player"]]
-    p "7"
     if fleet.save
-      p "8.1"
       fleet
     else
-      p "8.2"
       nil
     end
   end
 
-  def self.calculate_steps_left planet_from_id, planet_to_id
-    #todo
-    5
+
+
+  def calculate_steps_left planet_from_id, planet_to_id
+    c1 = Planet[planet_from_id].cell
+    c2 = Planet[planet_to_id].cell
+    distance(to_cube(c1.x, c1.y), to_cube(c2.x, c2.y))
+  end
+
+private
+
+  Cube = Struct.new(:x, :y, :z)
+
+  def to_cube col, row
+    x = col
+    z = row - (col - col % 2) / 2
+    y = -x - z
+    return Cube.new(x, y, z)
+  end
+
+  def distance c1, c2
+    ((c2.x - c1.x).abs + (c2.y - c1.y).abs + (c2.z - c1.z).abs) / 2
   end
 
 end

@@ -7,23 +7,23 @@ class Cell < Ohm::Model
   reference :planet, :Planet
   reference :game, :Game
   
-  attribute :coord_x, lambda { |x| x.to_i }
-  attribute :coord_y, lambda { |x| x.to_i }
+  attribute :x, lambda { |x| x.to_i }
+  attribute :y, lambda { |x| x.to_i }
   set :neighbors, :Cell
 
-  validates :coord_x, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 64, greater_than_or_equal_to: 1}
-  validates :coord_y, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 64, greater_than_or_equal_to: 1}
+  validates :x, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 64, greater_than_or_equal_to: 1}
+  validates :y, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 64, greater_than_or_equal_to: 1}
 
   def relative_id
     return self.id.to_i - self.game.cells.first.id.to_i + 1
   end
 
-  def coord_x
-    self.attributes[:coord_x].to_i
+  def x
+    self.attributes[:x].to_i
   end
 
-  def coord_y
-    self.attributes[:coord_y].to_i
+  def y
+    self.attributes[:y].to_i
   end
 
   def update hash

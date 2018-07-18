@@ -12,11 +12,24 @@ class Deletion
         cell.delete
       end 
     end
-    players.each do |player| 
-      Ohm.redis.call "DEL", player_key[player.id][:planets]
-      Ohm.redis.call "DEL", player_key[player.id][:fleets]
-      player.game_id = nil
-      player.delete
+    if players
+      players.each do |player|
+        fleets = player.fleets
+        if fleets
+          fleets.each do |fleet| 
+            p "1"
+            fleet.player_id = nil
+            p "2"
+            fleet.save
+            p "3"
+            fleet.delete
+          end
+        end
+        Ohm.redis.call "DEL", player_key[player.id][:planets]
+        Ohm.redis.call "DEL", player_key[player.id][:fleets]
+        player.game_id = nil
+        player.delete
+      end
     end
     if planets
       planets.each do |planet| 
