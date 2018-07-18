@@ -65,20 +65,26 @@ class Api::GameController < ApplicationController
   end
 
   def leave
-    game = Game[cookies.encrypted[:game_id]]
+    game_id = cookies.encrypted[:game_id]
+    player_id = cookies.encrypted[:player_id]
+    cookies.delete :game_id
+    cookies.delete :player_id
+    game = Game[game_id]
     if game
-      game = game.remove_player cookies.encrypted[:player_id]
       core = Core.new
-      cookies.delete :game_id
-      cookies.delete :player_id
+      game = game.remove_player player_id
+      if game.playing?
+        core.end_turn(Player[player_id], [])
+      end
       if game
         core.broadcast_player game.get_creator.id
-        core.broadcast_players ("games:" + game.id.to_s), game.id
-        core.broadcast_game ("games:" + game.id.to_s), game.id
+        core.broadcast_players game.id
+        core.broadcast_planets game.id
+        core.broadcast_game game.id
       end
       render :json => { errors: [ nil ]}
     else
-      render :json => { errors: [ "Game\##{cookies.encrypted[:game_id]} does not exist" ]}
+      render :json => { errors: [ "Game\##{game_id} does not exist" ]}
     end
   end
 

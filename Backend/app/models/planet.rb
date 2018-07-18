@@ -14,12 +14,14 @@ class Planet < Ohm::Model
   attribute :production, lambda { |x| x.to_i }
   attribute :ships, lambda { |x| x.to_i }
   attribute :is_capital, lambda { |x| x.to_bool }
+  attribute :experience, lambda { |x| x.to_i }
 
   validates :is_capital, inclusion: { in: [true, false] }, allow_nil: true
   validates :buff, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
   validates :kill_perc, presence: true, numericality: { less_than: 1, greater_than: 0 }
   validates :production, presence: true, numericality: { only_integer: true, greater_than: 0 }
-  validates :ships, presence: true, numericality: { only_integer: true }
+  validates :experience, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :ships, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   def set_properties
     self.set_production
@@ -28,7 +30,22 @@ class Planet < Ohm::Model
     self.get_properties
     self.player_id = NEUTRAL_PLAYER
     self.is_capital = false
+    self.experience = 0
     self
+  end
+
+  def make_players_planet 
+    self.set_production 10
+    self.set_kill_percent 0.4
+    self.set_ships
+    self.experience = 0
+    self.is_capital = true
+  end
+
+  def make_neutral_planet
+    self.player_id = nil
+    self.experience = 0
+    self.save
   end
 
   def set_production prod = 0
@@ -59,13 +76,6 @@ class Planet < Ohm::Model
     else 
       self.ships = 10
     end
-  end
-
-  def make_players_planet 
-    self.set_production 10
-    self.set_kill_percent 0.4
-    self.set_ships
-    self.is_capital = true
   end
 
   def get_properties

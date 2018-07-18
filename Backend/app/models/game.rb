@@ -197,15 +197,22 @@ class Game < Ohm::Model
   end
 
   def remove_player player_id
-    if self.players.count == 1
-      Deletion.delete_game self
-      return nil
-    else
-      pl = Player[player_id]
-      pl.game = nil
-      pl.save
-      pl.delete
-      self.make_new_admin
+    if self.room?
+      if self.players.count == 1
+        Deletion.delete_game self
+        return nil
+      else
+        pl = Player[player_id]
+        pl.game = nil
+        pl.save
+        pl.delete
+        self.make_new_admin
+        self
+      end
+    end
+    if self.playing?
+      player = Player[player_id]
+      player.surrender
       self
     end
   end

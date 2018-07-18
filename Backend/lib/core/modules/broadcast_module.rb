@@ -62,6 +62,7 @@ module Broadcastable
     player = Player[player_id]
     _hash = {
       id: player_id.to_i,
+      color: player.color_id.to_i,
       username: player.name,
       isCreator: (player.is_admin or false),
       isEndTurn: (player.is_end_turn or false),
@@ -84,6 +85,7 @@ module Broadcastable
         isGameOver: (player.is_game_over or false)
       }
     end
+    #{}"colors: es #{arr.pluck(:attributes)}".color(:brown).out
     ActionCable.server.broadcast("games:#{game_id}", { type: PLAYERS_TYPE, data: { PLAYERS_TYPE => arr }})
   end
 

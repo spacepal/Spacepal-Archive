@@ -48,7 +48,7 @@ class Fleet < Ohm::Model
   validates :ships, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :planet_from_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :planet_to_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
-  validates :started, inclusion: { in: [true, false] }
+  validates :started, inclusion: { in: [true, false,"true", "false"] }, allow_nil: true
 
   def started?
     self.started
@@ -56,6 +56,7 @@ class Fleet < Ohm::Model
 
   def start
     self.started = true
+    self.save
   end
 
   def kill_perc
