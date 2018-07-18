@@ -24,7 +24,7 @@
       <span>[T]</span>
 
       <span class="mdi mdi-cancel"></span>
-      <a @click="exit">Throw in the towel</a>
+      <a @click="exit">Surrender</a>
       <span>[<span class="mdi mdi-cancel"></span>]</span>
 
       <span class="mdi mdi-eye-off-outline"></span>
