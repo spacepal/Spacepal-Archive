@@ -6,12 +6,7 @@
     </template>
     <span class="button" v-if='!isLocked' @click="endTurn">End turn</span>
     <span class="button" @click="logout">
-      <template v-if="isGame">
-        Throw in the towel
-      </template>
-      <template v-else>
-        Exit
-      </template>
+      Exit
     </span>
     <FullPreloader ref="loader" />
   </div>

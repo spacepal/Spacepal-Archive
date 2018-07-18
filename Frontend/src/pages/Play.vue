@@ -32,7 +32,6 @@ import Map from '../components/Map'
 import Form from '../components/Form'
 import GameInfo from '../components/GameInfo'
 import Members from '../components/Members'
-import ActionButtons from '../components/ActionButtons'
 import Notifications from '../components/Notifications'
 import Tasks from '../components/Tasks'
 import GameMenu from '../components/GameMenu'
@@ -44,7 +43,6 @@ export default {
     GameMenu,
     Map,
     Members,
-    ActionButtons,
     Form,
     Notifications,
     Tasks

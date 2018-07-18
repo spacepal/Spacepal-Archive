@@ -33,7 +33,6 @@ import Map from './Map'
 import Form from './Form'
 import GameInfo from './GameInfo'
 import Members from './Members'
-import ActionButtons from './ActionButtons'
 import Notifications from './Notifications'
 import Tasks from './Tasks'
 import GameMenu from './GameMenu'
@@ -45,7 +44,6 @@ export default {
     GameMenu,
     Map,
     Members,
-    ActionButtons,
     Form,
     Notifications,
     Tasks

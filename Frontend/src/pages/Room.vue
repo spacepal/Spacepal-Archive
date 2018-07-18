@@ -15,7 +15,7 @@
 import Map from '../components/Map'
 import GameInfo from '../components/GameInfo'
 import Members from '../components/Members'
-import ActionButtons from '../components/ActionButtons'
+import ActionButtons from '../components/RoomActionButtons'
 
 export default {
   name: 'Room',
