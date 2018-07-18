@@ -1,23 +1,52 @@
+class FleetValidator < ActiveModel::Validator
+  
+  def validate record
+    self.piece_of_validations record, lambda { |r|
+      r.planet_from_id != r.planet_to_id
+    }, "planet_from can't be the same with planet_to", record.planet_from_id, record.planet_to_id
+    self.piece_of_validations record, lambda { |r| 
+      !Planet[r.planet_from_id].nil?
+    }, "there is no Planet with planet_from_id", record.planet_from_id
+    self.piece_of_validations record, lambda { |r| 
+      !Planet[r.planet_to_id].nil?
+    }, "there is no Planet with planet_to_id", record.planet_to_id
+  end
+
+  def piece_of_validations record, func, error_msg, *args
+    if args.any? { |arg| arg.nil? }
+      return
+    else
+      res = func.call record
+      unless res
+        record.errors[:base] << error_msg
+      end
+    end
+  end
+
+end
+
 class Fleet < Ohm::Model
   
   include ActiveModel::Validations
 
   DEFAULT_STATUS = "deffensive"
 
-  reference :game, :Game
   reference :player, :Player
 
-
   attribute :kill_perc, lambda { |x| x.to_f }
-  attribute :status
+  #attribute :status
   attribute :ships, lambda { |x| x.to_i }
-  attribute :cell_from_id
-  list :way, :Cell
+  attribute :steps_left
+  attribute :planet_from_id
+  attribute :planet_to_id
 
+  validates_with FleetValidator
   validates :kill_perc, presence: true, numericality: { less_than: 1, greater_than: 0 }
-  validates :status, presence: true, inclusion: { in: %w(aggressive deffensive avoiding)}
+  #validates :status, presence: true, inclusion: { in: %w(aggressive deffensive avoiding)}
+  validates :steps_left, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :ships, presence: true, numericality: { only_integer: true, greater_than: 0 }
-  validates :cell_from_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :planet_from_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :planet_to_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
 
   def kill_perc
     self.attributes[:kill_perc].to_f
@@ -56,6 +85,8 @@ class Fleet < Ohm::Model
     end
   end
 
+#-------------------------- for future ---------------------
+=begin
   def make_aggressive
     self.status = "aggressive"
   end 
@@ -65,5 +96,5 @@ class Fleet < Ohm::Model
   def make_avoiding
     self.status = "avoiding"
   end
-
+=end
 end

@@ -29,6 +29,7 @@ module Backend
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
     config.action_cable.mount_path = '/websocket'
+    ActionCable.server.config.logger = Logger.new(nil)
     config.action_cable.allowed_request_origins = [ %r{.*} ]
     config.middleware.use ActionDispatch::Cookies  
     config.middleware.insert_before 0, Rack::Cors do

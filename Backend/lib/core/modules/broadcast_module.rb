@@ -1,4 +1,4 @@
-module BroadcastModule
+module Broadcastable
 
   END_TURN_TYPE = :turn_ended
   GAME_TYPE = :game
@@ -8,12 +8,20 @@ module BroadcastModule
   PLANETS_TYPE = :planets
   NOTIFICATION_TYPE = :notifications
 
-  def broadcast_all_data room, game_id, player_id
+  def broadcast_all_data room, game_id, player_id = nil
     self.broadcast_game(room, game_id)
-    self.broadcast_player(player_id)
     self.broadcast_players(room, game_id)
-    self.broadcast_fleets(room, player_id)
     self.broadcast_planets(room, game_id)
+    if player_id
+      self.broadcast_player(player_id)
+      self.broadcast_fleets(player_id)
+    else
+      Game[game_id].players.each do |player|
+        player_id = player.id
+        self.broadcast_player(player_id)
+        self.broadcast_fleets(player_id)
+      end
+    end
   end
 
   def transmitted_player player_id
@@ -52,7 +60,6 @@ module BroadcastModule
 
   def broadcast_player player_id
     player = Player[player_id]
-    player.is_end_turn
     _hash = {
       id: player_id.to_i,
       username: player.name,
@@ -68,7 +75,7 @@ module BroadcastModule
     arr = players&.map do |player| 
       {
         id: player.id.to_i,
-        color: player.color_id,
+        color: player.color_id.to_i,
         username: player.name,
         isCreator: (player.is_admin or false),
         isArtificialIntelligence: (player.is_ai or false),
@@ -80,17 +87,17 @@ module BroadcastModule
     ActionCable.server.broadcast(room, { type: PLAYERS_TYPE, data: { PLAYERS_TYPE => arr }})
   end
 
-  def broadcast_fleets room, player_id
+  def broadcast_fleets player_id
     fleets = Player[player_id].fleets
     arr = fleets&.map do |fleet|
       {
-        from: Cell[fleet.cell_from_id].planet.id.to_i, # planetID
-        to: fleet.way[-1].planet.id.to_i, # planetID
-        count: fleet.ships,
-        stepsLeft: fleet.way.count
+        from: fleet.planet_from_id.to_i, # planetID
+        to: fleet.planet_to_id.to_i, # planetID
+        count: fleet.ships.to_i,
+        stepsLeft: fleet.steps_left.to_i
       }
     end
-    ActionCable.server.broadcast(room, { type: FLEETS_TYPE, data: { FLEETS_TYPE => arr }})
+    ActionCable.server.broadcast("players:#{player_id}", { type: FLEETS_TYPE, data: { FLEETS_TYPE => arr }})
   end
 
   def broadcast_planets room, game_id
@@ -98,11 +105,11 @@ module BroadcastModule
     arr = planets&.map do |planet|
       {
         id: planet.id.to_i,
-        ownerID: (planet.player_id or -1), # player ID
-        cellID: planet.cell.relative_id, # 1 ... width * height
-        production: planet.production,
-        killPerc: planet.kill_perc,
-        ships: planet.ships,
+        ownerID: (planet.player_id or -1).to_i, # player ID
+        cellID: planet.cell.relative_id.to_i, # 1 ... width * height
+        production: planet.production.to_f,
+        killPerc: planet.kill_perc.to_f,
+        ships: planet.ships.to_i,
         isCapital: (planet.is_capital or false)
       }
     end

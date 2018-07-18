@@ -4,16 +4,21 @@ RSpec.describe Fleet, type: :model do
   it "saves with valid props" do
     fleet = Fleet.new
     fleet.kill_perc = 0.5
-    fleet.status = Fleet::DEFAULT_STATUS
+    #fleet.status = Fleet::DEFAULT_STATUS
     fleet.ships = 100
-    fleet.cell_from_id = 5
+    fleet.planet_from_id = 5
+    fleet.planet_to_id = 10
+    fleet.steps_left = 3
     expect(fleet).to be_valid
   end
   it "not saves with invalid props" do
   fleet = Fleet.new
     fleet.kill_perc = 0
-    fleet.status = "Fleet::DEFAULT_STATUS"
+    #fleet.status = "Fleet::DEFAULT_STATUS"
     fleet.ships = -9
+    fleet.planet_from_id = 0
+    fleet.planet_to_id = 0
+    fleet.steps_left = 0
     expect(fleet).to_not be_valid
   end
   it "makes aggressive" do 

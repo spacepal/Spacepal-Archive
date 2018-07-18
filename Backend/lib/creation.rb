@@ -44,18 +44,17 @@ class Creation
     game.height.times do |h|
       game.width.times do |w|
         cell = Cell.new
-        cell.coord_x = w + 1
-        cell.coord_y = h + 1
+        cell.x = w + 1
+        cell.y = h + 1
         cell.save
         cells << cell.clone
       end
     end
     cells.each { |cell| cell.game = game; cell.save }
-    #game.cells.first.set_all_neighbors
-    if game.cells.count != game.width * game.height
-      return false
-    else
+    if game.cells.count == game.width * game.height
       cells
+    else
+      return false
     end
   end
 
@@ -64,7 +63,6 @@ class Creation
     players_ids = game.players.ids.map { |id| id.to_i }
     cells_ids = cells_ids.shuffle.take game.planets_count
     cells_ids.each_with_index do |id, index|
-      #("planet: \n index - " + index.to_s).color(:orange).out
       if index < game.players_limit
         planet = Planet.new
         planet.make_players_planet
@@ -79,15 +77,59 @@ class Creation
       planet.game = game
       planet.save
     end
-    #game.cells.each { |cell| (cell.coord_x.to_s + ":" + cell.coord_y.to_s).color(:yellow).out }
-    #("planets: " + game.planets.count.to_s).color(:orange).out
-    #("players: " + game.players.count.to_s).color(:orange).out
-    #game.planets.each { |planet| (planet.cell.coord_x.to_s + ":" + planet.cell.coord_y.to_s).color(:yellow).out }
     game.planets.to_a
   end
 
-  def self.create_fleet
+  def self.create_fleets player, array_fleets_hash
+    array_fleets_hash.each do |fleet_hash|
+      Creation.create_fleet player,fleet_hash
+    end
+  end
+  def self.create_fleet player, fleet_hash
+    if Planet[fleet_hash["from"]].ships >= fleet_hash["count"]
+      planet = Planet[fleet_hash["from"]]
+      planet.ships = planet.ships - fleet_hash["count"]
+      planet.save
+      planet = nil
+      fleet = Fleet.new
+      fleet.planet_from_id = fleet_hash["from"]
+      fleet.planet_to_id = fleet_hash["to"]
+      fleet.ships = fleet_hash["count"]
+      fleet.kill_perc = Planet[fleet.planet_to_id] ?
+        Planet[fleet.planet_to_id].kill_perc :
+        nil
+      fleet.steps_left = self.new.calculate_steps_left(
+          fleet.planet_from_id, fleet.planet_to_id)
+      fleet.player = player ? player : Player[fleet_hash["player"]]
+      if fleet.save
+        fleet
+      else
+        nil
+      end
+    else
 
+    end
+  end
+
+  def calculate_steps_left planet_from_id, planet_to_id
+    c1 = Planet[planet_from_id].cell
+    c2 = Planet[planet_to_id].cell
+    distance(to_cube(c1.x, c1.y), to_cube(c2.x, c2.y))
+  end
+
+private
+
+  Cube = Struct.new(:x, :y, :z)
+
+  def to_cube col, row
+    x = col
+    z = row - (col - col % 2) / 2
+    y = -x - z
+    return Cube.new(x, y, z)
+  end
+
+  def distance c1, c2
+    ((c2.x - c1.x).abs + (c2.y - c1.y).abs + (c2.z - c1.z).abs) / 2
   end
 
 end

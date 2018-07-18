@@ -17,7 +17,7 @@ class GameValidator < ActiveModel::Validator
       return
     else
       res = func.call record
-      if !res
+      unless res
         record.errors[:base] << error_msg
       end
     end
@@ -33,7 +33,6 @@ class Game < Ohm::Model
   IS_OVER = -1
   FIRST_STEP = 1
 
-  collection :fleets, :Fleet
   collection :planets, :Planet
   collection :players, :Player
   collection :cells, :Cell
@@ -64,21 +63,53 @@ class Game < Ohm::Model
   validates :pirates, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
   validates :production_after_capture, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
 
+  def get_capital_planets
+    arr = self.planets.map { |planet| planet if planet.is_capital }
+    arr.compact
+  end
+
+  def make_planets_not_capitals
+    self.get_capital_planets.each do |planet| 
+      planet.is_capital = false
+      planet.set_production
+      planet.set_kill_percent
+      planet.save
+    end
+
+  end
+
+  def get_planets_to_players
+    capitals = self.get_capital_planets
+    self.players.each_with_index do |player, index|
+      capitals[index].player = player
+      capitals[index].save
+    end
+
+  end
+
+  def set_players_colors
+    self.players.each_with_index do |player, index|
+      player.color_id = index + 1
+      player.save
+    end
+  end
+
   def get_state
-    return 1 if self.is_room?
-    return 2 if self.is_playing?
-    return 3 if self.is_over?
+    return 1 if self.room?
+    return 2 if self.playing?
+    return 3 if self.over?
   end
 
   def start_game
     self.step = Game::FIRST_STEP
+    self.save
   end
 
-  def is_room?
+  def room?
     self.step == Game::IS_ROOM
   end
 
-  def is_playing?
+  def playing?
     self.step != Game::IS_ROOM and self.step != Game::IS_OVER 
   end
 
@@ -99,13 +130,8 @@ class Game < Ohm::Model
   end
 
   def shuffle_map
-    "IN SHUFFLE".ljust(70).color(:green).out
     self.planets.each { |planet| planet.cell_id = nil; planet.save }
     self.cells.each { |cell| cell.planet_id = nil; cell.save }
-    hash_ = {}
-    self.planets.each { |planet| hash_[planet&.id] = planet&.cell&.id}
-    "Planet_id -> Cell_id: ".color(:yellow).print_
-    hash_.to_s.color(:yellow).out
     cells_ids = self.cells.ids
     planets_ids = self.planets.ids
     cells_ids = cells_ids.shuffle.take self.planets_count
@@ -117,13 +143,9 @@ class Game < Ohm::Model
       planet.cell = cell
       planet.save
     end
-    hash_ = {}
-    self.planets.each { |planet| hash_[planet&.id] = planet&.cell&.id}
-    "Planet_id -> Cell_id: ".color(:yellow).print_
-    hash_.to_s.color(:yellow).out
   end
 
-  def is_over?
+  def over?
     self.step == Game::IS_OVER
   end
 

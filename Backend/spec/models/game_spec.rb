@@ -68,7 +68,37 @@ RSpec.describe Game, type: :model do
     expect(game.players.first.is_admin).to be true
     Deletion.delete_game game
   end
+
   it "shuffles map" do
-    
+    player = Creation.create_player "Jack"
+    game = Creation.create_game(
+      player , "game_1", 
+      { width: 5, height: 5 },
+      3, 5, "1234", { has_pin_code: false,
+      buffs: false, production_after_capture: false,
+      pirates: false, accumulative: false })
+    Creation.create_cells game
+    Creation.create_planets game
+    cells_ids_before = game.planets.map { |planet| planet.cell.id }
+    game.shuffle_map
+    cells_ids_after = game.planets.map { |planet| planet.cell.id }
+    expect(cells_ids_before).to_not eq(cells_ids_after)
+    Deletion.delete_game game
+  end
+
+  it "gets capitals to players" do 
+    player = Creation.create_player "Jack"
+    game = Creation.create_game(
+      player , "game_1", 
+      { width: 5, height: 5 },
+      3, 5, "1234", { has_pin_code: false,
+      buffs: false, production_after_capture: false,
+      pirates: false, accumulative: false })
+    Creation.create_cells game
+    Creation.create_planets game
+    game.add_player "Mike"
+    game.get_planets_to_players
+    expect(!game.players.first.planets.empty?).to be true
+    Deletion.delete_game game
   end
 end

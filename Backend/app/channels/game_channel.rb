@@ -12,10 +12,11 @@ class GameChannel < ApplicationCable::Channel
   #cheats
 
   def start_game
-    game = Player[current_player.id].game
+    player = current_player 
+    game = Player[player.id].game
     core = Core.new
     core.start_game game.id
-    core.broadcast_all_data ("games:" + game.id.to_s), game.id, current_player.id
+    core.broadcast_all_data ("games:" + game.id.to_s), game.id, player.id
   end
 
   def shuffle
@@ -25,7 +26,9 @@ class GameChannel < ApplicationCable::Channel
     core.broadcast_planets ("games:" + game.id.to_s), game.id
   end
 
-  def end_turn
+  def end_turn data
+    core = Core.new
+    core.end_turn current_player, data["fleets"]
     #TB.new Player[current_player.id].game.id
     #на входе json корабли и игрок_id
     #в либе пишу broadcast

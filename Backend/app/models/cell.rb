@@ -7,23 +7,23 @@ class Cell < Ohm::Model
   reference :planet, :Planet
   reference :game, :Game
   
-  attribute :coord_x, lambda { |x| x.to_i }
-  attribute :coord_y, lambda { |x| x.to_i }
+  attribute :x, lambda { |x| x.to_i }
+  attribute :y, lambda { |x| x.to_i }
   set :neighbors, :Cell
 
-  validates :coord_x, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 64, greater_than_or_equal_to: 1}
-  validates :coord_y, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 64, greater_than_or_equal_to: 1}
+  validates :x, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 64, greater_than_or_equal_to: 1}
+  validates :y, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 64, greater_than_or_equal_to: 1}
 
   def relative_id
     return self.id.to_i - self.game.cells.first.id.to_i + 1
   end
 
-  def coord_x
-    self.attributes[:coord_x].to_i
+  def x
+    self.attributes[:x].to_i
   end
 
-  def coord_y
-    self.attributes[:coord_y].to_i
+  def y
+    self.attributes[:y].to_i
   end
 
   def update hash
@@ -80,15 +80,12 @@ class Cell < Ohm::Model
     arr_neigh.sort! { |el| el.id }
     arr_neigh.each { |el| cell.neighbors << el; cell.save }
     cell.save
-    #(n - first_id + 1).to_s.color("green").out
-    #(cell.neighbors.map { |m| m - first_id + 1 }).to_s.color("cyan").out      
   end
 
   def is_valid this, next_, first_id, last_id, w
     calc_offset = lambda { |index| (index - first_id) % w }
     current_offset = calc_offset.call(this)
     next_offset = calc_offset.call(next_)
-    #("this = " + (this - first_id + 1).to_s + " next_ = " + (next_ - first_id + 1).to_s + " current_offset = " + current_offset.to_s + " next_offset = " + next_offset.to_s).color("orange").out
     if next_.between?(first_id, last_id) and 
       (current_offset - next_offset).abs < 2
       Cell[next_]  
