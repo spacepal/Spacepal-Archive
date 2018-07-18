@@ -220,7 +220,7 @@ export default {
       let visibilityOffset = this.a * this.scale
       let startPoint = realPosCalc({
         x: -visibilityOffset * 1.5,
-        y: -visibilityOffset * 1.5
+        y: -visibilityOffset * 1.75
       })
       let endPoint = realPosCalc({
         x: rect.width + visibilityOffset,
