@@ -86,24 +86,30 @@ class Creation
     end
   end
   def self.create_fleet player, fleet_hash
-    fleet = Fleet.new
-    fleet.planet_from_id = fleet_hash["from"]
-    fleet.planet_to_id = fleet_hash["to"]
-    fleet.ships = fleet_hash["count"]
-    fleet.kill_perc = Planet[fleet.planet_to_id] ?
-      Planet[fleet.planet_to_id].kill_perc :
-      nil
-    fleet.steps_left = self.new.calculate_steps_left(
-        fleet.planet_from_id, fleet.planet_to_id)
-    fleet.player = player ? player : Player[fleet_hash["player"]]
-    if fleet.save
-      fleet
+    if Planet[fleet_hash["from"]].ships >= fleet_hash["count"]
+      planet = Planet[fleet_hash["from"]]
+      planet.ships = planet.ships - fleet_hash["count"]
+      planet.save
+      planet = nil
+      fleet = Fleet.new
+      fleet.planet_from_id = fleet_hash["from"]
+      fleet.planet_to_id = fleet_hash["to"]
+      fleet.ships = fleet_hash["count"]
+      fleet.kill_perc = Planet[fleet.planet_to_id] ?
+        Planet[fleet.planet_to_id].kill_perc :
+        nil
+      fleet.steps_left = self.new.calculate_steps_left(
+          fleet.planet_from_id, fleet.planet_to_id)
+      fleet.player = player ? player : Player[fleet_hash["player"]]
+      if fleet.save
+        fleet
+      else
+        nil
+      end
     else
-      nil
+
     end
   end
-
-
 
   def calculate_steps_left planet_from_id, planet_to_id
     c1 = Planet[planet_from_id].cell

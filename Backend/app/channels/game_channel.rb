@@ -27,7 +27,6 @@ class GameChannel < ApplicationCable::Channel
   end
 
   def end_turn data
-    data.to_s.color(:yellow).out
     core = Core.new
     core.end_turn current_player, data["fleets"]
     #TB.new Player[current_player.id].game.id

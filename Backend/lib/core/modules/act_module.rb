@@ -18,11 +18,7 @@ module Actable
   end
 
   def save_fleets player, array_fleets_hash
-    begin
-      Creation.create_fleets player, array_fleets_hash
-    rescue StandartError => e
-      e.message.to_s.color(:red).out
-    end
+    Creation.create_fleets player, array_fleets_hash
   end
 
 end
