@@ -1,10 +1,9 @@
 <template>
   <div class="active-buttons flex-horizontal">
-    <template v-if="isCreator && isRoom">
+    <template v-if="isCreator">
       <span class="button" @click="start" :class="startBtnClass">Start</span>
       <span class="button" @click="regenerateMap" :class="regenBtnClass">Regen</span>
     </template>
-    <span class="button" v-if='!isLocked' @click="endTurn">End turn</span>
     <span class="button" @click="logout">
       Exit
     </span>
@@ -24,10 +23,6 @@ export default {
   computed: {
     ...mapGetters({
       isCreator: 'isCreator',
-      isLoggedIn: 'isPlayer',
-      isRoom: 'game/isRoom',
-      isGame: 'game/isGame',
-      isLocked: 'isLocked',
       sync: 'sync',
       players: 'members'
     }),
