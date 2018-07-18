@@ -85,6 +85,7 @@ export default {
         {
           code: 'Space',
           method: this.endTurn,
+          modalLock: true,
           description: 'End turn'
         },
         {
