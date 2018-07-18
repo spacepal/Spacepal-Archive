@@ -54,6 +54,7 @@ export default {
       hotKeys: [
         {
           code: 'Enter',
+          isKey: true,
           method: () => {
             if (this.isVisible) {
               this.confirm()
@@ -62,6 +63,7 @@ export default {
         },
         {
           code: 'Escape',
+          isKey: true,
           method: this.close
         }
       ]
