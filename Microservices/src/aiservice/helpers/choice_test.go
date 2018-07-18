@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"aiservice/ai/list/ilist"
 	"aiservice/model"
 	"aiservice/model/imodel"
 	"testing"
@@ -21,30 +22,15 @@ func TestCalculateIndex(t *testing.T) {
 type FakeFactor struct {
 }
 
-func (f FakeFactor) Quantity() float64 {
-	return 1.0
-}
-func (f FakeFactor) Random() float64 {
-	return 3.0
-}
-func (f FakeFactor) Prod() float64 {
-	return 1.0
-}
-func (f FakeFactor) Kill() float64 {
-	return 1.0
-}
-func (f FakeFactor) Power() float64 {
-	return 1.0
-}
-func (f FakeFactor) Ships() float64 {
-	return 1.0
-}
-func (f FakeFactor) PlayerPower() float64 {
-	return 1.0
-}
-func (f FakeFactor) Distance() float64 {
-	return -1.0
-}
+func (f FakeFactor) Quantity() float64                   { return 1.0 }
+func (f FakeFactor) Random() float64                     { return 3.0 }
+func (f FakeFactor) Prod() float64                       { return 1.0 }
+func (f FakeFactor) Kill() float64                       { return 1.0 }
+func (f FakeFactor) Power() float64                      { return 1.0 }
+func (f FakeFactor) Ships() float64                      { return 1.0 }
+func (f FakeFactor) PlayerPower() float64                { return 1.0 }
+func (f FakeFactor) Distance() float64                   { return -1.0 }
+func (f FakeFactor) WithoutDistance() ilist.FactorGetter { return f }
 
 func TestPlanetChoiceMaker(t *testing.T) {
 	mapSize := model.MapSize{MapWidth: 4, MapHeight: 4}
