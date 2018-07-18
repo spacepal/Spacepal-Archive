@@ -68,6 +68,11 @@ export default {
           isKey: true,
           method: this.goHome,
           description: 'Go to your planet'
+        },
+        {
+          code: 'Escape',
+          isKey: true,
+          method: this.unselectLastCell
         }
       ]
     }
