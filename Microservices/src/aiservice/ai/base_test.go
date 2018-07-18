@@ -1,6 +1,7 @@
 package ai
 
 import (
+	"aiservice/ai/list/ilist"
 	"aiservice/helpers"
 	"aiservice/model"
 	"aiservice/model/imodel"
@@ -9,14 +10,15 @@ import (
 
 type FakeFactor struct{}
 
-func (f FakeFactor) Quantity() float64    { return +0.5 }
-func (f FakeFactor) Random() float64      { return +3.0 }
-func (f FakeFactor) Prod() float64        { return +1.0 }
-func (f FakeFactor) Kill() float64        { return +1.0 }
-func (f FakeFactor) Power() float64       { return +1.0 }
-func (f FakeFactor) Ships() float64       { return +1.0 }
-func (f FakeFactor) PlayerPower() float64 { return +1.0 }
-func (f FakeFactor) Distance() float64    { return -2.0 }
+func (f FakeFactor) Quantity() float64                   { return +0.5 }
+func (f FakeFactor) Random() float64                     { return +3.0 }
+func (f FakeFactor) Prod() float64                       { return +1.0 }
+func (f FakeFactor) Kill() float64                       { return +1.0 }
+func (f FakeFactor) Power() float64                      { return +1.0 }
+func (f FakeFactor) Ships() float64                      { return +1.0 }
+func (f FakeFactor) PlayerPower() float64                { return +1.0 }
+func (f FakeFactor) Distance() float64                   { return -2.0 }
+func (f FakeFactor) WithoutDistance() ilist.FactorGetter { return f }
 
 var baseTestPlanets = []imodel.PlanetGetter{
 	model.Planet{
@@ -68,7 +70,7 @@ func TestBase(t *testing.T) {
 		t.Fatal("NewBase returns nil")
 	}
 	globstat := helpers.NewGlobStat(baseTestPlanets)
-	planets := helpers.NewPlanets(baseTestPlanets, 2)
+	planets := helpers.NewPlanets(baseTestPlanets, baseTestMapSize, 2)
 
 	var allPlanets = map[int]bool{}
 	for _, p := range baseTestPlanets {

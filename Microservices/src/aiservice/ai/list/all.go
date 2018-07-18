@@ -73,4 +73,26 @@ func RegisterAll(r iai.ManagerRegister) {
 			playerPower: +0.0,
 			distance:    -2.0,
 		}))
+
+	r.Register("Drina", ai.NewZonesAcceptor(
+		&factor{ // for getting main planet in zone
+			quantity:    +0.8,
+			random:      +0.0,
+			prod:        +0.0,
+			kill:        +1.0,
+			power:       +0.0,
+			ships:       +0.0,
+			playerPower: +0.0,
+			distance:    +2.0,
+		},
+		&factor{ // for getting target planet to attack
+			quantity:    +0.9,
+			random:      +2.0,
+			prod:        +1.0,
+			kill:        +0.0,
+			power:       +0.0,
+			ships:       +0.0,
+			playerPower: +0.0,
+			distance:    -2.0,
+		}))
 }

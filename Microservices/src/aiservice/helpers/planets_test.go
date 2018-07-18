@@ -16,10 +16,14 @@ func TestPlanets(t *testing.T) {
 		model.Planet{OwnerID: 2},
 		model.Planet{OwnerID: constants.NeutralOwnerID},
 	}
+	var mapSize = model.MapSize{
+		MapHeight: 10,
+		MapWidth:  10,
+	}
 	selfPlanetsCount := 2
 	foreignPlanetsCount := 3
 
-	planetsHelper := NewPlanets(planets, ownerID)
+	planetsHelper := NewPlanets(planets, mapSize, ownerID)
 	if planetsHelper == nil {
 		t.Fatal("planetsHelper == nil")
 	}
@@ -45,7 +49,7 @@ func TestPlanets(t *testing.T) {
 		}
 	}
 
-	planetsHelper = NewPlanets([]imodel.PlanetGetter{}, ownerID)
+	planetsHelper = NewPlanets([]imodel.PlanetGetter{}, mapSize, ownerID)
 	if len(planetsHelper.Foreign()) != 0 {
 		t.Log("Foreign planet, for empty collection, exists")
 		t.Errorf("len(planetsHelper.Foreign()) != 0")
