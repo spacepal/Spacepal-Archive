@@ -99,7 +99,6 @@ export default {
     },
     disableHotKeys (e) {
       this.$disableHotKeys()
-      console.log(e)
     },
     forceInput () {
       this.text = this.value
