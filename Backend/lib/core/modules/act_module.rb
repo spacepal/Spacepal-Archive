@@ -14,11 +14,18 @@ module Actable
   end
 
   def end_turn player, array_fleets_hash
-    self.save_fleets(player, array_fleets_hash) unless array_fleets_hash.empty? 
+    save_fleets(player, array_fleets_hash) unless array_fleets_hash.empty? 
+    player_end_turn player
   end
+
+private
 
   def save_fleets player, array_fleets_hash
     Creation.create_fleets player, array_fleets_hash
+  end
+
+  def player_end_turn player
+    player.end_turn
   end
 
 end

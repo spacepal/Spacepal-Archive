@@ -71,8 +71,10 @@ class Game < Ohm::Model
   def make_planets_not_capitals
     self.get_capital_planets.each do |planet| 
       planet.is_capital = false
-      planet.set_production
-      planet.set_kill_percent
+      unless planet.player
+        planet.set_production 
+        planet.set_kill_percent
+      end
       planet.save
     end
 

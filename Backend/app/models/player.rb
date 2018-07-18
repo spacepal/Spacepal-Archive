@@ -44,6 +44,11 @@ class Player < Ohm::Model
     self.planets.size > 0 or self.fleets.size > 0
   end
 
+  def end_turn
+    self.is_end_turn = true
+    self.save
+  end
+
   def make_admin
     self.is_admin = true
     self.save

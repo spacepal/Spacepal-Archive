@@ -8,10 +8,10 @@ module Broadcastable
   PLANETS_TYPE = :planets
   NOTIFICATION_TYPE = :notifications
 
-  def broadcast_all_data room, game_id, player_id = nil
-    self.broadcast_game(room, game_id)
-    self.broadcast_players(room, game_id)
-    self.broadcast_planets(room, game_id)
+  def broadcast_all_data game_id, player_id = nil
+    self.broadcast_game(game_id)
+    self.broadcast_players(game_id)
+    self.broadcast_planets(game_id)
     if player_id
       self.broadcast_player(player_id)
       self.broadcast_fleets(player_id)
@@ -37,7 +37,7 @@ module Broadcastable
     return { type: PLAYER_TYPE, data: _hash }
   end
 
-  def broadcast_game room, game_id
+  def broadcast_game game_id
     game = Game[game_id]
     _hash = {
       id: game.id.to_i,
@@ -55,7 +55,7 @@ module Broadcastable
       turnNumber: game.step,
       state: game.get_state # STATE_ROOM = 1; STATE_GAME = 2; STATE_END = 3
     }
-    ActionCable.server.broadcast(room, { type: GAME_TYPE, data: _hash })
+    ActionCable.server.broadcast("games:#{game_id}", { type: GAME_TYPE, data: _hash })
   end  
 
   def broadcast_player player_id
@@ -70,7 +70,7 @@ module Broadcastable
     ActionCable.server.broadcast("players:#{player_id}", { type: PLAYER_TYPE, data: _hash })
   end
 
-  def broadcast_players room, game_id
+  def broadcast_players game_id
     players = Game[game_id].players
     arr = players&.map do |player| 
       {
@@ -84,7 +84,7 @@ module Broadcastable
         isGameOver: (player.is_game_over or false)
       }
     end
-    ActionCable.server.broadcast(room, { type: PLAYERS_TYPE, data: { PLAYERS_TYPE => arr }})
+    ActionCable.server.broadcast("games:#{game_id}", { type: PLAYERS_TYPE, data: { PLAYERS_TYPE => arr }})
   end
 
   def broadcast_fleets player_id
@@ -100,7 +100,7 @@ module Broadcastable
     ActionCable.server.broadcast("players:#{player_id}", { type: FLEETS_TYPE, data: { FLEETS_TYPE => arr }})
   end
 
-  def broadcast_planets room, game_id
+  def broadcast_planets game_id
     planets = Game[game_id].planets
     arr = planets&.map do |planet|
       {
@@ -113,7 +113,7 @@ module Broadcastable
         isCapital: (planet.is_capital or false)
       }
     end
-    ActionCable.server.broadcast(room, { type: PLANETS_TYPE, data: { PLANETS_TYPE => arr }})
+    ActionCable.server.broadcast("games:#{game_id}", { type: PLANETS_TYPE, data: { PLANETS_TYPE => arr }})
   end
 
 end

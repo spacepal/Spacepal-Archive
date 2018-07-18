@@ -39,6 +39,7 @@ class Fleet < Ohm::Model
   attribute :steps_left
   attribute :planet_from_id
   attribute :planet_to_id
+  attribute :started #for other players not to see changin in planets
 
   validates_with FleetValidator
   validates :kill_perc, presence: true, numericality: { less_than: 1, greater_than: 0 }
@@ -47,6 +48,15 @@ class Fleet < Ohm::Model
   validates :ships, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :planet_from_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :planet_to_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :started, inclusion: { in: [true, false] }
+
+  def started?
+    self.started
+  end
+
+  def start
+    self.started = true
+  end
 
   def kill_perc
     self.attributes[:kill_perc].to_f

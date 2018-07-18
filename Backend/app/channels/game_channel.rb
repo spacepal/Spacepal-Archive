@@ -5,7 +5,7 @@ class GameChannel < ApplicationCable::Channel
     core = Core.new
     stream_from ("games:" + game.id.to_s)
     transmit core.transmitted_player(current_player.id)
-    core.broadcast_all_data ("games:" + game.id.to_s), game.id, current_player.id
+    core.broadcast_all_data game.id, current_player.id
     # stream_from "some_channel"
   end
 
@@ -16,22 +16,23 @@ class GameChannel < ApplicationCable::Channel
     game = Player[player.id].game
     core = Core.new
     core.start_game game.id
-    core.broadcast_all_data ("games:" + game.id.to_s), game.id, player.id
+    core.broadcast_all_data game.id, player.id
   end
 
   def shuffle
     game = Player[current_player.id].game
     core = Core.new
     core.shuffle_map game.id
-    core.broadcast_planets ("games:" + game.id.to_s), game.id
+    core.broadcast_planets game.id
   end
 
   def end_turn data
+    player = current_player 
+    game = Player[player.id].game
     core = Core.new
     core.end_turn current_player, data["fleets"]
-    #TB.new Player[current_player.id].game.id
-    #на входе json корабли и игрок_id
-    #в либе пишу broadcast
+    core.broadcast_player player.id
+    core.broadcast_players game.id
   end
 
   def unsubscribed
