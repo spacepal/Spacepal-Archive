@@ -1,6 +1,7 @@
 
 export default {
   neutral: { bg: 'rgb(50, 50, 50)', text: 'white' },
+  invalid: { bg: 'white', text: 'black' },
   1: { bg: '#26537C', text: 'white' },
   2: { bg: '#6A237E', text: 'white' },
   3: { bg: '#8BB42D', text: 'white' },

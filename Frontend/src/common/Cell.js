@@ -99,6 +99,9 @@ class Cell {
         text = 'capital'
         memberColor = Colors[CAPITAL_COLOR_ID]
       }
+      if (memberColor === undefined) {
+        memberColor = Colors['invalid']
+      }
       ctx.fillStyle = memberColor.bg
     } else {
       ctx.fillStyle = 'black'
