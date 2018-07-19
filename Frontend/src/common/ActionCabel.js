@@ -9,7 +9,7 @@ const START_ACTION = 'start_game'
 export default class ActionCabel {
   constructor (gameID) {
     let self = this
-    this._playerRoom = false
+    this._playerRoom = undefined
     this._cable = ActionCable.createConsumer(WS_SERVER)
     this._okPromise = new Promise((resolve, reject) => {
       self._okResolvePromise = resolve
