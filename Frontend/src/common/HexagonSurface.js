@@ -15,7 +15,7 @@ export default {
         active: []
       },
       hoveredIndex: undefined,
-      selectedIndex: undefined,
+      selectedIndex: -1,
       pending: {
         scale: 1.0,
         dx: 0,
@@ -88,9 +88,9 @@ export default {
       this._switchCell(cellID, true)
     },
     unselectLastCell () {
-      if (this.selectedIndex) {
+      if (this.selectedIndex >= 0) {
         this._switchCell(this.selectedIndex, false)
-        this.selectedIndex = null
+        this.selectedIndex = -1
       }
     },
     _switchCell (cellID, selected) {
