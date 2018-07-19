@@ -23,8 +23,8 @@ class Core
 
   def start_game
     self.start_playing
-    self.gain_players_planet_exp
-    self.broadcast_all_data
+    self.gain_players_planet_exp 
+    self.broadcast_on_start_game
   end
 
   def end_turn fleets = []
@@ -51,21 +51,6 @@ class Core
     else
       self.broadcast_on_everybody_ends_turn
     end
-  end
-
-  def broadcast_on_player_ends_turn
-    self.broadcast_player
-    self.broadcast_players
-  end
-
-  def broadcast_on_everybody_ends_turn
-    self.broadcast_end_turn
-    self.broadcast_all_data
-  end
-
-  def broadcast_on_end_game
-    self.broadcast_game
-    self.broadcast_players
   end
 
 end

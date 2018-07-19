@@ -63,6 +63,10 @@ class Game < Ohm::Model
   validates :pirates, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
   validates :production_after_capture, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
 
+  def self.in_room_count
+    arr = self.all.reduce (0) { |count, game| count = game.room? ? count += 1 : count }
+  end
+
   def get_capital_planets
     arr = self.planets.map { |planet| planet if planet.is_capital }
     arr.compact
@@ -161,7 +165,7 @@ class Game < Ohm::Model
     self.step == Game::IS_OVER
   end
 
-  def self.get_all params #get hash of selected games
+  def self.get_all_in_room params #get hash of selected games
     params[:conditions] = { step: Game::IS_ROOM }
     start_num = params[:offset].to_i
     end_num = params[:offset].to_i + params[:limit].to_i

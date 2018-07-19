@@ -8,18 +8,53 @@ module Broadcastable
   PLANETS_TYPE = :planets
   NOTIFICATION_TYPE = :notifications
 
-  def broadcast_all_data
+  def broadcast_on_subscribe
+    self.broadcast_all_common_data
+    self.broadcast_player
+  end
+
+  def broadcast_on_start_game
+    self.broadcast_all_common_data
+    self.broadcast_player_to_everybody
+  end
+
+  def broadcast_on_player_ends_turn
+    self.broadcast_player
+    self.broadcast_players
+  end
+
+  def broadcast_on_everybody_ends_turn
+    self.broadcast_end_turn
+    self.broadcast_all_common_data
+    self.broadcast_private_data_to_everybody
+  end
+
+  def broadcast_on_end_game
+    self.broadcast_game
+    self.broadcast_players
+  end
+
+  def broadcast_all_common_data 
     self.broadcast_game
     self.broadcast_players
     self.broadcast_planets
-    if @player_id
+  end
+
+  def broadcast_private_data
+    self.broadcast_player
+    self.broadcast_fleets
+  end
+
+  def broadcast_player_to_everybody
+    Game[@game_id].players.each do |player|
+      self.broadcast_player
+    end
+  end
+
+  def broadcast_private_data_to_everybody
+    Game[@game_id].players.each do |player|
       self.broadcast_player
       self.broadcast_fleets
-    else
-      Game[@game_id].players.each do |player|
-        self.broadcast_player
-        self.broadcast_fleets
-      end
     end
   end
 

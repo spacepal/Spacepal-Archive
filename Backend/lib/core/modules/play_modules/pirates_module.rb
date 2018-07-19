@@ -1,9 +1,9 @@
 module PirateModule
 
 # 1 - 100
-  @@PIRATES_ATTACK_PLANET_POSIBILITY = 10
+  @@PIRATES_ATTACK_PLANET_POSSIBILITY = 10
   @@PIRATES_ATTACK_PLANET_MAX_DAMAGE = 40
-  @@PIRATES_ATTACK_FLEET_POSIBILITY = 30
+  @@PIRATES_ATTACK_FLEET_POSSIBILITY = 30
   @@PIRATES_ATTACK_FLEET_MAX_DAMAGE = 5
 
   def execute_pirates
@@ -27,7 +27,7 @@ module PirateModule
   end
 
   def pirates_attack_planet?
-    if Random.rand(1..100) <= @@PIRATES_ATTACK_PLANET_POSIBILITY
+    if Random.rand(1..100) <= @@PIRATES_ATTACK_PLANET_POSSIBILITY
       true
     else
       false
@@ -35,7 +35,7 @@ module PirateModule
   end  
 
   def pirates_attack_fleet?
-    if Random.rand(1..100) <= @@PIRATES_ATTACK_FLEET_POSIBILITY
+    if Random.rand(1..100) <= @@PIRATES_ATTACK_FLEET_POSSIBILITY
       true
     else
       false

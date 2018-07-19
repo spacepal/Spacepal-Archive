@@ -115,15 +115,21 @@ class Planet < Ohm::Model
             rand((1 - Planet::ERROR_OF_LUCK)..(1 + Planet::ERROR_OF_LUCK))
     winner_force = (planet_force - fleet_force) *
             rand((1 - Planet::ERROR_OF_LUCK)..(1 + Planet::ERROR_OF_LUCK))
+    "ATTACK: planet:(#{self.cell.x};#{self.cell.y}) -> (#{planet_ships} * #{self.kill_perc} = #{planet_force} | fleet:#{fleet.id} -> (#{fleet_ships} * #{fleet.kill_perc} = #{fleet_force}) | winner_force:#{winner_force} ".color(:orange).print_
     if winner_force > 0
-      self.ships = (winner_force / self.kill_perc).to_i
+      winner_ships = (winner_force / self.kill_perc).to_i
+      self.ships = winner_ships == 0 ? rand(1..3) : winner_ships
+      "ships = #{self.ships} PLANET WIN".color(:orange).out
       self.save
     elsif winner_force == 0
       self.ships = 0
       self.save
+      "ships = #{self.ships} NOBODY NOT LOSE".color(:orange).out
     elsif winner_force < 0
+      winner_ships = (winner_force / fleet.kill_perc).to_i.abs
       self.change_player fleet.player
-      self.ships = (winner_force / fleet.kill_perc).to_i.abs
+      self.ships = winner_ships == 0 ? rand(1..3) : winner_ships
+      "ships = #{self.ships} FLEET WIN".color(:orange).out
       self.save
     end
       fleet.player = nil

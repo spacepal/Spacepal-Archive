@@ -1,8 +1,8 @@
 class Api::GameController < ApplicationController
 
   def index
-    arr = Game.get_all :offset => params[:offset], :limit => params[:limit]
-    render :json => { games: arr, :count => Game.all.count }
+    arr = Game.get_all_in_room :offset => params[:offset], :limit => params[:limit]
+    render :json => { games: arr, :count => Game.in_room_count }
   end
 
   def create

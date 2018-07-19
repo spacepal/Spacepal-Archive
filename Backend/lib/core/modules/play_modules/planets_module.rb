@@ -22,9 +22,11 @@ module PlanetModule
 
   def gain_players_planet_exp
     game = Game[@game_id] 
-    game.planets.each do |planet|
-      if plane.player
-        planet.gain_experience
+    if game.accumulative
+      game.planets.each do |planet|
+        if planet.player
+          planet.gain_experience
+        end
       end
     end
   end 
