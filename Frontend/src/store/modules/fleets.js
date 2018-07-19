@@ -13,7 +13,9 @@ const mutations = {
     })
   },
   CLEAR_FLEETS (state) {
-    state.fleets = {}
+    Object.keys(state.fleets).forEach(key => {
+      Vue.delete(state.fleets, key)
+    })
   }
 }
 

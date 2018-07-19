@@ -11,8 +11,12 @@ const state = {
 
 const mutations = {
   CLEAR (state) {
-    state.tasks = {}
-    state.shipsDecreasing = {}
+    Object.keys(state.tasks).forEach(key => {
+      Vue.delete(state.tasks, key)
+    })
+    Object.keys(state.shipsDecreasing).forEach(key => {
+      Vue.delete(state.shipsDecreasing, key)
+    })
   },
   ADD_TASK ({ tasks, lastTaskID }, task) {
     Vue.set(tasks, lastTaskID, task)

@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 const INTIAIL_PROFILE = {
   id: null,
   username: null,
@@ -12,7 +14,9 @@ const state = {
 
 const mutations = {
   SET_PROFILE (state, profile) {
-    state.profile = profile
+    Object.keys(profile).forEach(key => {
+      Vue.set(state.profile, key, profile[key])
+    })
   }
 }
 

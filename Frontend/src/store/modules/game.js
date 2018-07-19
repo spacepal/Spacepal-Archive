@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import Service from '../../common/Service.js'
 
 const STATE_UNKNOWN = 0
@@ -14,7 +15,9 @@ const state = {
 
 const mutations = {
   SET_GAME_INFO (state, gameInfo) {
-    state.info = gameInfo
+    Object.keys(gameInfo).forEach(key => {
+      Vue.set(state.info, key, gameInfo[key])
+    })
   }
 }
 
