@@ -2,37 +2,31 @@ class GameChannel < ApplicationCable::Channel
 
   def subscribed
     game = Player[current_player_id].game
-    core = Core.new
+    core = Core.new game.id, current_player_id
     stream_from ("games:" + game.id.to_s)
-    transmit core.transmitted_player(current_player_id)
-    core.broadcast_all_data game.id, current_player_id
+    transmit core.transmitted_player
+    core.broadcast_all_data
     # stream_from "some_channel"
   end
 
   #cheats
 
   def start_game
-    player = Player[current_player_id] 
-    game = Player[player.id].game
-    core = Core.new
-    core.start_game game.id
-    core.broadcast_all_data game.id, player.id
+    game = Player[current_player_id].game
+    core = Core.new game.id, current_player_id
+    core.start_game
   end
 
   def shuffle
     game = Player[current_player_id].game
-    core = Core.new
-    core.shuffle_map game.id
-    core.broadcast_planets game.id
+    core = Core.new game.id, current_player_id
+    core.shuffle
   end
 
   def end_turn data
-    player = Player[current_player_id] 
-    game = Player[player.id].game
-    core = Core.new
-    core.end_turn player, data["fleets"]
-    core.broadcast_player player.id
-    core.broadcast_players game.id
+    game = Player[current_player_id].game
+    core = Core.new game.id, current_player_id
+    core.end_turn data["fleets"]
   end
 
   def unsubscribed

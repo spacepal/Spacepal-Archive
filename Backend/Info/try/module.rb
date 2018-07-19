@@ -1,6 +1,11 @@
 module Fff
 
   def qwe
+    qqwe
+    p @asds
+  end
+
+  def qqwe
     puts "Fff"
   end
 

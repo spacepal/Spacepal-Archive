@@ -4,6 +4,9 @@ class Planet < Ohm::Model
 
   DEFAULT_PRODUCTION = 10
   NEUTRAL_PLAYER = -1
+  ERROR_OF_LUCK = 0.05
+  PLAYERS_PRODUCTION = 10
+  PLAYERS_KILL_PERC = 0.5
 
   reference :game, :Game
   reference :player, :Player
@@ -20,7 +23,7 @@ class Planet < Ohm::Model
   validates :buff, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
   validates :kill_perc, presence: true, numericality: { less_than: 1, greater_than: 0 }
   validates :production, presence: true, numericality: { only_integer: true, greater_than: 0 }
-  validates :experience, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :experience, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: -1 }
   validates :ships, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   def set_properties
@@ -35,8 +38,8 @@ class Planet < Ohm::Model
   end
 
   def make_players_planet 
-    self.set_production 10
-    self.set_kill_percent 0.4
+    self.set_production Planet::PLAYERS_PRODUCTION
+    self.set_kill_percent Planet::PLAYERS_KILL_PERC
     self.set_ships
     self.experience = 0
     self.is_capital = true
@@ -87,7 +90,72 @@ class Planet < Ohm::Model
     props
   end
 
-    def update hash
+  def fleet_took_off fleet
+    unless self.ships < fleet.ships 
+      self.ships -= fleet.ships
+      self.save
+    end
+  end  
+
+  def took_fleet fleet
+    self.ships += fleet.ships
+    self.save
+    fleet.player_id = nil
+    fleet.delete
+    fleet = nil
+  end
+
+  def defend_against_fleet fleet
+    rand = Random.new
+    planet_ships = self.ships
+    fleet_ships = fleet.ships
+    planet_force = planet_ships * self.kill_perc *
+            rand((1 - Planet::ERROR_OF_LUCK)..(1 + Planet::ERROR_OF_LUCK))
+    fleet_force = fleet_ships * fleet.kill_perc *
+            rand((1 - Planet::ERROR_OF_LUCK)..(1 + Planet::ERROR_OF_LUCK))
+    winner_force = (planet_force - fleet_force) *
+            rand((1 - Planet::ERROR_OF_LUCK)..(1 + Planet::ERROR_OF_LUCK))
+    if winner_force > 0
+      self.ships = (winner_force / self.kill_perc).to_i
+      self.save
+    elsif winner_force == 0
+      self.ships = 0
+      self.save
+    elsif winner_force < 0
+      self.change_player fleet.player
+      self.ships = (winner_force / fleet.kill_perc).to_i.abs
+      self.save
+    end
+      fleet.player = nil
+      fleet.save
+      fleet.delete
+  end
+
+  def change_player player
+    self.player = player
+    self.experience = -1
+    self.save
+  end
+
+  def product_ships
+    if self.player
+      if self.experience == -1
+        self.ships += self.production
+      else
+        self.ships += self.production + self.experience
+      end
+    else
+      self.ships += 10
+    end
+    self.save
+  end
+
+  def gain_experience exp = 1
+      self.experience += exp
+      self.save
+  end
+
+  def update hash
     obj = Planet.new hash
     if obj.valid?
       super hash

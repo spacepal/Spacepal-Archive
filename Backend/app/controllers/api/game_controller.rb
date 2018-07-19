@@ -71,16 +71,18 @@ class Api::GameController < ApplicationController
     cookies.delete :player_id
     game = Game[game_id]
     if game
-      core = Core.new
       game = game.remove_player player_id
+      core = Core.new game_id, player_id
       if game.playing?
-        core.end_turn(Player[player_id], [])
+        core.end_turn([])
+        core.check_game_on_leaving
       end
       if game
-        core.broadcast_player game.get_creator.id
-        core.broadcast_players game.id
-        core.broadcast_planets game.id
-        core.broadcast_game game.id
+        core.player_id = game.get_creator.id
+        core.broadcast_player
+        core.broadcast_players
+        core.broadcast_planets
+        core.broadcast_game
       end
       render :json => { errors: [ nil ]}
     else

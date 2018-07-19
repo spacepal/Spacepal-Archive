@@ -86,7 +86,6 @@ class Creation
     end
   end
   def self.create_fleet player, fleet_hash
-    planet = 
     if Planet[fleet_hash["from"]].ships >= fleet_hash["count"]
       fleet = Fleet.new
       fleet.started = false
@@ -101,12 +100,13 @@ class Creation
           fleet.planet_from_id, fleet.planet_to_id)
       fleet.player = player ? player : Player[fleet_hash["player"]]
       if fleet.save
-        fleet
+        fleet = nil
+        return true
       else
-        nil
+        false
       end
     else
-      nil
+      false
     end
   end
 

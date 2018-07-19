@@ -107,6 +107,16 @@ class Game < Ohm::Model
     self.save
   end
 
+  def over
+    self.step = Game::IS_OVER
+    self.save
+  end
+
+  def continue
+    self.step += 1
+    self.save
+  end
+
   def room?
     self.step == Game::IS_ROOM
   end
@@ -234,7 +244,20 @@ class Game < Ohm::Model
     nil
   end
   
-    def update hash
+  def not_loosing_players
+    (self.players.map { |player| player unless player.game_over? }).compact
+  end
+
+  def not_loosing_players_count
+    (self.players.map { |player| player unless player.game_over? }).compact.count
+  end
+
+  def everybody_ends_turn?
+    self.players.each { |player| return false unless player.end_turn? }
+    return true
+  end
+
+  def update hash
     obj = Game.new hash
     if obj.valid?
       super hash

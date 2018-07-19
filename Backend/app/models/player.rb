@@ -47,12 +47,24 @@ class Player < Ohm::Model
   def end_turn
     self.is_end_turn = true
     self.save
+  end
 
+  def continue
+    self.is_end_turn = false
+    self.save
   end
 
   def end_game
     self.is_game_over = true
     self.save
+  end
+
+  def end_turn? 
+    self.is_end_turn
+  end
+
+  def game_over?
+    self.is_game_over
   end
 
   def make_admin
