@@ -109,6 +109,7 @@ export default {
       if (this.$store.getters.isLocked) {
         this.$toast('You cannot end turn now')
       } else {
+        this.showPanel('main')
         this.$store.dispatch('game/endTurn')
       }
     },
