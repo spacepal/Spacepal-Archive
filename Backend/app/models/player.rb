@@ -14,7 +14,7 @@ class Player < Ohm::Model
 
   include ActiveModel::Validations
 
-  DEFAULT_COLOR = -1
+  DEFAULT_COLOR = -10
   NEUTRAL_COLOR = 0
 
   collection :planets, :Planet
@@ -33,7 +33,7 @@ class Player < Ohm::Model
 
   validates_with PlayerValidator
   validates :name, presence: true, length: { in: 1..32 }
-  validates :color_id, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: -1 }
+  validates :color_id, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: -10 }
   validates :is_end_turn, inclusion: { in: [true, false] }, allow_nil: true
   validates :is_game_over, inclusion: { in: [true, false] }, allow_nil: true
   validates :is_admin, inclusion: { in: [true, false] }, allow_nil: true
@@ -42,6 +42,29 @@ class Player < Ohm::Model
 
   def has_fleets_or_planets
     self.planets.size > 0 or self.fleets.size > 0
+  end
+
+  def end_turn
+    self.is_end_turn = true
+    self.save
+  end
+
+  def continue
+    self.is_end_turn = false
+    self.save
+  end
+
+  def end_game
+    self.is_game_over = true
+    self.save
+  end
+
+  def end_turn? 
+    self.is_end_turn
+  end
+
+  def game_over?
+    self.is_game_over
   end
 
   def make_admin
@@ -76,6 +99,14 @@ class Player < Ohm::Model
     else
       false
     end
+  end
+
+  def surrender 
+    planets.each do |planet|
+      planet.make_neutral_planet
+    end
+    self.end_game
+    true
   end
 
 end

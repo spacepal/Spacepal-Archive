@@ -1,8 +1,8 @@
 class Api::GameController < ApplicationController
 
   def index
-    arr = Game.get_all :offset => params[:offset], :limit => params[:limit]
-    render :json => { games: arr, :count => Game.all.count }
+    arr = Game.get_all_in_room :offset => params[:offset], :limit => params[:limit]
+    render :json => { games: arr, :count => Game.in_room_count }
   end
 
   def create
@@ -65,20 +65,28 @@ class Api::GameController < ApplicationController
   end
 
   def leave
-    game = Game[cookies.encrypted[:game_id]]
+    game_id = cookies.encrypted[:game_id]
+    player_id = cookies.encrypted[:player_id]
+    cookies.delete :game_id
+    cookies.delete :player_id
+    game = Game[game_id]
     if game
-      game = game.remove_player cookies.encrypted[:player_id]
-      core = Core.new
-      cookies.delete :game_id
-      cookies.delete :player_id
+      game = game.remove_player player_id
+      core = Core.new game_id, player_id
+      if game.playing?
+        core.end_turn([])
+        core.check_game_on_leaving
+      end
       if game
-        core.broadcast_player game.get_creator.id
-        core.broadcast_players ("games:" + game.id.to_s), game.id
-        core.broadcast_game ("games:" + game.id.to_s), game.id
+        core.player_id = game.get_creator.id
+        core.broadcast_player
+        core.broadcast_players
+        core.broadcast_planets
+        core.broadcast_game
       end
       render :json => { errors: [ nil ]}
     else
-      render :json => { errors: [ "Game\##{cookies.encrypted[:game_id]} does not exist" ]}
+      render :json => { errors: [ "Game\##{game_id} does not exist" ]}
     end
   end
 

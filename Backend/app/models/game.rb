@@ -63,6 +63,10 @@ class Game < Ohm::Model
   validates :pirates, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
   validates :production_after_capture, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
 
+  def self.in_room_count
+    arr = self.all.reduce (0) { |count, game| count = game.room? ? count += 1 : count }
+  end
+
   def get_capital_planets
     arr = self.planets.map { |planet| planet if planet.is_capital }
     arr.compact
@@ -71,8 +75,10 @@ class Game < Ohm::Model
   def make_planets_not_capitals
     self.get_capital_planets.each do |planet| 
       planet.is_capital = false
-      planet.set_production
-      planet.set_kill_percent
+      unless planet.player
+        planet.set_production 
+        planet.set_kill_percent
+      end
       planet.save
     end
 
@@ -102,6 +108,16 @@ class Game < Ohm::Model
 
   def start_game
     self.step = Game::FIRST_STEP
+    self.save
+  end
+
+  def over
+    self.step = Game::IS_OVER
+    self.save
+  end
+
+  def continue
+    self.step += 1
     self.save
   end
 
@@ -149,7 +165,7 @@ class Game < Ohm::Model
     self.step == Game::IS_OVER
   end
 
-  def self.get_all params #get hash of selected games
+  def self.get_all_in_room params #get hash of selected games
     params[:conditions] = { step: Game::IS_ROOM }
     start_num = params[:offset].to_i
     end_num = params[:offset].to_i + params[:limit].to_i
@@ -195,15 +211,22 @@ class Game < Ohm::Model
   end
 
   def remove_player player_id
-    if self.players.count == 1
-      Deletion.delete_game self
-      return nil
-    else
-      pl = Player[player_id]
-      pl.game = nil
-      pl.save
-      pl.delete
-      self.make_new_admin
+    if self.room?
+      if self.players.count == 1
+        Deletion.delete_game self
+        return nil
+      else
+        pl = Player[player_id]
+        pl.game = nil
+        pl.save
+        pl.delete
+        self.make_new_admin
+        self
+      end
+    end
+    if self.playing?
+      player = Player[player_id]
+      player.surrender
       self
     end
   end
@@ -225,7 +248,20 @@ class Game < Ohm::Model
     nil
   end
   
-    def update hash
+  def not_loosing_players
+    (self.players.map { |player| player unless player.game_over? }).compact
+  end
+
+  def not_loosing_players_count
+    (self.players.map { |player| player unless player.game_over? }).compact.count
+  end
+
+  def everybody_ends_turn?
+    self.players.each { |player| return false unless player.end_turn? }
+    return true
+  end
+
+  def update hash
     obj = Game.new hash
     if obj.valid?
       super hash

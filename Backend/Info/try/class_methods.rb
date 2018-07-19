@@ -1,5 +1,7 @@
 class Aaa
 
+    JJJ = 5
+
   def self.d
     self.new.s
   end

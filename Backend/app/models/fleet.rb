@@ -36,9 +36,10 @@ class Fleet < Ohm::Model
   attribute :kill_perc, lambda { |x| x.to_f }
   #attribute :status
   attribute :ships, lambda { |x| x.to_i }
-  attribute :steps_left
-  attribute :planet_from_id
-  attribute :planet_to_id
+  attribute :steps_left, lambda { |x| x.to_i }
+  attribute :planet_from_id, lambda { |x| x.to_i }
+  attribute :planet_to_id, lambda { |x| x.to_i }
+  attribute :started #for other players not to see changing in planets
 
   validates_with FleetValidator
   validates :kill_perc, presence: true, numericality: { less_than: 1, greater_than: 0 }
@@ -47,6 +48,21 @@ class Fleet < Ohm::Model
   validates :ships, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :planet_from_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :planet_to_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :started, inclusion: { in: [true, false,"true", "false"] }, allow_nil: true
+
+  def move steps = 1
+    self.steps_left -= steps
+    self.save
+  end
+
+  def started?
+    self.started
+  end
+
+  def start
+    self.started = true
+    self.save
+  end
 
   def kill_perc
     self.attributes[:kill_perc].to_f

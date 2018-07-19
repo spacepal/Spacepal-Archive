@@ -17,11 +17,8 @@ class Deletion
         fleets = player.fleets
         if fleets
           fleets.each do |fleet| 
-            p "1"
             fleet.player_id = nil
-            p "2"
             fleet.save
-            p "3"
             fleet.delete
           end
         end

@@ -87,27 +87,27 @@ class Creation
   end
   def self.create_fleet player, fleet_hash
     if Planet[fleet_hash["from"]].ships >= fleet_hash["count"]
-      planet = Planet[fleet_hash["from"]]
-      planet.ships = planet.ships - fleet_hash["count"]
-      planet.save
-      planet = nil
       fleet = Fleet.new
+      fleet.started = false
       fleet.planet_from_id = fleet_hash["from"]
       fleet.planet_to_id = fleet_hash["to"]
       fleet.ships = fleet_hash["count"]
-      fleet.kill_perc = Planet[fleet.planet_to_id] ?
-        Planet[fleet.planet_to_id].kill_perc :
+      planet_from = Planet[fleet.planet_from_id]
+      fleet.kill_perc = planet_from ?
+        planet_from.kill_perc :
         nil
       fleet.steps_left = self.new.calculate_steps_left(
           fleet.planet_from_id, fleet.planet_to_id)
       fleet.player = player ? player : Player[fleet_hash["player"]]
       if fleet.save
-        fleet
+        "created_fleet:#{fleet.id} (#{fleet.player.name}) from:(#{Planet[fleet.planet_from_id].cell.x};#{Planet[fleet.planet_from_id].cell.y}) to:(#{Planet[fleet.planet_to_id].cell.x};#{Planet[fleet.planet_to_id].cell.y}) steps: #{fleet.steps_left}, kill_perc:#{fleet.kill_perc}, ships:#{fleet.ships}".color(:yellow).out
+        fleet = nil
+        return true
       else
-        nil
+        false
       end
     else
-
+      false
     end
   end
 
@@ -123,7 +123,7 @@ private
 
   def to_cube col, row
     x = col
-    z = row - (col - col % 2) / 2
+    z = row - (col + col % 2) / 2
     y = -x - z
     return Cube.new(x, y, z)
   end
