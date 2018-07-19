@@ -29,6 +29,10 @@ const getters = {
   },
   isCreator (state) {
     return state.profile.isCreator || false
+  },
+  isWinner (state, _, __, rootGetters) {
+    let m = rootGetters['member'](state.profile.id)
+    return m !== undefined && !m.isGameOver
   }
 }
 

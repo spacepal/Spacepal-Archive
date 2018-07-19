@@ -72,10 +72,13 @@ const actions = {
     localStorage.setItem(STORAGE_MENU_IS_SHOWED, isShowed)
     commit('SET_MENU_IS_SHOWED', isShowed)
   },
-  lock ({ commit }) {
+  lock ({ commit, dispatch }) {
+    console.log('END_TURN_LOCK')
     commit('END_TURN_LOCK')
+    dispatch('syncUnset', 'profile')
   },
   unlock ({ commit }) {
+    console.log('TURN_UNLOCK')
     commit('END_TURN_UNLOCK')
   },
   enableCable ({ state, commit, dispatch }) {
@@ -84,6 +87,7 @@ const actions = {
     return state.cable.get(state.gameID).isOk
   },
   reset ({ commit, dispatch }) { // turn_ended from ActionCable
+    console.log('RESET')
     dispatch('lock') // it does not matter
     dispatch('events/clear')
     dispatch('tasks/clear')
@@ -97,7 +101,6 @@ const actions = {
     if (state.endTurnLock &&
       state.sync.game &&
       state.sync.profile &&
-      state.sync.members &&
       state.sync.planets &&
       getters['game/isGame'] &&
       !getters['profile'].isEndTurn &&
