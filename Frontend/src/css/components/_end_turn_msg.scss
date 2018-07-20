@@ -3,6 +3,9 @@
 
 @each $theme in $themes {
   .#{$theme} {
+    .turn-number {
+      color: map_get($colorNewTurn, $theme)
+    }
     .circle {
       border: 3px solid map_get($colorBorder, $theme)
     }
