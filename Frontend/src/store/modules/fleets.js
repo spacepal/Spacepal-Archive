@@ -28,7 +28,7 @@ const actions = {
 }
 
 const getters = {
-  fleets (state) {
+  all (state) {
     return state.fleets
   }
 }

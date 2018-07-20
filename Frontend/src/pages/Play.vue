@@ -15,7 +15,31 @@
       v-if="panelsVisibility.tasks"
       @click.self="hideAllPanels">
       <Form class="info-panel-body" @click="false">
-        <Tasks @goToCell="goToCell"></Tasks>
+        <Fleets
+          :canDelete="true"
+          :syncs="['planets', 'profile']"
+          :fleets="tasks"
+          @goToCell="goToCell"
+          @delete="delTask">
+          <template slot="noFleets">
+            No tasks
+          </template>
+        </Fleets>
+      </Form>
+    </div>
+    <div class="info-panel-bg"
+      v-if="panelsVisibility.fleets"
+      @click.self="hideAllPanels">
+      <Form class="info-panel-body" @click="false">
+        <Fleets
+          :canDelete="false"
+          :syncs="['fleets']"
+          :fleets="fleets"
+          @goToCell="goToCell">
+          <template slot="noFleets">
+            No fleets
+          </template>
+        </Fleets>
       </Form>
     </div>
     <div class="info-panel-bg"
@@ -31,12 +55,13 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 import Map from '../components/Map'
 import Form from '../components/Form'
 import GameInfo from '../components/GameInfo'
 import Members from '../components/Members'
 import Notifications from '../components/Notifications'
-import Tasks from '../components/Tasks'
+import Fleets from '../components/Fleets'
 import GameMenu from '../components/GameMenu'
 import EndTurnMsg from '../components/nano/EndTurnMsg'
 
@@ -49,7 +74,7 @@ export default {
     Members,
     Form,
     Notifications,
-    Tasks,
+    Fleets,
     EndTurnMsg
   },
   data () {
@@ -65,6 +90,14 @@ export default {
             this.panelsVisibility.main = true
           },
           description: 'Show game info'
+        },
+        {
+          code: 'KeyF',
+          method: () => {
+            this.hideAllPanels('fleets')
+            this.panelsVisibility.fleets ^= true
+          },
+          description: 'Show fleets'
         },
         {
           code: 'KeyT',
@@ -96,11 +129,21 @@ export default {
       panelsVisibility: {
         main: false,
         tasks: false,
-        notifications: false
+        notifications: false,
+        fleets: false
       }
     }
   },
+  computed: {
+    ...mapGetters({
+      tasks: 'tasks/all',
+      fleets: 'fleets/all'
+    })
+  },
   methods: {
+    ...mapActions({
+      delTask: 'tasks/del'
+    }),
     onTurnEnded () {
       this.panelsVisibility['main'] = false
     },

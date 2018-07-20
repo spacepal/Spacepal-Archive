@@ -1,6 +1,7 @@
 /* pending fleets */
 
 import Vue from 'vue'
+import { calcDistance } from '../../common/DistanceHelper.js'
 
 const state = {
   tasks: {},
@@ -99,8 +100,12 @@ const actions = {
       console.warn('tasks.add: lack of ships')
       return
     }
+    let stepsLeft = calcDistance(
+      rootGetters.planetByID(to).cellID,
+      rootGetters.planetByID(from).cellID
+    )
     commit('DECREASE_SHIPS', { planetID: from, count })
-    commit('ADD_TASK', { from, to, count })
+    commit('ADD_TASK', { from, to, count, stepsLeft })
     commit('INCREASE_ID')
   },
   clear ({ commit }) {

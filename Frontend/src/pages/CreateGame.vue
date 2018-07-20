@@ -109,7 +109,7 @@ export default {
     if (this.$route.params['auto']) {
       this.setRandom()
       this.$nextTick(() => {
-        this.createGame()
+        this.createGame(true)
       })
     }
   },
@@ -148,8 +148,9 @@ export default {
     goHome () {
       this.$router.push({ name: 'GamesList' })
     },
-    createGame () {
-      if (this.$refs.form.isValid()) {
+    createGame (force = false) {
+      console.log(this.pref)
+      if (this.$refs.form.isValid() || force) {
         this.$refs.loader.show()
         this.$store.dispatch('game/create', this.pref).then(gameID => {
           this.$refs.loader.hide()
