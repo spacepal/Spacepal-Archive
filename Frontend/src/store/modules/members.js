@@ -11,7 +11,9 @@ const mutations = {
     })
   },
   CLEAR_MEMBERS (state) {
-    state.members = {}
+    state.members.forEach(m => {
+      Vue.delete(state.members, m.id)
+    })
   }
 }
 

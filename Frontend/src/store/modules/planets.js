@@ -13,8 +13,10 @@ const mutations = {
     })
   },
   CLEAR_PLANETS (state) {
-    state.planetsByCellID = {}
-    state.planetsByID = {}
+    state.planets.forEach(p => {
+      Vue.delete(state.planetsByCellID, p.cellID)
+      Vue.delete(state.planetsByID, p.id)
+    })
   }
 }
 
