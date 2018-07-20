@@ -21,6 +21,7 @@ const state = {
   cable: new Map(),
   gameID: (gID !== undefined ? parseInt(gID) : undefined),
   sync: {
+    endTurn: false, // is used for animation of turn number
     game: false,
     fleets: false,
     members: false,

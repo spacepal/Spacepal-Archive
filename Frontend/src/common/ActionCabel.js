@@ -67,6 +67,7 @@ export default class ActionCabel {
       store.dispatch('setPlanets', data.data.planets)
     } else if (data.type === 'turn_ended') {
       store.dispatch('reset')
+      store.dispatch('syncSet', 'endTurn')
     } else {
       console.warn(`ActionCable.js: Unknown type`)
     }
