@@ -257,7 +257,7 @@ class Game < Ohm::Model
   end
 
   def make_new_admin
-    self.players.first.make_admin
+    self.players_not_bot.first.make_admin
   end
 
   def playername_is_uniq player_name
