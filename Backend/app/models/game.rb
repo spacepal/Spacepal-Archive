@@ -231,13 +231,19 @@ class Game < Ohm::Model
   end
 
   def players_not_bot
-    (self.players.map { |player| player if (player.ai? == false or player.ai? == nil) }).compact
+    (self.players.map { |player| player unless player.ai? }).compact
+  end
+
+  def remove_bot player_id
+    if Player[player_id].ai?
+      self.remove_player(player_id) 
+    end
   end
 
   def remove_player player_id
-    "self.players_not_bot.count = #{self.players_not_bot}".bg(:yellow)
+    "self.players_not_bot.count = #{self.players_not_bot.count}".bg(:yellow)
     if self.room?
-      if self.players_not_bot.count == 1
+      if self.players_not_bot.count == 1 and !Player[player_id].ai?
         Deletion.delete_game self
         return nil
       else

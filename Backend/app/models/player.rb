@@ -40,7 +40,7 @@ class Player < Ohm::Model
   validates :is_ai, inclusion: { in: [true, false] }, allow_nil: true
 
   def ai?
-    self.is_ai
+    self.is_ai == true
   end
 
   def end_turn

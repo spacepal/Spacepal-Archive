@@ -28,6 +28,11 @@ class Core
     self.broadcast_players
   end
 
+  def del_bot player_id
+    self.delete_bot player_id
+    self.broadcast_players
+  end
+
   def start_game
     self.start_playing
     self.gain_players_planet_exp 

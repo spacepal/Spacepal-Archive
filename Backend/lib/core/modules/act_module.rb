@@ -19,6 +19,10 @@ module Actable
     game.add_player_bot names.sample
   end
 
+  def delete_bot player_id
+    Game[@game_id].remove_bot player_id
+  end
+
   def player_ends_turn array_fleets_hash = []
     player = Player[@player_id]
     save_fleets(array_fleets_hash) unless array_fleets_hash.empty? 
