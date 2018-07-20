@@ -36,6 +36,7 @@ export default {
       keys: [
         { field: 'id', adapted: 'ID' },
         { field: 'name', adapted: 'Name' },
+        { field: 'turnNumber', adapted: 'Turn' },
         { field: 'creator', adapted: 'Creator' },
         { field: 'pinCode', adapted: 'Pin' },
         { field: 'mapWidth', adapted: 'Width' },
