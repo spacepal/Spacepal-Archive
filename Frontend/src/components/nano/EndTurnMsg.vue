@@ -29,20 +29,19 @@ export default {
       return t
     }
   },
-  methods: {
-    mounted () {
-      this.$store.watch((_, getters) => getters['game/info'], () => {
-        if (!this.sync['endTurn']) {
-          return
-        }
-        this.$store.dispatch('syncReset', 'endTurn')
-        clearTimeout(this._timer)
-        this._timer = setTimeout(() => {
-          this.isShowed = false
-        }, 600)
-        this.isShowed = true
-      })
-    }
+  mounted () {
+    this.$store.watch((_, getters) => getters.sync.game, () => {
+      if (!this.sync['endTurn'] || !this.sync['game']) {
+        return
+      }
+      this.$store.dispatch('syncUnset', 'endTurn')
+      clearTimeout(this._timer)
+      this._timer = setTimeout(() => {
+        this.isShowed = false
+      }, 1000)
+      this.isShowed = true
+      this.$emit('onTurnEnded')
+    })
   }
 }
 </script>

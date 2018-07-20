@@ -1,14 +1,16 @@
 <template>
   <div class="game-page">
     <Map ref="map" full></Map>
-    <div class="info-panel-bg"
-      v-if="panelsVisibility.main"
-      @click="hideAllPanels">
-      <Form class="info-panel-body">
-        <Members class="withoutborder" />
-        <GameInfo class="withoutborder" />
-      </Form>
-    </div>
+    <transition name="fade">
+      <div class="info-panel-bg"
+        v-if="panelsVisibility.main"
+        @click="hideAllPanels">
+        <Form class="info-panel-body">
+          <Members class="withoutborder" />
+          <GameInfo class="withoutborder" />
+        </Form>
+      </div>
+    </transition>
     <div class="info-panel-bg"
       v-if="panelsVisibility.tasks"
       @click.self="hideAllPanels">
@@ -24,6 +26,7 @@
       </Form>
     </div>
     <GameMenu @showPanel="showPanel" @goHome="goHome" />
+    <EndTurnMsg @onTurnEnded="onTurnEnded" />
   </div>
 </template>
 
@@ -35,6 +38,7 @@ import Members from '../components/Members'
 import Notifications from '../components/Notifications'
 import Tasks from '../components/Tasks'
 import GameMenu from '../components/GameMenu'
+import EndTurnMsg from '../components/nano/EndTurnMsg'
 
 export default {
   name: 'Play',
@@ -45,7 +49,8 @@ export default {
     Members,
     Form,
     Notifications,
-    Tasks
+    Tasks,
+    EndTurnMsg
   },
   data () {
     return {
@@ -95,6 +100,9 @@ export default {
     }
   },
   methods: {
+    onTurnEnded () {
+      this.panelsVisibility['main'] = false
+    },
     showPanel (panelName) {
       this.hideAllPanels()
       this.panelsVisibility[panelName] = true
