@@ -38,7 +38,6 @@ class Player < Ohm::Model
   validates :is_game_over, inclusion: { in: [true, false] }, allow_nil: true
   validates :is_admin, inclusion: { in: [true, false] }, allow_nil: true
   validates :is_ai, inclusion: { in: [true, false] }, allow_nil: true
-  validates :ai_name, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
 
   def end_turn
     self.is_end_turn = true

@@ -38,6 +38,7 @@ class Creation
     if player.save
       player
     else 
+      player.errors.messages.to_s.bg(:red).color(:black).out
       nil
     end
   end

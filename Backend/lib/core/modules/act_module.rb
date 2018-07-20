@@ -15,10 +15,8 @@ module Actable
 
   def create_bot
     game = Game[@game_id]
-      names = get_bot_names
-      game.add_player_bot nil, names.sample
-      return true
-    return false
+    names = get_bot_names
+    game.add_player_bot names.sample
   end
 
   def player_ends_turn array_fleets_hash = []
