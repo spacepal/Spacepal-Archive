@@ -1,0 +1,17 @@
+@keyframes turnAnim {
+  0% {
+    transform: scale(0.0);
+    opacity: 0.0;
+  }
+  40% {
+    opacity: 1.0;
+  }
+  99% {
+    transform: scale(3.0);
+    opacity: 0.0;
+    margin-left: 0;
+  }
+  100% {
+    margin-left: -100%;
+  }
+}
