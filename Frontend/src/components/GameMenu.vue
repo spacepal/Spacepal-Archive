@@ -23,6 +23,14 @@
       <a @click="showPanel('tasks')">Tasks</a>
       <span>[T]</span>
 
+      <span class="mdi mdi-developer-board"></span>
+      <a @click="showPanel('autoTasks')">Auto tasks</a>
+      <span>[A]</span>
+
+      <span class="mdi mdi-rocket"></span>
+      <a @click="showPanel('fleets')">Fleets</a>
+      <span>[F]</span>
+
       <span class="mdi mdi-cancel"></span>
       <a @click="exit">Surrender</a>
       <span>[<span class="mdi mdi-cancel"></span>]</span>
@@ -114,7 +122,7 @@ $menuBtn: $iconSize + $padding * 2;
 }
 .menu:hover {
   transform: translateX($menuBtn);
-  height: 180px;
+  height: 240px;
   transition: transform 0.1s ease-out,
     height 0.1s ease-out;
 }
