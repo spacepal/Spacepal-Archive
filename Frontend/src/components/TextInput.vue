@@ -1,12 +1,9 @@
 <template>
   <div @wheel="mousewheel" class="field" :class="labelClass + ' ' + statusClass">
     <div class="label" v-if="hasLabel">{{label}}</div>
-    <input ref="inp" :type="type" :maxlength="maxLength" :min="minimum" :max="maximum"
-      v-model="text" :placeholder="value" @blur="enableHotKeys"
-      @change="onChange($event.target.value)"
-      @keydown="onChange($event.target.value)"
-      @paste="onChange($event.target.value)"
-      @focus="disableHotKeys($event)" @click="$event.target.select()">
+    <input ref="inp" type="text" :maxlength="maxLength"
+      :placeholder="placeholder" v-model="text" @blur="$enableHotKeys"
+      @focus="$disableHotKeys" @click="$event.target.select()">
     <div class="counter" v-show="text.length !== 0" v-if="hasCounter">
       {{text.length}}\{{max}}
     </div>
@@ -58,26 +55,19 @@ export default {
     } else if (this.type === TYPE_NUMBER) {
       this._regExp = new RegExp('^[+-]{0,1}[0-9]+$')
     }
+    this.revalidate()
+    this.placeholder = this.value + ''
   },
   data () {
     return {
-      text: '',
       isLabelOut: false,
       statusClass: '',
-      lastGenerated: ''
+      lastGenerated: '',
+      placeholder: '',
+      text: ''
     }
   },
   computed: {
-    minimum () {
-      if (this.min !== undefined && this.type === TYPE_NUMBER) {
-        return this.min
-      }
-    },
-    maximum () {
-      if (this.max !== undefined && this.type === TYPE_NUMBER) {
-        return this.max
-      }
-    },
     maxLength () {
       if (this.max !== undefined && this.type === TYPE_TEXT) {
         return this.max
@@ -94,15 +84,6 @@ export default {
     }
   },
   methods: {
-    enableHotKeys () {
-      this.$enableHotKeys()
-    },
-    disableHotKeys (e) {
-      this.$disableHotKeys()
-    },
-    forceInput () {
-      this.text = this.value
-    },
     focus () {
       this.$refs.inp.focus()
     },
@@ -117,17 +98,18 @@ export default {
     },
     mousewheel (event) {
       if (this.type === TYPE_NUMBER) {
-        if (this.text === '') {
-          this.text = this.value
-          return false
-        }
-        let val = this.text - event.deltaY / Math.abs(event.deltaY)
-        if (val > this.max) {
-          this.text = this.max
-        } else if (val < this.min) {
-          this.text = this.min
+        let val = parseInt(this.text)
+        if (isNaN(val)) {
+          this.text = parseInt(this.placeholder)
         } else {
-          this.text = val
+          val -= event.deltaY / Math.abs(event.deltaY)
+          if (val > this.max) {
+            this.text = this.max + ''
+          } else if (val < this.min) {
+            this.text = this.min + ''
+          } else {
+            this.text = val + ''
+          }
         }
       } else if (this.type === TYPE_TEXT) {
         this.regenerate()
@@ -159,27 +141,33 @@ export default {
     },
     revalidate () {
       this.statusClass = ''
-      if (this.isValid() && this.text.length !== 0 &&
-        this.$refs.inp.validity.valid) {
+      if (this.isValid() && this.text.length !== 0) {
         this.statusClass = 'field-valid'
         return true
       }
       return false
-    },
-    onChange (text) {
-      this.isLabelOut = (text + '').length !== 0 ||
-        this.$refs.inp.validity.badInput
     }
   },
   watch: {
     enableValidation () {
       this.$emit('change')
     },
-    text (newText) {
-      this.onChange(newText)
-      if (this.revalidate()) {
-        this.$emit('input', (this.type === TYPE_NUMBER ? parseInt(newText) : newText))
+    value (newValue) {
+      let val = newValue
+      if (this.type === TYPE_NUMBER) {
+        if (!isNaN(parseInt(val))) {
+          this.text = newValue + ''
+        }
       }
+    },
+    text (newText) {
+      this.isLabelOut = (newText + '').length !== 0
+      if (this.type === TYPE_NUMBER) {
+        this.$emit('input', parseInt(newText))
+      } else {
+        this.$emit('input', newText)
+      }
+      this.revalidate()
       this.$emit('change')
     },
     max () {
