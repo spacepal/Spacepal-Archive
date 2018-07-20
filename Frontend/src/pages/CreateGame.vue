@@ -105,6 +105,14 @@ export default {
       ]
     }
   },
+  mounted () {
+    if (this.$route.params['auto']) {
+      this.setRandom()
+      this.$nextTick(() => {
+        this.createGame()
+      })
+    }
+  },
   methods: {
     setRandom () {
       this.$refs.username.regenerate()

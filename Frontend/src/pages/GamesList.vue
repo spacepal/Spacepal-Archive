@@ -5,9 +5,12 @@
     <div class="flex-horizontal">
       <div class="flex-space"></div>
       <div id="games-list">
-        <STable :fields="fields" :rows="rows" @rowClicked="rowClicked" :loading="isLoading">
+        <STable :fields="fields" :rows="rows" @rowClicked="rowClicked"
+          @notFoundCliked="createRandom" :loading="isLoading">
           <template slot="notfound">
-            There's no games
+            <p>
+              Click for create first random game
+            </p>
           </template>
         </STable>
         <Paginator :total="total" :limit="limit" @pageChanged="pageChanged" />
@@ -149,6 +152,14 @@ export default {
     clearTimeout(this._refreshTimer)
   },
   methods: {
+    createRandom () {
+      this.$router.push({
+        name: 'CreateGame',
+        params: {
+          auto: true
+        }
+      })
+    },
     setRandom () {
       this.$refs.usernameInput.regenerate(true)
     },

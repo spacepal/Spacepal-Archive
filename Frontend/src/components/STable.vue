@@ -10,7 +10,7 @@
         </thead>
         <tbody>
           <tr v-if="rows.length === 0" class="norows">
-            <td :colspan="fields.length">
+            <td :colspan="fields.length"  @click="notFoundCliked">
               <slot name="notfound">There's no rows</slot>
             </td>
           </tr>
@@ -66,6 +66,11 @@ export default {
     rowClicked (row, i) {
       if (!this.loading) {
         this.$emit('rowClicked', {row, i})
+      }
+    },
+    notFoundCliked () {
+      if (!this.loading) {
+        this.$emit('notFoundCliked')
       }
     }
   }
