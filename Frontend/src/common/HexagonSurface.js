@@ -1,5 +1,6 @@
 import Cell from './Cell.js'
 import { mapGetters } from 'vuex'
+import { calcDistance } from './DistanceHelper.js'
 
 export default {
   data () {
@@ -125,7 +126,13 @@ export default {
       if (cell) {
         cell.isHovered = true
         this.hoveredIndex = cell.id - 1
-        cell.render(this.context)
+        if (this.selectedIndex !== -1) {
+          let distance = calcDistance(this.selectedIndex + 1,
+            cell.id, this.$store.getters['game/info'].mapWidth)
+          cell.render(this.context, distance)
+        } else {
+          cell.render(this.context)
+        }
       }
       this._moveLock = false
     },

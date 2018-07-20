@@ -79,7 +79,7 @@ class Cell {
       C.x * (A.y - B.y)) * 0.5
   }
 
-  render (ctx) {
+  render (ctx, stepsTo = 0) {
     ctx.save()
 
     ctx.beginPath()
@@ -153,13 +153,18 @@ class Cell {
       ctx.font = '18px Audiowide'
       ctx.fillStyle = memberColor.text
       ctx.textAlign = 'center'
+      if (stepsTo > 0) {
+        ctx.fillText('Steps: ' + stepsTo,
+          this.firstPoint.x + this._a / 2,
+          this.firstPoint.y + 80)
+      }
       ctx.fillText('Ships: ' + (planet.ships - this._shipsDec(planet.id)),
         this.firstPoint.x + this._a / 2,
-        this.firstPoint.y + 150)
+        this.firstPoint.y + 140)
       if (this._isHovered) {
         ctx.fillText('Kill: ' + Math.round(planet.killPerc * 100) / 100.0,
           this.firstPoint.x + this._a / 2,
-          this.firstPoint.y + 125)
+          this.firstPoint.y + 120)
         ctx.fillText('Prod: ' + planet.production,
           this.firstPoint.x + this._a / 2,
           this.firstPoint.y + 100)

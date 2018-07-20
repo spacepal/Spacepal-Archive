@@ -96,7 +96,8 @@ const actions = {
     }
     let stepsLeft = calcDistance(
       rootGetters.planetByID(to).cellID,
-      rootGetters.planetByID(from).cellID
+      rootGetters.planetByID(from).cellID,
+      rootGetters['game/info'].mapWidth
     )
     if (isAutoTask) {
       commit('ADD_AUTO_TASK', { from, to, count, stepsLeft })
