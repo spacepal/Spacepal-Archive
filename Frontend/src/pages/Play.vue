@@ -1,5 +1,5 @@
 <template>
-  <div class="game-page">
+  <div class="game-page" ref="page">
     <Map ref="map" full></Map>
     <transition name="scale" mode="out-in">
       <div class="info-panel-bg"

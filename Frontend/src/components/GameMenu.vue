@@ -35,6 +35,10 @@
       <a @click="exit">Surrender</a>
       <span>[<span class="mdi mdi-cancel"></span>]</span>
 
+      <span class="mdi mdi-fullscreen"></span>
+      <a @click="fullScreen">Fullscreen</a>
+      <span>[F11]</span>
+
       <span class="mdi mdi-eye-off-outline"></span>
       <a @click="toggleVisibility">Hide menu</a>
       <span>[M]</span>
@@ -59,7 +63,8 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['menuIsVisible', 'isLocked'])
+    ...mapGetters(['menuIsVisible', 'isLocked']),
+    isFullScreen: () => document.fullscreen
   },
   methods: {
     ...mapActions({
@@ -82,6 +87,35 @@ export default {
     },
     toggleVisibility () {
       this.$store.dispatch('toggleMenuVisibility')
+    },
+    fullScreen () {
+      let isFullScreen = document.fullscreen ||
+        document.webkitIsFullScreen ||
+        document.mozFullScreen
+      if (isFullScreen) {
+        if (document.exitFullscreen) {
+          document.exitFullscreen()
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen()
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen()
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen()
+        } else {
+          this.$toast('Press F11')
+        }
+      } else {
+        let app = document.getElementById('app')
+        if (app.requestFullscreen) {
+          app.requestFullscreen()
+        } else if (app.webkitRequestFullscreen) {
+          app.webkitRequestFullscreen()
+        } else if (app.mozRequestFullScreen) {
+          app.mozRequestFullScreen()
+        } else {
+          this.$toast('Press F11')
+        }
+      }
     }
   }
 }
