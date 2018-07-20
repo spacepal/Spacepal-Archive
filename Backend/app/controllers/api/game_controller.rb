@@ -70,6 +70,7 @@ class Api::GameController < ApplicationController
     cookies.delete :game_id
     cookies.delete :player_id
     game = Game[game_id]
+    p game.attributes
     if game
       game = game.remove_player player_id
       core = Core.new game_id, player_id

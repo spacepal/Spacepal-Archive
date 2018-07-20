@@ -228,12 +228,16 @@ class Game < Ohm::Model
       self.errors.add :players_limit, "no place for new player"
       nil
     end
+  end
 
+  def players_not_bot
+    (self.players.map { |player| player if (player.ai? == false or player.ai? == nil) }).compact
   end
 
   def remove_player player_id
+    "self.players_not_bot.count = #{self.players_not_bot}".bg(:yellow)
     if self.room?
-      if self.players.count == 1
+      if self.players_not_bot.count == 1
         Deletion.delete_game self
         return nil
       else

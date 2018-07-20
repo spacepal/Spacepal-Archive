@@ -3,7 +3,6 @@ module ApplicationCable
     identified_by :current_player_id
  
     def connect
-      "player_id:#{cookies.encrypted[:player_id]} ||| game_id:#{cookies.encrypted[:game_id]}".color(:silver).out
       self.current_player_id = find_verified_player_id
     end
  
