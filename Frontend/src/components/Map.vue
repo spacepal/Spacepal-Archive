@@ -127,14 +127,14 @@ export default {
     this._mouseUpListener = () => {
       this.drag = false
     }
-    this.$store.watch((_, getters) => getters['game/info'], () => {
+    this.$store.watch((_, getters) => getters.sync['game'], () => {
       if (this.mapSizeWidth !== this.mapSize.width ||
         this.mapSizeHeight !== this.mapSize.height) {
         this.init(context, this.hexSize, this.mapSizeWidth, this.mapSizeHeight)
       }
     })
-    this.$store.watch((_, getters) => getters.planets, () => this.tick())
-    this.$store.watch((_, getters) => getters.members, () => this.tick())
+    this.$store.watch((_, getters) => getters.sync['planets'], () => this.tick())
+    this.$store.watch((_, getters) => getters.sync['members'], () => this.tick())
     this.$store.watch((_, getters) => getters['tasks/all'], () => this.tick())
     window.addEventListener('mouseup', this._mouseUpListener)
   },
