@@ -1,7 +1,7 @@
 <template>
   <div class="game-page">
     <Map ref="map" full></Map>
-    <transition name="fade">
+    <transition name="scale" mode="out-in">
       <div class="info-panel-bg"
         v-if="panelsVisibility.main"
         @click="hideAllPanels">
@@ -85,6 +85,7 @@ export default {
         {
           code: 'Space',
           method: this.endTurn,
+          modalLock: true,
           description: 'End turn'
         },
         {

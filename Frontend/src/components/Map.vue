@@ -180,6 +180,7 @@ export default {
         this.$toast(`Lack of ships`)
       } else {
         this.selectCell(planet.cellID - 1)
+        this.task.count = ''
         this.task.from = planet.id
         this.task.maxCount = this.availableShips(planet.id)
       }

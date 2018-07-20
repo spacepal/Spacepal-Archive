@@ -2,8 +2,9 @@
   <div @wheel="mousewheel" class="field" :class="labelClass + ' ' + statusClass">
     <div class="label" v-if="hasLabel">{{label}}</div>
     <input ref="inp" type="text" :maxlength="maxLength"
-      :placeholder="placeholder" v-model="text" @blur="$enableHotKeys"
-      @focus="$disableHotKeys" @click="$event.target.select()">
+      :placeholder="placeholder" v-model="text"
+      @keyup="onKey" @keydown="onKey" @keypress="onKey"
+      @click="$event.target.select()">
     <div class="counter" v-show="text.length !== 0" v-if="hasCounter">
       {{text.length}}\{{max}}
     </div>
@@ -84,6 +85,11 @@ export default {
     }
   },
   methods: {
+    onKey (e) {
+      if (e.keyCode >= 32) {
+        e.stopPropagation()
+      }
+    },
     focus () {
       this.$refs.inp.focus()
     },

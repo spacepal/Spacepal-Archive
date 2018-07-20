@@ -76,9 +76,11 @@ export default {
   },
   methods: {
     show () {
+      this.$disableHotKeys()
       this.isVisible = true
     },
     close () {
+      this.$enableHotKeys()
       this.isVisible = false
       this.$emit('reject')
     },
