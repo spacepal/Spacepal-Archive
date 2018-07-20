@@ -1,7 +1,7 @@
 class PlayerChannel < ApplicationCable::Channel
  
   def subscribed
-    stream_from ("players:" + current_player_id.to_s)
+    stream_from ("players:#{current_player_id}")
   end
 
   def unsubscribed

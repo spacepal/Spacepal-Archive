@@ -26,6 +26,7 @@ module Broadcastable
   def broadcast_on_everybody_ends_turn
     self.broadcast_end_turn
     self.broadcast_all_common_data
+    "BROADCAST ON EVERYBODY ENDS TURN".color(:cyan).out
     self.broadcast_private_data_to_everybody
   end
 
@@ -47,14 +48,16 @@ module Broadcastable
 
   def broadcast_player_to_everybody
     Game[@game_id].players.each do |player|
-      self.broadcast_player
+      self.broadcast_player player.id
     end
   end
 
   def broadcast_private_data_to_everybody
+  "broadcast_private_data_to_everybody".color(:cyan).out
     Game[@game_id].players.each do |player|
-      self.broadcast_player
-      self.broadcast_fleets
+      "player_name: #{player.name}".color(:cyan).out
+      self.broadcast_player player.id
+      self.broadcast_fleets player.id
     end
   end
 
@@ -96,17 +99,18 @@ module Broadcastable
     ActionCable.server.broadcast("games:#{@game_id}", { type: GAME_TYPE, data: _hash })
   end  
 
-  def broadcast_player
-    player = Player[@player_id]
+  def broadcast_player player_id = @player_id
+    player = Player[player_id]
+    "from broadcast_player player_name = #{player.name}"
     _hash = {
-      id: @player_id.to_i,
+      id: player_id.to_i,
       color: player.color_id.to_i,
       username: player.name,
       isCreator: (player.is_admin or false),
       isEndTurn: (player.is_end_turn or false),
       isGameOver: (player.is_game_over or false)
     }
-    ActionCable.server.broadcast("players:#{@player_id}", { type: PLAYER_TYPE, data: _hash })
+    ActionCable.server.broadcast("players:#{player_id}", { type: PLAYER_TYPE, data: _hash })
   end
 
   def broadcast_players
@@ -127,8 +131,9 @@ module Broadcastable
     ActionCable.server.broadcast("games:#{@game_id}", { type: PLAYERS_TYPE, data: { PLAYERS_TYPE => arr }})
   end
 
-  def broadcast_fleets
-    fleets = Player[@player_id].fleets
+  def broadcast_fleets player_id = @player_id 
+    player = Player[player_id]
+    fleets = player.fleets
     arr = fleets&.map do |fleet|
       {
         from: fleet.planet_from_id.to_i, # planetID
@@ -137,7 +142,7 @@ module Broadcastable
         stepsLeft: fleet.steps_left.to_i
       }
     end
-    ActionCable.server.broadcast("players:#{@player_id}", { type: FLEETS_TYPE, data: { FLEETS_TYPE => arr }})
+    ActionCable.server.broadcast("players:#{player_id}", { type: FLEETS_TYPE, data: { FLEETS_TYPE => arr }})
   end
 
   def broadcast_planets

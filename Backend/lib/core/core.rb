@@ -29,17 +29,20 @@ class Core
 
   def end_turn fleets = []
     player = Player[@player_id]
-    game = player.game
-    self.player_ends_turn fleets
-    if self.everybody_ends_turn?
-      make_step
-      if game.over?
-        self.broadcast_on_end_game
+    unless player.end_turn?
+      game = player.game
+      self.player_ends_turn fleets
+      if self.everybody_ends_turn?
+        make_step
+        if game.over?
+          self.broadcast_on_end_game
+        else
+          self.broadcast_on_everybody_ends_turn
+        end
       else
-        self.broadcast_on_everybody_ends_turn
+        self.broadcast_on_player_ends_turn
+        self.broadcast_player
       end
-    else
-      self.broadcast_on_player_ends_turn
     end
   end
 

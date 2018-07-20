@@ -221,13 +221,13 @@ class Game < Ohm::Model
         pl.save
         pl.delete
         self.make_new_admin
-        self
+        return self
       end
     end
     if self.playing?
       player = Player[player_id]
       player.surrender
-      self
+      return self
     end
   end
 

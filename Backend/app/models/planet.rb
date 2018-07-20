@@ -157,8 +157,10 @@ class Planet < Ohm::Model
   end
 
   def gain_experience exp = 1
+    if self.player
       self.experience += exp
       self.save
+    end
   end
 
   def update hash
