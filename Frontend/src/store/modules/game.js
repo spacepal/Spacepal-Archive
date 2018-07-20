@@ -56,6 +56,12 @@ const actions = {
     }
     return false
   },
+  addBot ({ rootState }) {
+    rootState.cable.get(rootState.gameID).addBot()
+  },
+  delBot ({ rootState }, id) {
+    rootState.cable.get(rootState.gameID).delBot(id)
+  },
   endTurn ({ dispatch, rootState, rootGetters }) {
     if (rootGetters.isLocked) {
       console.warn('game.endTurn is locked')
@@ -74,6 +80,13 @@ const actions = {
 }
 
 const getters = {
+  hasFreePlace: (state, _, __, rootGetters) => {
+    if (!rootGetters.sync.game || !rootGetters.sync.members) {
+      return false
+    }
+    let limit = state.info.playersLimit || 0
+    return limit > Object.values(rootGetters.members).length
+  },
   isRoom: (state, _, __, rootGetters) => {
     return rootGetters.isPlayer && state.info.state === STATE_ROOM
   },

@@ -10,15 +10,30 @@
         </template>
         <template v-for="m in members">
           <Member :key="m.username + '_1'" :id="m.id"></Member>
-          <span :key="m.username + '_2'" v-if="m.isGameOver"></span>
+          <template v-if="!isRoom">
+            <span :key="m.username + '_2'" v-if="m.isGameOver"></span>
+            <template v-else>
+              <span :key="m.username + '_2'" v-if='m.isEndTurn'
+                class="mdi mdi-radiobox-marked mdi-16px">
+              </span>
+              <span :key="m.username + '_2'" v-else
+                class="mdi mdi-radiobox-blank mdi-16px">
+              </span>
+            </template>
+          </template>
           <template v-else>
-            <span :key="m.username + '_3'" v-if='m.isEndTurn'
-              class="mdi mdi-radiobox-marked mdi-16px">
-            </span>
-            <span :key="m.username + '_3'" v-else
-              class="mdi mdi-radiobox-blank mdi-16px">
+            <span :key="m.username + '_2'">
+              <a v-if="m.isArtificialIntelligence && isCreator"
+                class="mdi mdi-delete-forever"
+                @click="delBot(m.id)"></a>
             </span>
           </template>
+        </template>
+        <template>
+          <a v-if="isRoom && isCreator && hasFreePlace" class="action" @click="addBot">
+            Add bot
+          </a>
+          <span class="mdi mdi-desktop-classic"></span>
         </template>
       </div>
     </Form>
@@ -29,7 +44,7 @@
 import Form from './Form'
 import Member from './nano/Member'
 import Colors from '../common/Colors'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'Members',
@@ -39,15 +54,22 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'members',
-      'sync'
-    ]),
+    ...mapGetters({
+      members: 'members',
+      sync: 'sync',
+      isRoom: 'game/isRoom',
+      hasFreePlace: 'game/hasFreePlace',
+      isCreator: 'isCreator'
+    }),
     loadingClass () {
       return this.sync.members ? '' : 'loading'
     }
   },
   methods: {
+    ...mapActions({
+      addBot: 'game/addBot',
+      delBot: 'game/delBot'
+    }),
     memberIconStyle (member) {
       return {
         color: Colors[member.color].bg
@@ -64,5 +86,8 @@ export default {
   span {
     margin: 0 3px;
   }
+}
+.action {
+  text-align: center;
 }
 </style>

@@ -5,6 +5,8 @@ import store from '@/store'
 const END_TURN_ACTION = 'end_turn'
 const SHUFFLE_ACTION = 'shuffle'
 const START_ACTION = 'start_game'
+const ADD_BOT_ACTION = 'add_bot'
+const DEL_BOT_ACTION = 'del_bot'
 
 export default class ActionCabel {
   constructor (gameID) {
@@ -77,6 +79,12 @@ export default class ActionCabel {
   }
   shuffleMap () {
     this._gameRoom.perform(SHUFFLE_ACTION)
+  }
+  addBot () {
+    this._gameRoom.perform(ADD_BOT_ACTION, { })
+  }
+  delBot (id) {
+    this._gameRoom.perform(DEL_BOT_ACTION, { id })
   }
   endTurn (fleets) {
     this._gameRoom.perform(END_TURN_ACTION, { fleets })
