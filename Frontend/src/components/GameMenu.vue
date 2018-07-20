@@ -66,6 +66,15 @@ export default {
     ...mapGetters(['menuIsVisible', 'isLocked']),
     isFullScreen: () => document.fullscreen
   },
+  mounted () {
+    let onFullscreenError = () => {
+      this.$toast('Press F11 for fullscreen mode')
+    }
+    document.addEventListener('fullscreenerror', onFullscreenError)
+    document.addEventListener('webkitfullscreenerror', onFullscreenError)
+    document.addEventListener('mozfullscreenerror', onFullscreenError)
+    document.addEventListener('MSFullscreenError', onFullscreenError)
+  },
   methods: {
     ...mapActions({
       endTurn: 'game/endTurn',
