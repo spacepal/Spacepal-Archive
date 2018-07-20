@@ -7,27 +7,41 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'EndTurnMsg',
   data () {
     return {
-      isShowed: false,
-      turn: 0
+      isShowed: false
+    }
+  },
+  computed: {
+    ...mapGetters({
+      game: 'game/info',
+      sync: 'sync'
+    }),
+    turn () {
+      let t = this.game.turnNumber
+      if (t > 9999) {
+        t = Math.ceil(t / 10000)
+        return t + 'k'
+      }
+      return t
     }
   },
   methods: {
-    show (turn) {
-      clearTimeout(this._timer)
-      this._timer = setTimeout(() => {
-        this.isShowed = false
-      }, 600)
-      this.isShowed = true
-      if (turn > 9999) {
-        this.turn = Math.ceil(turn / 10000)
-        this.turn += 'k'
-      } else {
-        this.turn = turn
-      }
+    mounted () {
+      this.$store.watch((_, getters) => getters['game/info'], () => {
+        if (!this.sync['endTurn']) {
+          return
+        }
+        this.$store.dispatch('syncReset', 'endTurn')
+        clearTimeout(this._timer)
+        this._timer = setTimeout(() => {
+          this.isShowed = false
+        }, 600)
+        this.isShowed = true
+      })
     }
   }
 }

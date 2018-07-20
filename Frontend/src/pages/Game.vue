@@ -4,6 +4,7 @@
     <Play v-if="isGame" />
     <End v-if="isOver" />
     <FullPreloader autostart v-if="isUnknown" ref="loader" />
+    <EndTurnMsg ref="endTurnMsg" />
   </div>
 </template>
 
@@ -12,6 +13,7 @@ import { mapGetters } from 'vuex'
 import Play from './Play'
 import Room from './Room'
 import End from './End'
+import EndTurnMsg from '../components/nano/EndTurnMsg'
 import FullPreloader from '../components/FullPreloader'
 
 export default {
@@ -20,7 +22,8 @@ export default {
     Play,
     Room,
     End,
-    FullPreloader
+    FullPreloader,
+    EndTurnMsg
   },
   computed: {
     ...mapGetters({
