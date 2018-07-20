@@ -117,26 +117,31 @@ export default {
     setRandom () {
       this.$refs.username.regenerate()
       this.$refs.gamename.regenerate()
-      this.pref.map.width = Faker.random.number({
-        min: 5,
-        max: 12
-      })
-      this.pref.map.height = Faker.random.number({
-        min: 5,
-        max: this.pref.map.width - 1
-      })
-      this.pref.playersLimit = 8
-      this.pref.planetsCount = Faker.random.number({
-        min: 8,
-        max: this.pref.map.width * this.pref.map.height
-      })
-      this.pref.pinCode = ''
+      this.pref.map.width = 5
+      this.pref.map.height = 4
+      this.pref.planetsCount = 8
+      this.pref.playersLimit = 1
+      this.pref.pinCode = '1111'
       this.pref.flags.pirates = Faker.random.boolean()
       this.pref.flags.buffs = Faker.random.boolean()
       this.pref.flags.productionAfterCapture = Faker.random.boolean()
       this.pref.flags.accumulative = Faker.random.boolean()
       this.pref.flags.hasPinCode = false
       this.$nextTick(() => {
+        this.pref.playersLimit = 8
+        this.pref.map.width = Faker.random.number({
+          min: 5,
+          max: 12
+        })
+        this.pref.map.height = Faker.random.number({
+          min: 5,
+          max: this.pref.map.width - 1
+        })
+        this.pref.planetsCount = Faker.random.number({
+          min: 8,
+          max: this.pref.map.width * this.pref.map.height
+        })
+        this.pref.pinCode = ''
         this.$refs.form.forceInput()
       })
     },
