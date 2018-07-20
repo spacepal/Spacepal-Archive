@@ -10,7 +10,7 @@ module Broadcastable
 
   def broadcast_on_subscribe
     self.broadcast_all_common_data
-    self.broadcast_player
+    self.broadcast_private_data
   end
 
   def broadcast_on_start_game
@@ -108,7 +108,8 @@ module Broadcastable
       username: player.name,
       isCreator: (player.is_admin or false),
       isEndTurn: (player.is_end_turn or false),
-      isGameOver: (player.is_game_over or false)
+      isGameOver: (player.is_game_over or false),
+      isArtificialIntelligence: (player.is_ai or false)
     }
     ActionCable.server.broadcast("players:#{player_id}", { type: PLAYER_TYPE, data: _hash })
   end
@@ -122,7 +123,7 @@ module Broadcastable
         username: player.name,
         isCreator: (player.is_admin or false),
         isArtificialIntelligence: (player.is_ai or false),
-        artificialIntelligenceType:  player.ai_type,
+        artificialIntelligenceType:  player.ai_name,
         isEndTurn: (player.is_end_turn or false),
         isGameOver: (player.is_game_over or false)
       }

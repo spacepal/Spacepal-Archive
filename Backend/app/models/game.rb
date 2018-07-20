@@ -212,6 +212,27 @@ class Game < Ohm::Model
     end
   end
 
+  def add_player_bot player_name, ai_name
+    if self.players.size < self.players_limit
+      unless player_name
+        player_name = Faker::Name.first_name
+      end
+      until self.playername_is_uniq player_name do
+        player_name = Faker::Name.first_name
+      end
+      pl = Creation.create_player player_name, true, ai_name
+      if pl.id
+        pl.game = self
+        pl.save
+        pl
+      end
+    else
+      self.errors.add :players_limit, "no place for new player"
+      nil
+    end
+
+  end
+
   def remove_player player_id
     if self.room?
       if self.players.count == 1
