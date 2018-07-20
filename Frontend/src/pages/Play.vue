@@ -43,6 +43,22 @@
       </Form>
     </div>
     <div class="info-panel-bg"
+      v-if="panelsVisibility.autoTasks"
+      @click.self="hideAllPanels">
+      <Form class="info-panel-body" @click="false">
+        <Fleets
+          :canDelete="true"
+          :syncs="[]"
+          :fleets="autoTasks"
+          @goToCell="goToCell"
+          @delete="delTask">
+          <template slot="noFleets">
+            No auto tasks
+          </template>
+        </Fleets>
+      </Form>
+    </div>
+    <div class="info-panel-bg"
       v-if="panelsVisibility.notifications"
       @click="hideAllPanels">
       <Form class="info-panel-body">
@@ -100,6 +116,14 @@ export default {
           description: 'Show fleets'
         },
         {
+          code: 'KeyA',
+          method: () => {
+            this.hideAllPanels('autoTasks')
+            this.panelsVisibility.autoTasks ^= true
+          },
+          description: 'Show auto tasks'
+        },
+        {
           code: 'KeyT',
           method: () => {
             this.hideAllPanels('tasks')
@@ -129,6 +153,7 @@ export default {
       panelsVisibility: {
         main: false,
         tasks: false,
+        autoTasks: false,
         notifications: false,
         fleets: false
       }
@@ -137,7 +162,8 @@ export default {
   computed: {
     ...mapGetters({
       tasks: 'tasks/all',
-      fleets: 'fleets/all'
+      fleets: 'fleets/all',
+      autoTasks: 'tasks/autoTasks'
     })
   },
   methods: {

@@ -14,9 +14,13 @@
       <Form ref="taskForm" class="withoutborder">
         <TextInput type="number"
           :label="`Max ships count: ${task.maxCount}`"
-          :min="1" :max="task.maxCount"
+          :min="1" :max="(task.isAutoTask ? Number.MAX_VALUE : task.maxCount)"
           v-model="task.count"
           @change="checkTaskForm"></TextInput>
+        <div class="flex-horizontal">
+          <SwitchBox label="Hold" title="Create auto task"
+            v-model="task.isAutoTask" @change="checkTaskForm" />
+        </div>
       </Form>
     </Window>
   </div>
@@ -28,6 +32,7 @@ import HexagonSurface from '../common/HexagonSurface'
 import Window from './Window'
 import TextInput from './TextInput'
 import Form from './Form'
+import SwitchBox from './SwitchBox'
 
 export default {
   name: 'Map',
@@ -42,7 +47,7 @@ export default {
       default: 100
     }
   },
-  components: { Window, TextInput, Form },
+  components: { Window, TextInput, Form, SwitchBox },
   data () {
     return {
       task: {
@@ -144,7 +149,9 @@ export default {
   },
   methods: {
     checkTaskForm () {
-      this.task.isValid = this.$refs.taskForm.isValid()
+      this.$nextTick(() => {
+        this.task.isValid = this.$refs.taskForm.isValid()
+      })
     },
     taskConfirm () {
       if (this.task.isValid) {

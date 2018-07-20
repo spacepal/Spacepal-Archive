@@ -29,8 +29,8 @@
             </span>
           </template>
         </template>
-        <template>
-          <a v-if="isRoom && isCreator && hasFreePlace" class="action" @click="addBot">
+        <template v-if="isRoom && isCreator && hasFreePlace">
+          <a class="action" @click="addBot">
             Add bot
           </a>
           <span class="mdi mdi-desktop-classic"></span>

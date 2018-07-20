@@ -45,20 +45,27 @@ const mutations = {
 }
 
 const actions = {
-  doAutoTasks ({ state, rootGetters, dispatch }) {
+  doAutoTasks ({ state, rootGetters, dispatch, getters }) {
     if (rootGetters.isLocked) {
       console.warn('tasks.doAutoTasks: isLocked')
       return
     }
     for (let taskID in state.autoTasks) {
       let task = state.autoTasks[taskID]
-      let planet = rootGetters.planet(task.from)
+      let planet = rootGetters.planetByID(task.from)
       if (!planet || !rootGetters.isMemberPlanetOwner(task.from)) {
         dispatch('del', taskID)
         continue
       }
       task.isAutoTask = false
-      dispatch('add', task)
+      let count = getters.availableShips(task.from) - task.count
+      if (count > 1) {
+        dispatch('add', {
+          from: task.from,
+          to: task.to,
+          count: count
+        })
+      }
     }
     dispatch('syncSet', 'autotasks', { root: true })
   },
@@ -87,8 +94,12 @@ const actions = {
       console.warn('tasks.add: the member is not owner of the planet')
       return
     }
+    let stepsLeft = calcDistance(
+      rootGetters.planetByID(to).cellID,
+      rootGetters.planetByID(from).cellID
+    )
     if (isAutoTask) {
-      commit('ADD_AUTO_TASK', { from, to, count })
+      commit('ADD_AUTO_TASK', { from, to, count, stepsLeft })
       commit('INCREASE_ID')
       return
     }
@@ -100,10 +111,6 @@ const actions = {
       console.warn('tasks.add: lack of ships')
       return
     }
-    let stepsLeft = calcDistance(
-      rootGetters.planetByID(to).cellID,
-      rootGetters.planetByID(from).cellID
-    )
     commit('DECREASE_SHIPS', { planetID: from, count })
     commit('ADD_TASK', { from, to, count, stepsLeft })
     commit('INCREASE_ID')
