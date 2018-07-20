@@ -13,9 +13,8 @@
       @confirm="taskConfirm" @reject="taskReject" :enabled="task.isValid">
       <Form ref="taskForm" class="withoutborder">
         <TextInput type="number"
-          label="Ships count"
+          :label="`Max ships count: ${task.maxCount}`"
           :min="1" :max="task.maxCount"
-          :value="task.maxCount"
           v-model="task.count"
           @change="checkTaskForm"></TextInput>
       </Form>
@@ -180,9 +179,9 @@ export default {
         this.$toast(`Lack of ships`)
       } else {
         this.selectCell(planet.cellID - 1)
-        this.task.count = ''
         this.task.from = planet.id
         this.task.maxCount = this.availableShips(planet.id)
+        this.task.count = 0
       }
     },
     mousewheel (event) {
