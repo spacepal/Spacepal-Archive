@@ -86,9 +86,11 @@ class Game < Ohm::Model
 
   def get_planets_to_players
     capitals = self.get_capital_planets
+    d = capitals.count.to_f / self.players.count
     self.players.each_with_index do |player, index|
-      capitals[index].player = player
-      capitals[index].save
+      n = (index * d).to_i
+      capitals[n].player = player
+      capitals[n].save
     end
 
   end
@@ -221,13 +223,13 @@ class Game < Ohm::Model
         pl.save
         pl.delete
         self.make_new_admin
-        self
+        return self
       end
     end
     if self.playing?
       player = Player[player_id]
       player.surrender
-      self
+      return self
     end
   end
 

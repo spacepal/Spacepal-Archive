@@ -73,13 +73,12 @@ class Api::GameController < ApplicationController
     if game
       game = game.remove_player player_id
       core = Core.new game_id, player_id
-      if game.playing?
+      if game&.playing?
         core.end_turn([])
         core.check_game_on_leaving
       end
       if game
-        core.player_id = game.get_creator.id
-        core.broadcast_player
+        core.broadcast_player game.get_creator.id
         core.broadcast_players
         core.broadcast_planets
         core.broadcast_game
