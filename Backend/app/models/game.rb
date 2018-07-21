@@ -296,6 +296,12 @@ class Game < Ohm::Model
     return true
   end
 
+  def self.ids_room
+    (array = Game.all.map { |game| 
+        game.id if game.room? and game.pin_code.nil? 
+      }).compact
+  end
+
   def update hash
     obj = Game.new hash
     if obj.valid?
