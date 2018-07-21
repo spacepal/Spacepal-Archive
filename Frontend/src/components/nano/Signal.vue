@@ -1,5 +1,5 @@
 <template>
-  <div class="info-panel-bg signal" v-show="isVisible">
+  <div class="info-panel-bg signal" v-show="isVisible" :class="signalClass">
     <Form class="info-panel-body">
       <span class="mdi mdi-16px" :class="icon"></span>
       {{message}}
@@ -36,6 +36,9 @@ export default {
     }
   },
   computed: {
+    signalClass () {
+      return this.signalStrength === 0 ? 'no-signal' : ''
+    },
     isVisible () {
       return this.isShowed || this.signalStrength === 0
     },
@@ -88,7 +91,11 @@ export default {
 
 <style lang="scss" scoped>
 .signal {
+  position: fixed;
   z-index: 1000000000000000;
   user-select: none
+}
+.no-signal {
+  background: black
 }
 </style>
