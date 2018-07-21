@@ -242,7 +242,8 @@ export default {
         this.task.from = planet.id
         this.task.maxCount = this.availableShips(planet.id)
         this.task.count = 0
-        this.task.isAutoTask = false
+        this.task.isHoldAutoTask = false
+        this.task.isDispatchAutoTask = false
       }
     },
     mousewheel (event) {
