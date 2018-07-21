@@ -15,6 +15,10 @@
     .bg {
       background: map_get($background, $theme);
     }
+
+    .text-highlighted {
+      color: map_get($colorHighlighted, $theme)
+    }
   }
 }
 

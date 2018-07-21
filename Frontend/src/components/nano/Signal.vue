@@ -1,7 +1,7 @@
 <template>
   <div class="info-panel-bg signal" v-show="isVisible" :class="signalClass">
     <Form class="info-panel-body">
-      <span class="mdi mdi-16px" :class="icon"></span>
+      <span class="mdi mdi-16px text-highlighted" :class="icon"></span>
       {{message}}
     </Form>
   </div>
@@ -15,14 +15,20 @@ const SIGNAL_BAD_ICON = 'mdi-signal-cellular-1'
 const SIGNAL_NORMAL_ICON = 'mdi-signal-cellular-2'
 const SIGNAL_GOOD_ICON = 'mdi-signal-cellular-3'
 const SIGNAL_UNKNOWN_ICON = 'mdi-signal-cellular-outline'
-const SIGNAL_CHECK_INTERVAL = 1500
+const SIGNAL_CHECK_INTERVAL = 3000
+const MAX_CHECK_INTERVAL = 10000
+const INC_CHECK_INTERVAL = 1000
 
 export default {
   name: 'Signal',
   mounted () {
     let timerFunc = () => {
       this.checkConnection()
-      setTimeout(timerFunc, SIGNAL_CHECK_INTERVAL)
+      setTimeout(timerFunc, this.lastCheckInterval)
+      if (this.signalStrength === 0) {
+        this.lastCheckInterval += INC_CHECK_INTERVAL
+        this.lastCheckInterval = Math.min(MAX_CHECK_INTERVAL, this.lastCheckInterval)
+      }
     }
     timerFunc()
   },
@@ -31,6 +37,7 @@ export default {
   },
   data () {
     return {
+      lastCheckInterval: SIGNAL_CHECK_INTERVAL,
       isShowed: false,
       signalStrength: -1
     }
@@ -96,6 +103,17 @@ export default {
   user-select: none
 }
 .no-signal {
+  .mdi {
+    animation: animBlink 0.6s linear infinite alternate !important;
+  }
   background: black
+}
+@keyframes animBlink {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1.0;
+  }
 }
 </style>
