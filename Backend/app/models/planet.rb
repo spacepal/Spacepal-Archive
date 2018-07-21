@@ -91,6 +91,7 @@ class Planet < Ohm::Model
   end
 
   def fleet_took_off fleet
+    #"planet:#{ self.cell.relative_id } -> #{ self.attributes } | fleet:#{fleet.id} (#{ fleet.player.name }) -> #{ fleet.attributes }".bg(:silver).color(:black).out
     unless self.ships < fleet.ships 
       self.ships -= fleet.ships
       self.save

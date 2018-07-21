@@ -35,11 +35,16 @@ class Api::GameController < ApplicationController
   end
 
   def join
-    game_id = params[:id].to_i
+    if params[:id] == "random"
+      game_id = Game.ids_room.sample
+    else
+      game_id ||= params[:id].to_i
+    end
     data = self.game_params
     game = Game[game_id]
     unless game
-      render :json => { errors: ["can't find game with id " + game.id.to_s] }
+      render :json => { errors: ["can't find the game"] }
+      return
     end
     if game.room?
       if game.pin_code
@@ -52,7 +57,7 @@ class Api::GameController < ApplicationController
       if player
         cookies.encrypted[:player_id] = player.id
         cookies.encrypted[:game_id] = game.id
-        render :json => { errors: nil }
+        render :json => { errors: nil, gameID: game_id.to_i }
         return
       else
         render :json => { errors: game.errors.messages.flatten }
@@ -87,6 +92,10 @@ class Api::GameController < ApplicationController
     else
       render :json => { errors: [ "Game\##{game_id} does not exist" ]}
     end
+  end
+
+  def check_status
+    render ""
   end
 
   def game_params

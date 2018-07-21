@@ -11,6 +11,11 @@ class GameChannel < ApplicationCable::Channel
 
   #cheats
 
+  def ask_data
+    core = Core.new Player[current_player_id].game_id, current_player_id
+    core.send_asked_data
+  end
+
   def start_game
     core = Core.new Player[current_player_id].game_id, current_player_id
     core.start_game
@@ -23,7 +28,8 @@ class GameChannel < ApplicationCable::Channel
 
   def add_bot
     core = Core.new Player[current_player_id].game_id, current_player_id
-    core.add_bot   
+    "core = #{core}".bg(:yellow).color(:black).out
+    core.add_bot
   end
 
   def del_bot data 

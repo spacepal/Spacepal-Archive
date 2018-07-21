@@ -58,6 +58,10 @@ class Core
     end
   end
 
+  def send_asked_data
+    self.broadcast_the_rest_of_data
+  end
+
   def check_game_on_leaving
     game = Game[@game_id]
     self.execute_game
