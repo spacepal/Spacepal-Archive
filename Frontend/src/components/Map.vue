@@ -14,7 +14,8 @@
       <Form ref="taskForm" class="withoutborder">
         <TextInput type="number"
           :label="`Max ships count: ${task.maxCount}`"
-          :min="1" :max="(task.isAutoTask ? Number.MAX_VALUE : task.maxCount)"
+          :min="(task.isAutoTask ? 0 : 1)"
+          :max="(task.isAutoTask ? Number.MAX_VALUE : task.maxCount)"
           v-model="task.count"
           @change="checkTaskForm"></TextInput>
         <div class="flex-horizontal">
