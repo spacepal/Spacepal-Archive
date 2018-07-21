@@ -18,7 +18,7 @@
           v-model="task.count"
           @change="checkTaskForm"></TextInput>
         <div class="flex-horizontal">
-          <SwitchBox label="Hold" title="Create auto task"
+          <SwitchBox label="Hold [space]" title="Create auto task"
             v-model="task.isAutoTask" @change="checkTaskForm" />
         </div>
       </Form>
@@ -62,6 +62,12 @@ export default {
       height: 1080,
       drag: false,
       hotKeys: [
+        {
+          code: 'Space',
+          method: () => {
+            this.task.isAutoTask = !this.task.isAutoTask
+          }
+        },
         {
           code: 'KeyH',
           method: this.goHome,
@@ -189,6 +195,7 @@ export default {
         this.task.from = planet.id
         this.task.maxCount = this.availableShips(planet.id)
         this.task.count = 0
+        this.task.isAutoTask = false
       }
     },
     mousewheel (event) {
