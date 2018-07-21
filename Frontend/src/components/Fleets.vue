@@ -19,7 +19,8 @@
         <Member :key="fleet.id + '_3'" :planetID="fleet.to"></Member>
         <span :key="fleet.id + '_4'">
           {{ fleet.count }}
-          <template>[]</template>
+          <span class="mdi mdi-earth" v-if="fleet.hold"></span>
+          <span class="mdi mdi-arrow-up" v-if="fleet.dispatch"></span>
         </span>
         <span :key="fleet.id + '_5'">
           {{ fleet.stepsLeft }}
