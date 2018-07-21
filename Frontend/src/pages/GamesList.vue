@@ -2,7 +2,7 @@
   <div id="games-page">
     <GameTitle></GameTitle>
     <div class="buttons">
-      <div class="button" @click="joinRandom" title="Join random game">
+      <div class="button" v-if="total != 0" @click="joinRandom" title="Join random game">
         <span class="mdi mdi-auto-fix mdi-16px"></span>
       </div>
       <div class="button" @click="createRandom" title="Create random game">
@@ -169,7 +169,16 @@ export default {
       })
     },
     joinRandom () {
-      this.$toast('@todo: Username: ' + this.usernameGenerator().next().value)
+      this.$refs.loader.show()
+      this.$store.dispatch('game/joinRandom', {
+        username: this.usernameGenerator().next().value
+      }).then(() => {
+        this.$refs.loader.hide()
+        this.$router.push({ name: 'Game' })
+      }).catch(err => {
+        this.$refs.loader.hide()
+        this.$toast(err.message)
+      })
     },
     setRandom () {
       this.$refs.usernameInput.regenerate(true)

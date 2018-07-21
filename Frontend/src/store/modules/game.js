@@ -26,6 +26,16 @@ const actions = {
     commit('SET_GAME_INFO', gameInfo)
     dispatch('syncSet', 'game', { root: true })
   },
+  joinRandom ({ dispatch }, { username }) {
+    return Service.game.joinRandom(username).then((resp) => {
+      if (resp.data.errors) {
+        throw new Error(resp.data.errors.join('; '))
+      }
+      let gameID = resp.data.gameID
+      dispatch('login', gameID, { root: true })
+      return gameID
+    })
+  },
   join ({ dispatch }, { gameID, pinCode, username }) {
     return Service.game.join(gameID, pinCode, username).then((resp) => {
       if (resp.data.errors) {
