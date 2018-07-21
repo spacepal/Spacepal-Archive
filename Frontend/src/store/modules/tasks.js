@@ -45,29 +45,40 @@ const mutations = {
 }
 
 const actions = {
-  doAutoTasks ({ state, rootGetters, dispatch, getters }) {
+  doAutoTasks ({ state, rootGetters, dispatch }) {
     if (rootGetters.isLocked) {
       console.warn('tasks.doAutoTasks: isLocked')
       return
     }
     for (let taskID in state.autoTasks) {
-      let task = state.autoTasks[taskID]
-      let planet = rootGetters.planetByID(task.from)
-      if (!planet || !rootGetters.isMemberPlanetOwner(task.from)) {
-        dispatch('del', taskID)
-        continue
-      }
-      task.isAutoTask = false
-      let count = getters.availableShips(task.from) - task.count
-      if (count > 1) {
-        dispatch('add', {
-          from: task.from,
-          to: task.to,
-          count: count
-        })
-      }
+      dispatch('doAutoTask', taskID)
     }
     dispatch('syncSet', 'autotasks', { root: true })
+  },
+  doAutoTask ({ state, rootGetters, dispatch, getters }, taskID) {
+    let task = state.autoTasks[taskID]
+    if (!task) {
+      console.warn('tasks.doAutoTask: task$' + taskID + ' is undefined')
+      return
+    }
+    let planet = rootGetters.planetByID(task.from)
+    if (!planet || !rootGetters.isMemberPlanetOwner(task.from)) {
+      dispatch('del', taskID)
+      return
+    }
+    let count = 0
+    if (task.hold) {
+      count = getters.availableShips(task.from) - task.count
+    } else if (task.dispatch && getters.availableShips(task.from) > task.count) {
+      count = task.count
+    }
+    if (count > 1) {
+      dispatch('add', {
+        from: task.from,
+        to: task.to,
+        count
+      })
+    }
   },
   del ({ state, commit }, taskID) {
     if (state.autoTasks[taskID]) {
@@ -81,7 +92,7 @@ const actions = {
     }
   },
   add ({ state, getters, rootGetters, commit, dispatch },
-    { from, to, count, isAutoTask }) {
+    { from, to, count, isDispatchAutoTask, isHoldAutoTask }) {
     let planet = rootGetters.planetByID(from)
     if (!planet) {
       console.warn('tasks.add: the planet is not found')
@@ -100,19 +111,29 @@ const actions = {
       rootGetters.planetByID(from).cellID,
       rootGetters['game/info'].mapWidth
     )
-    if (isAutoTask) {
+    if (isHoldAutoTask && isDispatchAutoTask) {
+      console.warn('tasks.add: hold and dispatch are set at the same time')
+      return
+    }
+    if (isHoldAutoTask || isDispatchAutoTask) {
       let autoTasks = state.autoTasks
       for (let id in autoTasks) {
         if (autoTasks[id].from === from) {
           dispatch('del', id)
         }
       }
-      commit('ADD_AUTO_TASK', { from, to, count, stepsLeft })
+      commit('ADD_AUTO_TASK', {
+        from,
+        to,
+        count,
+        stepsLeft,
+        hold: isHoldAutoTask,
+        dispatch: isDispatchAutoTask
+      })
+      let taskID = state.lastTaskID
       commit('INCREASE_ID')
-      count = getters.availableShips(from) - count
-      if (count < 1) {
-        return
-      }
+      dispatch('doAutoTask', taskID)
+      return
     }
     if (rootGetters.isLocked) {
       console.warn('tasks.add: isLocked')

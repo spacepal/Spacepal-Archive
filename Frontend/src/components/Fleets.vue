@@ -19,6 +19,7 @@
         <Member :key="fleet.id + '_3'" :planetID="fleet.to"></Member>
         <span :key="fleet.id + '_4'">
           {{ fleet.count }}
+          <template>[]</template>
         </span>
         <span :key="fleet.id + '_5'">
           {{ fleet.stepsLeft }}

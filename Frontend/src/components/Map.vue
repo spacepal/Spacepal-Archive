@@ -14,13 +14,19 @@
       <Form ref="taskForm" class="withoutborder">
         <TextInput type="number"
           :label="`Max ships count: ${task.maxCount}`"
-          :min="(task.isAutoTask ? 0 : 1)"
-          :max="(task.isAutoTask ? Number.MAX_VALUE : task.maxCount)"
+          :min="(isAutoTask ? 0 : 1)"
+          :max="(isAutoTask ? Number.MAX_VALUE : task.maxCount)"
           v-model="task.count"
           @change="checkTaskForm"></TextInput>
         <div class="flex-horizontal">
-          <SwitchBox label="Hold [space]" title="Create auto task"
-            v-model="task.isAutoTask" @change="checkTaskForm" />
+          <SwitchBox label="Hold [space]"
+            title="Create autotask that hold ships on the planet"
+            v-model="task.isHoldAutoTask"
+            @change="onHold(); checkTaskForm()" />
+          <SwitchBox label="Dispatch"
+            title="Create autotask that dispatch ships from the planet"
+            v-model="task.isDispatchAutoTask"
+            @change="onDispatch(); checkTaskForm()" />
         </div>
       </Form>
     </Window>
@@ -62,7 +68,8 @@ export default {
         to: null,
         count: 0,
         maxCount: 0,
-        isAutoTask: false,
+        isHoldAutoTask: false,
+        isDispatchAutoTask: false,
         isValid: false
       },
       width: 2048,
@@ -71,9 +78,7 @@ export default {
       hotKeys: [
         {
           code: 'Space',
-          method: () => {
-            this.task.isAutoTask = !this.task.isAutoTask
-          }
+          method: this.autoTask
         },
         {
           code: 'KeyH',
@@ -100,6 +105,9 @@ export default {
       availableShips: 'tasks/availableShips',
       isLocked: 'isLocked'
     }),
+    isAutoTask () {
+      return this.task.isHoldAutoTask || this.task.isDispatchAutoTask
+    },
     mapSizeWidth () {
       return this.$store.getters['game/info'].mapWidth || 5
     },
@@ -172,6 +180,27 @@ export default {
     window.removeEventListener('resize', this._onResizeFunc)
   },
   methods: {
+    autoTask () {
+      if (this.task.isHoldAutoTask) {
+        this.task.isHoldAutoTask = false
+        this.task.isDispatchAutoTask = true
+      } else if (this.task.isDispatchAutoTask) {
+        this.task.isHoldAutoTask = false
+        this.task.isDispatchAutoTask = false
+      } else {
+        this.task.isHoldAutoTask = true
+      }
+    },
+    onHold () {
+      if (this.task.isDispatchAutoTask && this.task.isHoldAutoTask) {
+        this.task.isDispatchAutoTask = false
+      }
+    },
+    onDispatch () {
+      if (this.task.isDispatchAutoTask && this.task.isHoldAutoTask) {
+        this.task.isHoldAutoTask = false
+      }
+    },
     checkTaskForm () {
       this.$nextTick(() => {
         this.task.isValid = this.$refs.taskForm.isValid()
