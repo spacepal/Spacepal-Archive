@@ -21,6 +21,12 @@ export default {
       checked: this.value
     }
   },
+  watch: {
+    value (newVal) {
+      this.checked = newVal
+      this.$emit('change')
+    }
+  },
   methods: {
     forceInput () {
       this.checked = this.value
