@@ -1,7 +1,15 @@
 <template>
   <div id="games-page">
     <GameTitle></GameTitle>
-    <div class="button" id="create-game-button" @click="goToCreate">Create game</div>
+    <div class="buttons">
+      <div class="button" @click="joinRandom" title="Join random game">
+        <span class="mdi mdi-auto-fix mdi-16px"></span>
+      </div>
+      <div class="button" @click="createRandom" title="Create random game">
+        <span class="mdi mdi-dice-multiple mdi-16px"></span>
+      </div>
+      <div class="button" @click="goToCreate" title="Create game">New</div>
+    </div>
     <div class="flex-horizontal">
       <div class="flex-space"></div>
       <div id="games-list">
@@ -160,6 +168,9 @@ export default {
         }
       })
     },
+    joinRandom () {
+      this.$toast('@todo: Username: ' + this.usernameGenerator().next().value)
+    },
     setRandom () {
       this.$refs.usernameInput.regenerate(true)
     },
@@ -214,10 +225,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#create-game-button {
+.buttons {
   position: absolute;
   right: 10px;
   top: 30px;
+  display: flex;
 }
 #games-page {
   min-width: 100%;
