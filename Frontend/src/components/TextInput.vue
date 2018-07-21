@@ -14,6 +14,10 @@
 <script>
 const TYPE_TEXT = 'text'
 const TYPE_NUMBER = 'number'
+const ZERO_CHAR = '0'.charCodeAt(0)
+const NINE_CHAR = '9'.charCodeAt(0)
+const SPACE_CHAR = ' '.charCodeAt(0)
+const LAST_SPECIAL_CODE = 46 // key 'del'
 
 export default {
   name: 'field',
@@ -86,8 +90,14 @@ export default {
   },
   methods: {
     onKey (e) {
-      if (e.keyCode >= 32) {
-        e.stopPropagation()
+      if (e.keyCode > LAST_SPECIAL_CODE || e.keyCode === SPACE_CHAR) {
+        if (this.type === TYPE_NUMBER) {
+          if (e.keyCode < ZERO_CHAR || e.keyCode > NINE_CHAR) {
+            e.preventDefault()
+          }
+        } else {
+          e.stopPropagation()
+        }
       }
     },
     focus () {
