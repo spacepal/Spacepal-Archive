@@ -13,11 +13,13 @@
       </div>
     </Window>
     <Toast ref="toast" glob />
+    <Signal ref="signal" />
   </div>
 </template>
 
 <script>
-import Window from './components/Window.vue'
+import Window from './components/Window'
+import Signal from './components/nano/Signal'
 let themes = ['dark', 'light']
 export default {
   name: 'App',
@@ -25,6 +27,16 @@ export default {
     return {
       currentTheme: 0,
       hotKeys: [
+        {
+          code: 'KeyS',
+          method: () => {
+            this.$refs.signal.hide()
+          },
+          methodDown: () => {
+            this.$refs.signal.show()
+          },
+          description: 'Show connection status'
+        },
         {
           code: 'Space',
           ctrl: true,
@@ -50,7 +62,7 @@ export default {
       return themes[this.currentTheme]
     }
   },
-  components: { Window },
+  components: { Window, Signal },
   mounted () {
     if (this.$store.getters['isPlayer']) {
       this.$store.dispatch('enableCable').catch(() => {

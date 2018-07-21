@@ -1,22 +1,16 @@
 <template>
   <div>
-    <div class="button" @click="show">On</div>
-    <EndTurnMsg ref="endTurn"></EndTurnMsg>
+    <Signal></Signal>
   </div>
 </template>
 
 <script>
-import EndTurnMsg from './nano/EndTurnMsg'
+import Signal from './nano/Signal'
 
 export default {
   name: 'Test',
   components: {
-    EndTurnMsg
-  },
-  methods: {
-    show (turn) {
-      this.$refs.endTurn.show(31)
-    }
+    Signal
   }
 }
 </script>
