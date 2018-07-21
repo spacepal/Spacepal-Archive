@@ -5,6 +5,7 @@ import { calcDistance } from './DistanceHelper.js'
 export default {
   data () {
     return {
+      offsetDX: 0,
       degree: 2.0 / 3.0 * Math.PI,
       a: 0,
       dx: 0,
@@ -143,8 +144,9 @@ export default {
     play () {
       this.paused = false
     },
-    init (ctx, a, mapSizeWidth, mapSizeHeight) {
+    init (ctx, a, mapSizeWidth, mapSizeHeight, offsetX = 0) {
       this.a = a
+      this.offsetDX = offsetX
       this.mapSize.width = mapSizeWidth
       this.mapSize.height = mapSizeHeight
       this.context = ctx
@@ -179,7 +181,9 @@ export default {
         return this.clearOffset()
       }
       let { width, height } = this.context.canvas
-      this.dx = width / 2.0 - firstCell.relativeWidth * this.mapSize.width / 2.0
+      this.dx = width / 2.0 -
+        firstCell.relativeWidth * this.mapSize.width / 2.0 -
+        this.offsetDX
       this.dy = height / 2.0 - firstCell.height * this.mapSize.height / 2.0
       this.scale = 1.0
       this.tick()
@@ -191,7 +195,9 @@ export default {
       }
       this.scale = 2.0
       let { width, height } = this.context.canvas
-      this.dx = -cell.startPoint.x + (width - cell.width) * 0.5
+      this.dx = -cell.startPoint.x +
+        (width - cell.width) * 0.5 -
+        this.offsetDX
       this.dy = -cell.startPoint.y + (height - cell.height) * 0.5
       this.tick()
     },

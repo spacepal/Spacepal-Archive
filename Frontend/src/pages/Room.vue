@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Map full></Map>
+    <Map full :offsetX="280"></Map>
     <div class="info-field">
       <div class="info-panel-body">
         <ActionButtons></ActionButtons>

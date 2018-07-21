@@ -40,6 +40,10 @@ export default {
   name: 'Map',
   extends: HexagonSurface,
   props: {
+    offsetX: {
+      type: Number,
+      default: 0
+    },
     full: {
       type: Boolean,
       default: false
@@ -145,14 +149,16 @@ export default {
     this._onResizeFunc()
 
     let context = this.$refs.canvas.getContext('2d')
-    this.init(context, this.hexSize, this.mapSizeWidth, this.mapSizeHeight)
+    this.init(context, this.hexSize, this.mapSizeWidth,
+      this.mapSizeHeight, this.offsetX)
     this._mouseUpListener = () => {
       this.drag = false
     }
     this.$store.watch((_, getters) => getters.sync['game'], () => {
       if (this.mapSizeWidth !== this.mapSize.width ||
         this.mapSizeHeight !== this.mapSize.height) {
-        this.init(context, this.hexSize, this.mapSizeWidth, this.mapSizeHeight)
+        this.init(context, this.hexSize, this.mapSizeWidth,
+          this.mapSizeHeight, this.offsetX)
       }
     })
     this.$store.watch((_, getters) => getters.planets, () => this.tick())
