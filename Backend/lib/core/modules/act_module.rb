@@ -15,7 +15,7 @@ module Actable
 
   def create_bot
     game = Game[@game_id]
-    names = get_bot_names
+    names = get_bot_names || ["first_bot", "second_bot"]
     game.add_player_bot names.sample
   end
 

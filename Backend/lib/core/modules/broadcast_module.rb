@@ -26,7 +26,6 @@ module Broadcastable
   def broadcast_on_everybody_ends_turn
     self.broadcast_end_turn
     self.broadcast_all_common_data
-    "BROADCAST ON EVERYBODY ENDS TURN".color(:cyan).out
     self.broadcast_private_data_to_everybody
   end
 
@@ -53,9 +52,7 @@ module Broadcastable
   end
 
   def broadcast_private_data_to_everybody
-  "broadcast_private_data_to_everybody".color(:cyan).out
     Game[@game_id].players.each do |player|
-      "player_name: #{player.name}".color(:cyan).out
       self.broadcast_player player.id
       self.broadcast_fleets player.id
     end

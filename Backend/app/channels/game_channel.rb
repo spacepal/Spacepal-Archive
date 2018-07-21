@@ -23,7 +23,8 @@ class GameChannel < ApplicationCable::Channel
 
   def add_bot
     core = Core.new Player[current_player_id].game_id, current_player_id
-    core.add_bot   
+    "core = #{core}".bg(:yellow).color(:black).out
+    core.add_bot
   end
 
   def del_bot data 

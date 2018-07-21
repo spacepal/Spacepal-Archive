@@ -63,6 +63,10 @@ class Game < Ohm::Model
   validates :pirates, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
   validates :production_after_capture, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
 
+  def production_after_capture?
+    self.production_after_capture == true
+  end
+
   def self.in_room_count
     arr = self.all.reduce (0) { |count, game| count = game.room? ? count += 1 : count }
   end

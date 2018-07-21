@@ -4,18 +4,20 @@ module PlanetModule
     game = Game[@game_id] 
     if game.accumulative
       game.planets.each do |planet|
-        product_ships planet, game.production_after_capture
+        product_ships planet, game.production_after_capture?
         planet.gain_experience
       end
     else
       game.planets.each do |planet|
-        product_ships planet, game.production_after_capture
+        product_ships planet, game.production_after_capture?
       end
     end
   end
 
   def product_ships planet, production_after_capture = false
-    unless !production_after_capture and planet.experience == -1
+    if !production_after_capture and planet.experience == -1
+      planet.gain_experience
+    else
       planet.product_ships
     end
   end
