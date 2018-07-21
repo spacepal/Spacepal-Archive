@@ -25,8 +25,10 @@ module Broadcastable
 
   def broadcast_on_everybody_ends_turn
     self.broadcast_end_turn
-    self.broadcast_all_common_data
-    self.broadcast_private_data_to_everybody
+  end
+
+  def broadcast_the_rest_of_data
+    self.broadcast_all_data_to_player
   end
 
   def broadcast_on_end_game
@@ -38,6 +40,14 @@ module Broadcastable
     self.broadcast_game
     self.broadcast_players
     self.broadcast_planets
+  end
+
+  def broadcast_all_data_to_player 
+    self.broadcast_game_to_player 
+    self.broadcast_players_to_player 
+    self.broadcast_planets_to_player 
+    self.broadcast_player
+    self.broadcast_fleets
   end
 
   def broadcast_private_data
@@ -75,7 +85,7 @@ module Broadcastable
     return { type: PLAYER_TYPE, data: _hash }
   end
 
-  def broadcast_game
+  def game
     game = Game[@game_id]
     _hash = {
       id: @game_id.to_i,
@@ -93,7 +103,15 @@ module Broadcastable
       turnNumber: game.step,
       state: game.get_state # STATE_ROOM = 1; STATE_GAME = 2; STATE_END = 3
     }
-    ActionCable.server.broadcast("games:#{@game_id}", { type: GAME_TYPE, data: _hash })
+    return { type: GAME_TYPE, data: _hash }
+  end
+
+  def broadcast_game
+    ActionCable.server.broadcast("games:#{@game_id}", self.game)
+  end  
+
+  def broadcast_game_to_player
+    ActionCable.server.broadcast("players:#{@player_id}", self.game)
   end  
 
   def broadcast_player player_id = @player_id
@@ -111,7 +129,7 @@ module Broadcastable
     ActionCable.server.broadcast("players:#{player_id}", { type: PLAYER_TYPE, data: _hash })
   end
 
-  def broadcast_players
+  def players
     players = Game[@game_id].players
     arr = players&.map do |player| 
       {
@@ -125,8 +143,15 @@ module Broadcastable
         isGameOver: (player.is_game_over or false)
       }
     end
-    #{}"colors: es #{arr.pluck(:attributes)}".color(:brown).out
-    ActionCable.server.broadcast("games:#{@game_id}", { type: PLAYERS_TYPE, data: { PLAYERS_TYPE => arr }})
+    return { type: PLAYERS_TYPE, data: { PLAYERS_TYPE => arr }}
+  end
+
+  def broadcast_players
+    ActionCable.server.broadcast("games:#{@game_id}", self.players)
+  end
+
+  def broadcast_players_to_player
+    ActionCable.server.broadcast("players:#{@player_id}", self.players)
   end
 
   def broadcast_fleets player_id = @player_id 
@@ -143,7 +168,7 @@ module Broadcastable
     ActionCable.server.broadcast("players:#{player_id}", { type: FLEETS_TYPE, data: { FLEETS_TYPE => arr }})
   end
 
-  def broadcast_planets
+  def planets
     planets = Game[@game_id].planets
     arr = planets&.map do |planet|
       {
@@ -156,7 +181,15 @@ module Broadcastable
         isCapital: (planet.is_capital or false)
       }
     end
-    ActionCable.server.broadcast("games:#{@game_id}", { type: PLANETS_TYPE, data: { PLANETS_TYPE => arr }})
+    return { type: PLANETS_TYPE, data: { PLANETS_TYPE => arr }}
+  end
+
+  def broadcast_planets
+    ActionCable.server.broadcast("games:#{@game_id}", self.planets )
+  end
+
+  def broadcast_planets_to_player
+    ActionCable.server.broadcast("players:#{@player_id}", self.planets )
   end
 
 end

@@ -11,6 +11,11 @@ class GameChannel < ApplicationCable::Channel
 
   #cheats
 
+  def ask_data
+    core = Core.new Player[current_player_id].game_id, current_player_id
+    core.send_asked_data
+  end
+
   def start_game
     core = Core.new Player[current_player_id].game_id, current_player_id
     core.start_game
