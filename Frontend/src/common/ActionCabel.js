@@ -7,6 +7,7 @@ const SHUFFLE_ACTION = 'shuffle'
 const START_ACTION = 'start_game'
 const ADD_BOT_ACTION = 'add_bot'
 const DEL_BOT_ACTION = 'del_bot'
+const REQUEST_DATA_ACTION = 'ask_data'
 
 export default class ActionCabel {
   constructor (gameID) {
@@ -70,6 +71,7 @@ export default class ActionCabel {
     } else if (data.type === 'turn_ended') {
       store.dispatch('reset')
       store.dispatch('syncSet', 'endTurn')
+      this.requestData()
     } else {
       console.warn(`ActionCable.js: Unknown type`)
     }
@@ -91,5 +93,8 @@ export default class ActionCabel {
   }
   start () {
     this._gameRoom.perform(START_ACTION, { })
+  }
+  requestData () {
+    this._gameRoom.perform(REQUEST_DATA_ACTION, { })
   }
 }
