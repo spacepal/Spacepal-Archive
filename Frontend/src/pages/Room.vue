@@ -1,12 +1,12 @@
 <template>
-  <div class="room-page">
-    <div class="map-field">
-      <Map></Map>
-    </div>
-    <div>
-      <ActionButtons></ActionButtons>
-      <GameInfo />
-      <Members />
+  <div>
+    <Map full></Map>
+    <div class="info-field">
+      <div class="info-panel-body">
+        <ActionButtons></ActionButtons>
+        <GameInfo />
+        <Members />
+      </div>
     </div>
   </div>
 </template>
@@ -28,17 +28,19 @@ export default {
 </script>
 
 <style lang="scss">
-.room-page {
-  display: grid;
-  grid-template-columns: auto 300px;
-}
-.map-field {
-  $margin: 10px;
-  max-width: calc(100% - #{$margin});
-  max-height: calc(100% - #{$margin});
+.info-field {
+  position: absolute;
+  right: 0;
+  min-height: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: $margin;
+  .info-panel-body {
+    flex: 1;
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+  }
+  .info-panel-body > * {
+    width: 320px;
+  }
 }
 </style>

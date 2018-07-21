@@ -3,7 +3,7 @@
     <Form>
       <div class="has-spinner" :class="loadingClass">
         <div class="game-info">
-          <template v-for="row in all">
+          <template v-for="row in all" v-if="!(row.onlyGame && !isGame) && !(row.hideEmpty && row.val === null)">
             <span :key="row.key + '_key'" :title="row.title">{{row.key}}:</span>
             <span :key="row.key + '_val'" :title="row.title">
               <span v-if="typeof row.val !== 'boolean'"
@@ -36,9 +36,9 @@ export default {
       keys: [
         { field: 'id', adapted: 'ID' },
         { field: 'name', adapted: 'Name' },
-        { field: 'turnNumber', adapted: 'Turn' },
+        { field: 'turnNumber', adapted: 'Turn', onlyGame: true },
         { field: 'creator', adapted: 'Creator' },
-        { field: 'pinCode', adapted: 'Pin' },
+        { field: 'pinCode', adapted: 'Pin', hideEmpty: true },
         { field: 'mapWidth', adapted: 'Width' },
         { field: 'mapHeight', adapted: 'Height' },
         { field: 'planets', adapted: 'Planets' },
@@ -51,9 +51,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'sync'
-    ]),
+    ...mapGetters({
+      sync: 'sync',
+      isGame: 'game/isGame'
+    }),
     loadingClass () {
       return this.sync.game ? '' : 'loading'
     },
@@ -65,6 +66,8 @@ export default {
           val = 'loading...'
         }
         return {
+          onlyGame: k.onlyGame,
+          hideEmpty: k.hideEmpty,
           title: k.title || '',
           key: k.adapted,
           val

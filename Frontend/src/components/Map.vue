@@ -34,6 +34,8 @@ import TextInput from './TextInput'
 import Form from './Form'
 import SwitchBox from './SwitchBox'
 
+const RESOLUTION_FACTOR = 1.5
+
 export default {
   name: 'Map',
   extends: HexagonSurface,
@@ -120,19 +122,28 @@ export default {
     }
     this._onResizeFunc = () => {
       timeout.doOnceAfter(() => {
-        this.width = document.documentElement.clientWidth
-        this.height = document.documentElement.clientHeight
+        if (this.full) {
+          this.width = document.documentElement.clientWidth
+          this.height = document.documentElement.clientHeight
+        } else {
+          let canvas = this.$refs.canvas
+          this.width = canvas.offsetWidth
+          this.height = canvas.offsetHeight
+        }
+        this.width *= RESOLUTION_FACTOR
+        this.height *= RESOLUTION_FACTOR
         this.clearOffset()
+        this.$nextTick(() => {
+          this.goHome()
+        })
         this.tick()
       }, 300)
     }
-    if (this.full) {
-      this.width = document.documentElement.clientWidth
-      this.height = document.documentElement.clientHeight
-      window.addEventListener('resize', this._onResizeFunc)
-    }
   },
   mounted () {
+    window.addEventListener('resize', this._onResizeFunc)
+    this._onResizeFunc()
+
     let context = this.$refs.canvas.getContext('2d')
     this.init(context, this.hexSize, this.mapSizeWidth, this.mapSizeHeight)
     this._mouseUpListener = () => {
@@ -144,7 +155,7 @@ export default {
         this.init(context, this.hexSize, this.mapSizeWidth, this.mapSizeHeight)
       }
     })
-    this.$store.watch((_, getters) => getters.sync['planets'], () => this.tick())
+    this.$store.watch((_, getters) => getters.planets, () => this.tick())
     this.$store.watch((_, getters) => getters.sync['members'], () => this.tick())
     this.$store.watch((_, getters) => getters['tasks/all'], () => this.tick())
     window.addEventListener('mouseup', this._mouseUpListener)
@@ -248,10 +259,10 @@ export default {
   $width: 2048;
   $border: 1px;
   canvas {
-    $margin: 4px;
+    $margin: 2px;
     margin: $margin;
-    max-width: calc(100% - #{$margin - $border * 4});
-    max-height: calc(100% - #{$margin - $border * 4});
+    width: 100%;
+    height: 100%;
     border: $border solid rgb(54, 129, 221);
   }
 

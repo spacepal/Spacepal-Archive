@@ -54,6 +54,7 @@ export default {
   },
   methods: {
     _genSurface (a) {
+      this.cells.active = []
       this.cells.all = []
       for (let y = 0, count = 1; y < this.mapSize.height; ++y) {
         for (let x = 0; x < this.mapSize.width; ++x) {
@@ -157,7 +158,6 @@ export default {
         }
         requestAnimationFrame(this._tick)
       }
-      this.goHome()
     },
     tick () {
       requestAnimationFrame(() => this.redraw(this.context))
