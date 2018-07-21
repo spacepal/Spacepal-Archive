@@ -80,7 +80,8 @@ const actions = {
       console.warn('tasks.del: invalid taskID')
     }
   },
-  add ({ getters, rootGetters, commit }, { from, to, count, isAutoTask }) {
+  add ({ state, getters, rootGetters, commit, dispatch },
+    { from, to, count, isAutoTask }) {
     let planet = rootGetters.planetByID(from)
     if (!planet) {
       console.warn('tasks.add: the planet is not found')
@@ -100,6 +101,12 @@ const actions = {
       rootGetters['game/info'].mapWidth
     )
     if (isAutoTask) {
+      let autoTasks = state.autoTasks
+      for (let id in autoTasks) {
+        if (autoTasks[id].from === from) {
+          dispatch('del', id)
+        }
+      }
       commit('ADD_AUTO_TASK', { from, to, count, stepsLeft })
       commit('INCREASE_ID')
       count = getters.availableShips(from) - count
