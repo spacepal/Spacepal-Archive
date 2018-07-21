@@ -19,11 +19,11 @@
           v-model="task.count"
           @change="checkTaskForm"></TextInput>
         <div class="flex-horizontal">
-          <SwitchBox label="Hold [space]"
+          <SwitchBox :label="'Hold' + autoTaskLabel({hold: true, dispatch: false})"
             title="Create autotask that hold ships on the planet"
             v-model="task.isHoldAutoTask"
             @change="onHold(); checkTaskForm()" />
-          <SwitchBox label="Dispatch"
+          <SwitchBox :label="'Dispatch' + autoTaskLabel({hold: false, dispatch: true})"
             title="Create autotask that dispatch ships from the planet"
             v-model="task.isDispatchAutoTask"
             @change="onDispatch(); checkTaskForm()" />
@@ -180,6 +180,13 @@ export default {
     window.removeEventListener('resize', this._onResizeFunc)
   },
   methods: {
+    autoTaskLabel({hold, dispatch}) {
+      if (dispatch && this.task.isHoldAutoTask ||
+        hold && !this.task.isHoldAutoTask && !this.task.isDispatchAutoTask) {
+        return ' [space]'
+      }
+      return ''
+    },
     autoTask () {
       if (this.task.isHoldAutoTask) {
         this.task.isHoldAutoTask = false
