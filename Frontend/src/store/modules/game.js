@@ -56,10 +56,12 @@ const actions = {
     }
     return false
   },
-  addBot ({ rootState }) {
+  addBot ({ rootState, dispatch }) {
+    dispatch('syncUnset', 'members')
     rootState.cable.get(rootState.gameID).addBot()
   },
-  delBot ({ rootState }, id) {
+  delBot ({ rootState, dispatch }, id) {
+    dispatch('syncUnset', 'members')
     rootState.cable.get(rootState.gameID).delBot(id)
   },
   endTurn ({ dispatch, rootState, rootGetters }) {
