@@ -83,7 +83,7 @@ export default {
     },
     checkConnection () {
       let startTime = (new Date()).getTime()
-      Service.game.all(0, 1).then((r) => {
+      Service.game.all(0, 0).then((r) => {
         let endTime = (new Date()).getTime()
         let score = 3 - Math.floor((endTime - startTime) / 20)
         score = Math.min(3, Math.max(1, score))
