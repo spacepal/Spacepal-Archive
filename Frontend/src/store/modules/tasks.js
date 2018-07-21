@@ -102,7 +102,10 @@ const actions = {
     if (isAutoTask) {
       commit('ADD_AUTO_TASK', { from, to, count, stepsLeft })
       commit('INCREASE_ID')
-      return
+      count = getters.availableShips(from) - count
+      if (count < 1) {
+        return
+      }
     }
     if (rootGetters.isLocked) {
       console.warn('tasks.add: isLocked')
