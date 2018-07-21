@@ -21,6 +21,16 @@ class GameChannel < ApplicationCable::Channel
     core.shuffle
   end
 
+  def add_bot
+    core = Core.new Player[current_player_id].game_id, current_player_id
+    core.add_bot   
+  end
+
+  def del_bot data 
+    core = Core.new Player[current_player_id].game_id, current_player_id
+    core.del_bot data["id"]
+  end
+
   def end_turn data
     core = Core.new Player[current_player_id].game_id, current_player_id
     core.end_turn data["fleets"]

@@ -1,6 +1,7 @@
 require_relative 'modules/broadcast_module.rb'
 require_relative 'modules/act_module.rb'
 require_relative 'modules/play_module.rb'
+require_relative 'modules/request_module.rb'
 
 #общий класс
 class Core
@@ -8,6 +9,7 @@ class Core
   include Broadcastable
   include Actable
   include Playable
+  include RequestModule
 
   attr_accessor :player_id
 
@@ -19,6 +21,16 @@ class Core
   def shuffle
     self.shuffle_map
     self.broadcast_planets
+  end
+
+  def add_bot
+    self.create_bot
+    self.broadcast_players
+  end
+
+  def del_bot player_id
+    self.delete_bot player_id
+    self.broadcast_players
   end
 
   def start_game

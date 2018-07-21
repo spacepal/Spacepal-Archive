@@ -212,9 +212,38 @@ class Game < Ohm::Model
     end
   end
 
+  def add_player_bot ai_name
+    if self.players.size < self.players_limit
+      begin
+      player_name = Faker::Name.first_name
+      end until self.playername_is_uniq player_name
+      pl = Creation.create_player player_name, is_ai: true, ai_name: ai_name
+      if pl.id
+        pl.game = self
+        pl.save
+        pl
+      end
+      nil
+    else
+      self.errors.add :players_limit, "no place for new player"
+      nil
+    end
+  end
+
+  def players_not_bot
+    (self.players.map { |player| player unless player.ai? }).compact
+  end
+
+  def remove_bot player_id
+    if Player[player_id].ai?
+      self.remove_player(player_id) 
+    end
+  end
+
   def remove_player player_id
+    "self.players_not_bot.count = #{self.players_not_bot.count}".bg(:yellow)
     if self.room?
-      if self.players.count == 1
+      if self.players_not_bot.count == 1 and !Player[player_id].ai?
         Deletion.delete_game self
         return nil
       else
@@ -234,7 +263,7 @@ class Game < Ohm::Model
   end
 
   def make_new_admin
-    self.players.first.make_admin
+    self.players_not_bot.first.make_admin
   end
 
   def playername_is_uniq player_name

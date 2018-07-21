@@ -26,7 +26,7 @@ class Creation
     end
   end
 
-  def self.create_player name, is_ai: false, ai_type: nil 
+  def self.create_player name, is_ai: false, ai_name: nil 
     player = Player.new
     player.name = name
     player.is_end_turn = false
@@ -34,9 +34,13 @@ class Creation
     player.is_admin = false
     player.color_id = Player::DEFAULT_COLOR
     player.is_ai = is_ai
-    player.ai_type = ai_type
-    player.save
-    player
+    player.ai_name = ai_name
+    if player.save
+      player
+    else 
+      player.errors.messages.to_s.bg(:red).color(:black).out
+      nil
+    end
   end
 
   def self.create_cells game
@@ -80,13 +84,14 @@ class Creation
     game.planets.to_a
   end
 
-  def self.create_fleets player, array_fleets_hash
+  def self.create_fleets player_id, array_fleets_hash
     array_fleets_hash.each do |fleet_hash|
-      Creation.create_fleet player,fleet_hash
+      Creation.create_fleet player_id,fleet_hash
     end
   end
-  def self.create_fleet player, fleet_hash
+  def self.create_fleet player_id, fleet_hash
     if Planet[fleet_hash["from"]].ships >= fleet_hash["count"]
+      player = Player[player_id]
       fleet = Fleet.new
       fleet.started = false
       fleet.planet_from_id = fleet_hash["from"]
@@ -98,7 +103,11 @@ class Creation
         nil
       fleet.steps_left = self.new.calculate_steps_left(
           fleet.planet_from_id, fleet.planet_to_id)
-      fleet.player = player ? player : Player[fleet_hash["player"]]
+      if player
+        fleet.player = player
+      else 
+        return nil
+      end
       if fleet.save
         "created_fleet:#{fleet.id} (#{fleet.player.name}) from:(#{Planet[fleet.planet_from_id].cell.x};#{Planet[fleet.planet_from_id].cell.y}) to:(#{Planet[fleet.planet_to_id].cell.x};#{Planet[fleet.planet_to_id].cell.y}) steps: #{fleet.steps_left}, kill_perc:#{fleet.kill_perc}, ships:#{fleet.ships}".color(:yellow).out
         fleet = nil

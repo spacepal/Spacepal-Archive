@@ -13,6 +13,16 @@ module Actable
     game.shuffle_map
   end
 
+  def create_bot
+    game = Game[@game_id]
+    names = get_bot_names
+    game.add_player_bot names.sample
+  end
+
+  def delete_bot player_id
+    Game[@game_id].remove_bot player_id
+  end
+
   def player_ends_turn array_fleets_hash = []
     player = Player[@player_id]
     save_fleets(array_fleets_hash) unless array_fleets_hash.empty? 
@@ -26,7 +36,7 @@ module Actable
 private
 
   def save_fleets array_fleets_hash
-    Creation.create_fleets Player[@player_id], array_fleets_hash
+    Creation.create_fleets @player_id, array_fleets_hash
   end
 
   def set_player_ends_turn
