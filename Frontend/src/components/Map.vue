@@ -180,9 +180,9 @@ export default {
     window.removeEventListener('resize', this._onResizeFunc)
   },
   methods: {
-    autoTaskLabel({hold, dispatch}) {
-      if (dispatch && this.task.isHoldAutoTask ||
-        hold && !this.task.isHoldAutoTask && !this.task.isDispatchAutoTask) {
+    autoTaskLabel ({ hold, dispatch }) {
+      if ((dispatch && this.task.isHoldAutoTask) ||
+        (hold && !this.task.isHoldAutoTask && !this.task.isDispatchAutoTask)) {
         return ' [space]'
       }
       return ''
