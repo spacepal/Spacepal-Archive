@@ -99,7 +99,7 @@ export default {
 <style lang="scss" scoped>
 .signal {
   position: fixed;
-  z-index: 1000000000000000;
+  z-index: 10000000000;
   user-select: none
 }
 .no-signal {

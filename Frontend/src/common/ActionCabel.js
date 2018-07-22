@@ -1,4 +1,4 @@
-import { GAME_CHANNEL, PLAYER_CHANNEL, WS_SERVER } from './constants.js'
+import { GAME_CHANNEL, PLAYER_CHANNEL } from './constants.js'
 import ActionCable from 'actioncable'
 import store from '@/store'
 
@@ -10,10 +10,10 @@ const DEL_BOT_ACTION = 'del_bot'
 const REQUEST_DATA_ACTION = 'ask_data'
 
 export default class ActionCabel {
-  constructor (gameID) {
+  constructor (gameID, wsServer) {
     let self = this
     this._playerRoom = undefined
-    this._cable = ActionCable.createConsumer(WS_SERVER)
+    this._cable = ActionCable.createConsumer(wsServer)
     this._okPromise = new Promise((resolve, reject) => {
       self._okResolvePromise = resolve
       self._okRejectPromise = reject

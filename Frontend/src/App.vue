@@ -12,21 +12,48 @@
         </template>
       </div>
     </Window>
-    <Toast ref="toast" glob />
     <Signal ref="signal" />
+    <Window ref="settings" type="confirm" @confirm="setCustom"
+      title="Backend settings" :enabled="settingsAreValid" class="settings">
+      <template>
+        <Form ref="settingsForm" class="withoutborder">
+          <TextInput label="Host" v-model="host" :min="1" @change="checkForm" />
+          <TextInput type="number" label="Port" v-model="port"
+            :min="1" :max="65535" @change="checkForm" />
+        </Form>
+      </template>
+      <template slot="footer">
+        <div class="button" @click="setDefault">
+          Default
+        </div>
+      </template>
+    </Window>
+    <Toast ref="toast" glob />
   </div>
 </template>
 
 <script>
 import Window from './components/Window'
+import Form from './components/Form'
+import TextInput from './components/TextInput'
 import Signal from './components/nano/Signal'
 let themes = ['dark', 'light']
 export default {
   name: 'App',
   data () {
     return {
+      settingsAreValid: false,
+      host: 'localhost',
+      port: 3000,
       currentTheme: 0,
       hotKeys: [
+        {
+          code: 'KeyP',
+          method: () => {
+            this.$refs.settings.show()
+          },
+          description: 'Open advanced settings'
+        },
         {
           code: 'KeyS',
           method: () => {
@@ -62,7 +89,7 @@ export default {
       return themes[this.currentTheme]
     }
   },
-  components: { Window, Signal },
+  components: { Window, Signal, Form, TextInput },
   mounted () {
     if (this.$store.getters['isPlayer']) {
       this.$store.dispatch('enableCable').catch(() => {
@@ -73,6 +100,20 @@ export default {
           name: 'GamesList'
         })
       })
+    }
+  },
+  methods: {
+    checkForm () {
+      this.settingsAreValid = this.$refs.settingsForm.isValid()
+    },
+    setCustom () {
+      this.$store.dispatch('setBackendServer', this.host + ':' + this.port)
+      location.reload()
+    },
+    setDefault () {
+      this.$store.dispatch('resetBackendServer')
+      this.$refs.settings.close()
+      location.reload()
     }
   }
 }
@@ -97,5 +138,9 @@ export default {
   .splitter {
     margin: 0 10px;
   }
+}
+
+.settings * {
+  z-index: 10000000000001 !important;
 }
 </style>

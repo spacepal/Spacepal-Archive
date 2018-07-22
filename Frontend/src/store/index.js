@@ -1,6 +1,7 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
 import ActionCabel from '../common/ActionCabel'
+import { DEFAULT_HOST, API_POSTFIX, WS_POSTFIX } from '../common/constants.js'
 /* modules */
 import events from './modules/events'
 import fleets from './modules/fleets'
@@ -14,6 +15,7 @@ Vue.use(Vuex)
 
 const STORAGE_GAME_ID = 'game_id'
 const STORAGE_MENU_IS_SHOWED = 'menu_is_showed'
+const STORAGE_BACKEND_HOST = 'backend'
 
 var gID = localStorage.getItem(STORAGE_GAME_ID)
 
@@ -31,10 +33,17 @@ const state = {
     autotasks: false // complete
   },
   endTurnLock: true,
-  menuIsShowed: localStorage.getItem(STORAGE_MENU_IS_SHOWED) !== 'false'
+  menuIsShowed: localStorage.getItem(STORAGE_MENU_IS_SHOWED) !== 'false',
+  backendServer: localStorage.getItem(STORAGE_BACKEND_HOST) || DEFAULT_HOST
 }
 
 const mutations = {
+  SET_BACKEND_SERVER (state, host) {
+    state.backendServer = host
+  },
+  RESET_BACKEND_SERVER (state) {
+    state.backendServer = DEFAULT_HOST
+  },
   SET_MENU_IS_SHOWED (state, isShowed) {
     state.menuIsShowed = isShowed
   },
@@ -49,8 +58,8 @@ const mutations = {
   SYNC_UNSET (state, syncType) {
     state.sync[syncType] = false
   },
-  ENABLE_CABLE (state) {
-    let cable = new ActionCabel(state.gameID)
+  ENABLE_CABLE (state, wsServer) {
+    let cable = new ActionCabel(state.gameID, wsServer)
     state.cable.set(state.gameID, cable)
   },
   LOGIN (state, { gameID }) {
@@ -68,6 +77,14 @@ const mutations = {
 }
 
 const actions = {
+  resetBackendServer ({ commit }, host) {
+    localStorage.removeItem(STORAGE_BACKEND_HOST)
+    commit('RESET_BACKEND_SERVER')
+  },
+  setBackendServer ({ commit }, host) {
+    localStorage.setItem(STORAGE_BACKEND_HOST, host)
+    commit('SET_BACKEND_SERVER', host)
+  },
   toggleMenuVisibility ({ state, commit }) {
     let isShowed = !state.menuIsShowed
     localStorage.setItem(STORAGE_MENU_IS_SHOWED, isShowed)
@@ -82,9 +99,9 @@ const actions = {
     console.log('TURN_UNLOCK')
     commit('END_TURN_UNLOCK')
   },
-  enableCable ({ state, commit, dispatch }) {
+  enableCable ({ state, commit, dispatch, getters }) {
     dispatch('reset')
-    commit('ENABLE_CABLE')
+    commit('ENABLE_CABLE', getters.backendWS)
     return state.cable.get(state.gameID).isOk
   },
   reset ({ commit, dispatch }) { // turn_ended from ActionCable
@@ -120,10 +137,10 @@ const actions = {
     commit('LOGOUT')
     return dispatch('game/logout', gID)
   },
-  login ({ commit }, gameID) {
+  login ({ commit, getters }, gameID) {
     localStorage.setItem(STORAGE_GAME_ID, gameID)
     commit('LOGIN', { gameID })
-    commit('ENABLE_CABLE')
+    commit('ENABLE_CABLE', getters.backendWS)
   },
   shuffleMap ({ state, getters, dispatch }) {
     if (!state.sync.profile || !state.sync.game ||
@@ -136,9 +153,9 @@ const actions = {
 }
 
 const getters = {
-  isPlayer: (state) => {
-    return !!state.gameID
-  },
+  backendAPI: (state) => 'http://' + state.backendServer + API_POSTFIX,
+  backendWS: (state) => 'ws://' + state.backendServer + WS_POSTFIX,
+  isPlayer: (state) => !!state.gameID,
   sync: (state) => state.sync,
   isLocked: (state) => state.endTurnLock,
   menuIsVisible: (state) => state.menuIsShowed

@@ -1,14 +1,13 @@
-
-import { API_URL } from './constants.js'
 import axios from 'axios'
+import store from '@/store'
 
 const service = {
   game: {
     status () {
-      return axios.get(API_URL + 'games/status')
+      return axios.get(store.getters['backendAPI'] + 'games/status')
     },
     all (offset, limit) {
-      return axios.get(API_URL + 'games', {
+      return axios.get(store.getters['backendAPI'] + 'games', {
         params: {
           offset,
           limit
@@ -16,15 +15,16 @@ const service = {
       })
     },
     create (data) {
-      return axios.post(API_URL + 'games', { data }, { withCredentials: true })
+      return axios.post(store.getters['backendAPI'] + 'games',
+        { data }, { withCredentials: true })
     },
     joinRandom (username) {
-      return axios.put(`${API_URL}games/random/join`,
+      return axios.put(store.getters['backendAPI'] + 'games/random/join',
         { data: { username } },
         { withCredentials: true })
     },
     join (gameID, pinCode, username) {
-      return axios.put(`${API_URL}games/${gameID}/join`, {
+      return axios.put(store.getters['backendAPI'] + `games/${gameID}/join`, {
         data: {
           pinCode,
           username
@@ -32,7 +32,8 @@ const service = {
       }, { withCredentials: true })
     },
     logout (gameID) {
-      return axios.delete(`${API_URL}games/${gameID}/player`, { withCredentials: true })
+      return axios.delete(store.getters['backendAPI'] + `games/${gameID}/player`,
+        { withCredentials: true })
     }
   }
 }
