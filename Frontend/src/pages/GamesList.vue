@@ -1,10 +1,15 @@
 <template>
   <div id="games-page">
     <GameTitle></GameTitle>
-    <div class="buttons">
+    <div class="buttons-left">
+      <div class="button" @click="goToGithub" title="Star on github">
+        <span class="mdi mdi-github-circle mdi-16px"></span>
+      </div>
       <div class="button" v-if="total != 0" @click="joinRandom" title="Join random game">
         <span class="mdi mdi-auto-fix mdi-16px"></span>
       </div>
+    </div>
+    <div class="buttons-right">
       <div class="button" @click="createRandom" title="Create random game">
         <span class="mdi mdi-dice-multiple mdi-16px"></span>
       </div>
@@ -44,6 +49,7 @@
         </div>
       </template>
     </Window>
+
     <FullPreloader ref="loader"></FullPreloader>
   </div>
 </template>
@@ -58,6 +64,7 @@ import FullPreloader from '../components/FullPreloader.vue'
 import Form from '../components/Form.vue'
 import Service from '../common/Service.js'
 import { UsernameGenerator } from '../common/Generators.js'
+import { GITHUB_REPO } from '../common/constants.js'
 
 const REFRESH_TIMEOUT = 5000
 
@@ -160,6 +167,9 @@ export default {
     clearTimeout(this._refreshTimer)
   },
   methods: {
+    goToGithub () {
+      window.open(GITHUB_REPO, '_blank').focus()
+    },
     createRandom () {
       this.$router.push({
         name: 'CreateGame',
@@ -234,11 +244,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.buttons {
+.buttons-left, .buttons-right {
   position: absolute;
-  right: 10px;
   top: 30px;
   display: flex;
+}
+.buttons-left {
+  left: 10px;
+}
+.buttons-right {
+  right: 10px;
 }
 #games-page {
   min-width: 100%;
