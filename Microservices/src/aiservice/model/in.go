@@ -49,7 +49,7 @@ func (in In) Check(manager iai.ManagerChecker) error {
 	if _, err := url.Parse(in.Callback); err != nil {
 		return errors.New("Callback URL is invalid")
 	}
-	if len(in.ArtIntPlayers) < 2 {
+	if len(in.ArtIntPlayers) < 1 {
 		return errors.New("Invalid count of players")
 	}
 	if len(in.AllPlanets) < len(in.ArtIntPlayers) {
