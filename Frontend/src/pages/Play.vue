@@ -13,7 +13,7 @@
     </transition>
     <div class="info-panel-bg"
       v-if="panelsVisibility.tasks"
-      @click.self="hideAllPanels">
+      @click="onPanelClicked($event, tasks)">
       <Form class="info-panel-body" @click="false">
         <Fleets
           :canDelete="true"
@@ -29,7 +29,7 @@
     </div>
     <div class="info-panel-bg"
       v-if="panelsVisibility.fleets"
-      @click.self="hideAllPanels">
+      @click="onPanelClicked($event, fleets)">
       <Form class="info-panel-body" @click="false">
         <Fleets
           :canDelete="false"
@@ -44,7 +44,8 @@
     </div>
     <div class="info-panel-bg"
       v-if="panelsVisibility.autoTasks"
-      @click.self="hideAllPanels">
+      @click.self="hideAllPanels"
+      @click="onPanelClicked($event, autoTasks)">
       <Form class="info-panel-body" @click="false">
         <Fleets
           :canDelete="true"
@@ -61,7 +62,7 @@
     </div>
     <div class="info-panel-bg"
       v-if="panelsVisibility.notifications"
-      @click="hideAllPanels">
+      @click="onPanelClicked($event, notifications)">
       <Form class="info-panel-body">
         <Notifications @goToCell="goToCell" />
       </Form>
@@ -164,13 +165,22 @@ export default {
     ...mapGetters({
       tasks: 'tasks/all',
       fleets: 'fleets/all',
-      autoTasks: 'tasks/autoTasks'
+      autoTasks: 'tasks/autoTasks',
+      notifications: 'events/all'
     })
   },
   methods: {
     ...mapActions({
       delTask: 'tasks/del'
     }),
+    onPanelClicked (event, data) {
+      if ((data.length !== undefined && data.length === 0) ||
+        Object.values(data).length === 0) {
+        this.hideAllPanels()
+      } else {
+        event.preventDefault()
+      }
+    },
     onTurnEnded () {
       this.panelsVisibility['main'] = false
     },
