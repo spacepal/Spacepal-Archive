@@ -31,6 +31,10 @@
       <a @click="showPanel('fleets')">Fleets</a>
       <span>[F]</span>
 
+      <span class="mdi mdi-bookmark-outline"></span>
+      <a @click="showPanel('bookmarks')">Bookmarks</a>
+      <span>[B]</span>
+
       <span class="mdi mdi-cancel"></span>
       <a @click="exit">Surrender</a>
       <span>[<span class="mdi mdi-cancel"></span>]</span>
