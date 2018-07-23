@@ -74,7 +74,7 @@ class Cell {
     this._isCentered = val
   }
 
-  _isPointInTriangle (A, B, C, point, eps = 0.1) {
+  _isPointInTriangle (A, B, C, point, eps = 0.01) {
     let area1 = this._triangleArea(A, B, point)
     let area2 = this._triangleArea(A, point, C)
     let area3 = this._triangleArea(point, B, C)
