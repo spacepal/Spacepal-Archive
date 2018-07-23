@@ -3,10 +3,12 @@
 import Vue from 'vue'
 import { calcDistance } from '../../common/DistanceHelper.js'
 
+const STORAGE_AUTOTASKS = 'autotasks'
+
 const state = {
   tasks: {},
   shipsDecreasing: {},
-  autoTasks: {},
+  autoTasks: JSON.parse(sessionStorage.getItem(STORAGE_AUTOTASKS)) || {},
   lastTaskID: 0
 }
 
@@ -83,6 +85,7 @@ const actions = {
   del ({ state, commit }, taskID) {
     if (state.autoTasks[taskID]) {
       commit('REMOVE_AUTO_TASK', taskID)
+      sessionStorage.setItem(STORAGE_AUTOTASKS, JSON.stringify(state.autoTasks))
     } else if (state.tasks[taskID]) {
       let task = state.tasks[taskID]
       commit('REMOVE_TASK', taskID)
@@ -133,6 +136,7 @@ const actions = {
       let taskID = state.lastTaskID
       commit('INCREASE_ID')
       dispatch('doAutoTask', taskID)
+      sessionStorage.setItem(STORAGE_AUTOTASKS, JSON.stringify(state.autoTasks))
       return
     }
     if (rootGetters.isLocked) {
