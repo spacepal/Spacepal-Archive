@@ -187,7 +187,7 @@ export default {
     goHome () {
       let p = this.theBestPlanet
       if (p) {
-        return this.goToCell(p.cellID)
+        return this.goToCell(p.cellID, false)
       }
       let firstCell = this.cells.all[0]
       if (!firstCell) {
@@ -213,7 +213,7 @@ export default {
       _highlightCenterize(cellIndex, true)
       this.centeredIndex = cellIndex
     },
-    goToCell (cellID) {
+    goToCell (cellID, highlight = true) {
       let cell = this.cells.all[cellID - 1]
       if (!cell) {
         return
@@ -225,7 +225,9 @@ export default {
       this.offsetDX
       this.dy = -cell.startPoint.y + (height - cell.height) * 0.5
       this.tick()
-      this.highlightCenterize(cellID - 1)
+      if (highlight) {
+        this.highlightCenterize(cellID - 1)
+      }
     },
     _scaleOverCenter (ctx, scale) {
       let { width, height } = ctx.canvas
