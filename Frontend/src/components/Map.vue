@@ -43,6 +43,7 @@ import SwitchBox from './SwitchBox'
 
 const RESOLUTION_FACTOR = 1.5
 const KEY_SCALE_FACTOR = 0.04 // for '+' and '-'
+const KEY_LARGE_SCALE_FACTOR = 0.5
 const KEY_TRANSLATE = 18 // Arrow keys
 
 export default {
@@ -109,6 +110,24 @@ export default {
             this.tick()
           },
           isKey: true
+        },
+        {
+          code: 'PageUp',
+          isKey: true,
+          description: 'Zoom+',
+          method: () => {
+            this.scaleSurface(1.0 + KEY_LARGE_SCALE_FACTOR)
+            this.tick()
+          }
+        },
+        {
+          code: 'PageDown',
+          isKey: true,
+          description: 'Zoom-',
+          method: () => {
+            this.scaleSurface(1.0 - KEY_LARGE_SCALE_FACTOR)
+            this.tick()
+          }
         },
         {
           code: '+',
