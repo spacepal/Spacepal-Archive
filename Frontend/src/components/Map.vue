@@ -292,7 +292,7 @@ export default {
       let dx = event.layerX - this.mouse.x
       let dy = event.layerY - this.mouse.y
       this.mouse = { x: event.layerX, y: event.layerY }
-      this.translateSurface({ dx, dy }, event.shiftKey)
+      this.translateSurface({ dx, dy }, !event.shiftKey)
     }
   }
 }

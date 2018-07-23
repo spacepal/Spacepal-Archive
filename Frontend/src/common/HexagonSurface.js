@@ -2,6 +2,8 @@ import Cell from './Cell.js'
 import { mapGetters } from 'vuex'
 import { calcDistance } from './DistanceHelper.js'
 
+const TRANSLATE_SCALE_FACTOR = 1.5
+
 export default {
   data () {
     return {
@@ -176,8 +178,10 @@ export default {
       requestAnimationFrame(() => this.redraw(this.context))
     },
     translateSurface ({dx, dy}, considerScale = false) {
-      this.pending.dx += dx * (considerScale ? 1.0 / this.scale : 1.0)
-      this.pending.dy += dy * (considerScale ? 1.0 / this.scale : 1.0)
+      this.pending.dx += dx * (considerScale
+        ? TRANSLATE_SCALE_FACTOR / this.scale : 1.0)
+      this.pending.dy += dy * (considerScale
+        ? TRANSLATE_SCALE_FACTOR / this.scale : 1.0)
       this.highlightCenterize(null)
     },
     scaleSurface (scale) {
