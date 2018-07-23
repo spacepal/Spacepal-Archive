@@ -27,7 +27,7 @@
         </span>
         <span :key="fleet.id + '_6'">
           <template v-if="canDelete">
-            <a v-if="!isLocked" @click="del(fleet.id)">delete</a>
+            <a v-if="actionEnabled" @click="del(fleet.id)">delete</a>
             <span v-else>no</span>
           </template>
         </span>
@@ -49,7 +49,11 @@ export default {
   props: {
     fleets: Object,
     syncs: Array,
-    canDelete: Boolean
+    canDelete: Boolean,
+    lockAction: {
+      type: Boolean,
+      default: true
+    }
   },
   data () {
     return {
@@ -69,6 +73,9 @@ export default {
       sync: 'sync',
       isLocked: 'isLocked'
     }),
+    actionEnabled () {
+      return !this.isLocked || this.lockAction === false
+    },
     adoptedFleets () {
       let t = []
       for (let id in this.fleets) {

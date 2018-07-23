@@ -51,7 +51,8 @@
           :syncs="[]"
           :fleets="autoTasks"
           @goToCell="goToCell"
-          @delete="delTask">
+          @delete="delTask"
+          :lockAction="false">
           <template slot="noFleets">
             No auto tasks
           </template>
