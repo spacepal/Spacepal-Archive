@@ -3,6 +3,7 @@ import { mapGetters } from 'vuex'
 import { calcDistance } from './DistanceHelper.js'
 
 const TRANSLATE_SCALE_FACTOR = 1.5
+const DEFAULT_SCALE = 2.0
 
 export default {
   data () {
@@ -13,7 +14,7 @@ export default {
       dx: 0,
       dy: 0,
       context: undefined,
-      scale: 1.0,
+      scale: DEFAULT_SCALE,
       cells: {
         all: [],
         active: []
@@ -185,7 +186,11 @@ export default {
       this.highlightCenterize(null)
     },
     scaleSurface (scale) {
-      this.pending.scale *= scale
+      if (scale === 0) {
+        this.scale = DEFAULT_SCALE
+      } else {
+        this.pending.scale *= scale
+      }
       this.highlightCenterize(null)
     },
     goHome () {

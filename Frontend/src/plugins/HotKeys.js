@@ -15,6 +15,7 @@ const HotKeysPlugin = {
         }
         registeredHotkeys.add(this.hotKeys)
         this._hotKeysEvent = (e) => {
+          console.log(e)
           this.hotKeys.forEach((key) => {
             if (!isEnabled && (key.code.startsWith('Key') || key.modalLock)) {
               return
@@ -29,16 +30,24 @@ const HotKeysPlugin = {
               return
             }
             if (e.code === key.code || (e.key === key.code && key.isKey)) {
-              if (e.type === 'keyup') {
+              if (e.type === 'keyup' &&
+                typeof key.method === 'function') {
                 key.method(e)
-              } else if (typeof key.methodDown === 'function') {
+              }
+              if (e.type === 'keydown' &&
+                typeof key.methodDown === 'function') {
                 key.methodDown(e)
+              }
+              if (e.type === 'keypress' &&
+                typeof key.methodPress === 'function') {
+                key.methodPress(e)
               }
             }
           })
         }
         window.addEventListener('keyup', this._hotKeysEvent)
         window.addEventListener('keydown', this._hotKeysEvent)
+        window.addEventListener('keypress', this._hotKeysEvent)
       },
       beforeDestroy: function () {
         registeredHotkeys.delete(this.hotKeys)

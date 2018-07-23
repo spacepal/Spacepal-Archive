@@ -42,6 +42,8 @@ import Form from './Form'
 import SwitchBox from './SwitchBox'
 
 const RESOLUTION_FACTOR = 1.5
+const KEY_SCALE_FACTOR = 0.04 // for '+' and '-'
+const KEY_TRANSLATE = 18 // Arrow keys
 
 export default {
   name: 'Map',
@@ -76,6 +78,73 @@ export default {
       height: 1080,
       drag: false,
       hotKeys: [
+        {
+          code: 'ArrowDown',
+          methodDown: () => {
+            this.translateSurface({ dx: 0, dy: -KEY_TRANSLATE }, true)
+            this.tick()
+          },
+          isKey: true
+        },
+        {
+          code: 'ArrowUp',
+          methodDown: () => {
+            this.translateSurface({ dx: 0, dy: +KEY_TRANSLATE }, true)
+            this.tick()
+          },
+          isKey: true
+        },
+        {
+          code: 'ArrowLeft',
+          methodDown: () => {
+            this.translateSurface({ dx: +KEY_TRANSLATE, dy: 0 }, true)
+            this.tick()
+          },
+          isKey: true
+        },
+        {
+          code: 'ArrowRight',
+          methodDown: () => {
+            this.translateSurface({ dx: -KEY_TRANSLATE, dy: 0 }, true)
+            this.tick()
+          },
+          isKey: true
+        },
+        {
+          code: '+',
+          isKey: true,
+          methodDown: this.play,
+          methodPress: this.zoomUp,
+          description: 'Zoom+',
+          method: this.safePause
+        },
+        {
+          code: '=',
+          isKey: true,
+          methodDown: this.play,
+          methodPress: this.zoomUp,
+          method: this.safePause
+        },
+        {
+          code: '-',
+          isKey: true,
+          methodDown: this.play,
+          methodPress: this.zoomDown,
+          description: 'Zoom-',
+          method: this.safePause
+        },
+        {
+          code: '*',
+          isKey: true,
+          method: this.zoomReset,
+          description: 'Default zoom'
+        },
+        {
+          code: '0',
+          isKey: true,
+          method: this.zoomReset,
+          description: 'Default zoom'
+        },
         {
           code: 'Space',
           method: this.autoTask
@@ -180,6 +249,21 @@ export default {
     window.removeEventListener('resize', this._onResizeFunc)
   },
   methods: {
+    safePause () {
+      if (this.drag) {
+        this.pause()
+      }
+    },
+    zoomUp () {
+      this.scaleSurface(1.0 + KEY_SCALE_FACTOR)
+    },
+    zoomDown () {
+      this.scaleSurface(1.0 - KEY_SCALE_FACTOR)
+    },
+    zoomReset () {
+      this.scaleSurface(0)
+      this.tick()
+    },
     autoTaskLabel ({ hold, dispatch }) {
       if ((dispatch && this.task.isHoldAutoTask) ||
         (hold && !this.task.isHoldAutoTask && !this.task.isDispatchAutoTask)) {
