@@ -16,6 +16,7 @@ export default {
         all: [],
         active: []
       },
+      centeredIndex: -1,
       hoveredIndex: undefined,
       selectedIndex: -1,
       pending: {
@@ -49,6 +50,16 @@ export default {
       this._fpsTimeout = setTimeout(fpsFunc, 1000)
     }
     fpsFunc()
+
+    this._centeredAnimTimerFunc = () => {
+      let cell = this.cells.all[this.centeredIndex]
+      if (cell) {
+        cell.isCentered = !cell.isCentered
+        cell.render(this.context)
+      }
+      setTimeout(this._centeredAnimTimerFunc, 350)
+    }
+    this._centeredAnimTimerFunc()
   },
   beforeDestroy () {
     clearTimeout(this._fpsTimeout)
@@ -167,9 +178,11 @@ export default {
     translateSurface ({dx, dy}, considerScale = false) {
       this.pending.dx += dx * (considerScale ? 1.0 / this.scale : 1.0)
       this.pending.dy += dy * (considerScale ? 1.0 / this.scale : 1.0)
+      this.highlightCenterize(null)
     },
     scaleSurface (scale) {
       this.pending.scale *= scale
+      this.highlightCenterize(null)
     },
     goHome () {
       let p = this.theBestPlanet
@@ -188,6 +201,18 @@ export default {
       this.scale = 1.0
       this.tick()
     },
+    highlightCenterize (cellIndex) {
+      let _highlightCenterize = (cI, centered) => {
+        let cell = this.cells.all[cI]
+        if (cell) {
+          cell.isCentered = centered
+          cell.render(this.context)
+        }
+      }
+      _highlightCenterize(this.centeredIndex, false)
+      _highlightCenterize(cellIndex, true)
+      this.centeredIndex = cellIndex
+    },
     goToCell (cellID) {
       let cell = this.cells.all[cellID - 1]
       if (!cell) {
@@ -196,10 +221,11 @@ export default {
       this.scale = 2.0
       let { width, height } = this.context.canvas
       this.dx = -cell.startPoint.x +
-        (width - cell.width) * 0.5 -
-        this.offsetDX
+      (width - cell.width) * 0.5 -
+      this.offsetDX
       this.dy = -cell.startPoint.y + (height - cell.height) * 0.5
       this.tick()
+      this.highlightCenterize(cellID - 1)
     },
     _scaleOverCenter (ctx, scale) {
       let { width, height } = ctx.canvas

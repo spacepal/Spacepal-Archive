@@ -9,6 +9,7 @@ class Cell {
     this._a = a
     this._isHovered = false
     this._isSelected = false
+    this.__isCentered = false
     this._dy = a * Math.sin(Math.PI - degree)
     this._dx = a * Math.cos(Math.PI - degree)
     let posY = y * this._dy * 2 + (x % 2 === 1 ? this._dy : 0)
@@ -65,6 +66,14 @@ class Cell {
     this._isHovered = val
   }
 
+  get isCentered () {
+    return this._isCentered
+  }
+
+  set isCentered (val) {
+    this._isCentered = val
+  }
+
   _isPointInTriangle (A, B, C, point, eps = 0.1) {
     let area1 = this._triangleArea(A, B, point)
     let area2 = this._triangleArea(A, point, C)
@@ -119,6 +128,9 @@ class Cell {
     if (planet) {
       ctx.font = '96px Material Design Icons'
       ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'
+      if (this.isCentered) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'
+      }
       ctx.textAlign = 'center'
       let planetIcon = (this._isSelected ? '\uF485' : '\uF1E7')
       ctx.fillText(planetIcon,
