@@ -19,6 +19,10 @@
     .text-highlighted {
       color: map_get($colorHighlighted, $theme)
     }
+
+    .text-additional {
+      color: map_get($colorAdditionalText, $theme)
+    }
   }
 }
 

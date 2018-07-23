@@ -66,6 +66,7 @@ export default {
   components: { Window, TextInput, Form, SwitchBox },
   data () {
     return {
+      isBookmarkMode: false,
       task: {
         from: null,
         to: null,
@@ -183,6 +184,15 @@ export default {
           code: 'Escape',
           isKey: true,
           method: this.unselectLastCell
+        },
+        {
+          code: 'KeyB',
+          methodDown: () => {
+            this.isBookmarkMode = true
+          },
+          method: () => {
+            this.isBookmarkMode = false
+          }
         }
       ]
     }
@@ -332,6 +342,10 @@ export default {
       this.$refs.taskWindow.show()
     },
     planetClicked (planet) {
+      if (this.isBookmarkMode) {
+        this.$emit('addBookmark', planet.id)
+        return
+      }
       if (this.isLocked) {
         return
       }

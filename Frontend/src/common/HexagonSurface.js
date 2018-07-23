@@ -236,6 +236,8 @@ export default {
       this.tick()
       if (highlight) {
         this.highlightCenterize(cellID - 1)
+      } else {
+        this.highlightCenterize(null)
       }
     },
     _scaleOverCenter (ctx, scale) {

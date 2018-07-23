@@ -1,6 +1,6 @@
 <template>
   <div class="game-page" ref="page">
-    <Map ref="map" full></Map>
+    <Map ref="map" full @addBookmark="setBookmark" />
     <transition name="scale" mode="out-in">
       <div class="info-panel-bg"
         v-if="panelsVisibility.main"
@@ -67,6 +67,13 @@
         <Notifications @goToCell="goToCell" />
       </Form>
     </div>
+    <div class="info-panel-bg"
+      v-show="panelsVisibility.bookmarks"
+      @click.self="hideAllPanels">
+      <Form class="info-panel-body">
+        <Bookmarks ref="bookmarks" @goToCell="goToCell" />
+      </Form>
+    </div>
     <GameMenu @showPanel="showPanel" @goHome="goHome" />
     <EndTurnMsg @onTurnEnded="onTurnEnded" />
   </div>
@@ -82,6 +89,7 @@ import Notifications from '../components/Notifications'
 import Fleets from '../components/Fleets'
 import GameMenu from '../components/GameMenu'
 import EndTurnMsg from '../components/nano/EndTurnMsg'
+import Bookmarks from '../components/Bookmarks'
 
 export default {
   name: 'Play',
@@ -93,71 +101,83 @@ export default {
     Form,
     Notifications,
     Fleets,
-    EndTurnMsg
+    EndTurnMsg,
+    Bookmarks
   },
   data () {
+    let hotKeys = [
+      {
+        code: 'KeyB',
+        method: () => {
+          this.hideAllPanels('bookmarks')
+          this.panelsVisibility.bookmarks ^= true
+        },
+        description: 'Show bookmarks'
+      },
+      {
+        code: 'KeyQ',
+        method: () => {
+          this.panelsVisibility.main = false
+        },
+        methodDown: () => {
+          this.hideAllPanels('info')
+          this.panelsVisibility.main = true
+        },
+        description: 'Show game info'
+      },
+      {
+        code: 'KeyF',
+        method: () => {
+          this.hideAllPanels('fleets')
+          this.panelsVisibility.fleets ^= true
+        },
+        description: 'Show fleets'
+      },
+      {
+        code: 'KeyA',
+        method: () => {
+          this.hideAllPanels('autoTasks')
+          this.panelsVisibility.autoTasks ^= true
+        },
+        description: 'Show auto tasks'
+      },
+      {
+        code: 'KeyT',
+        method: () => {
+          this.hideAllPanels('tasks')
+          this.panelsVisibility.tasks ^= true
+        },
+        description: 'Show tasks'
+      },
+      {
+        code: 'KeyN',
+        method: () => {
+          this.hideAllPanels('notifications')
+          this.panelsVisibility.notifications ^= true
+        },
+        description: 'Show notifications'
+      },
+      {
+        code: 'Space',
+        method: this.endTurn,
+        modalLock: true,
+        description: 'End turn'
+      },
+      {
+        code: 'Escape',
+        method: this.hideAllPanels
+      }
+    ]
+
     return {
-      hotKeys: [
-        {
-          code: 'KeyQ',
-          method: () => {
-            this.panelsVisibility.main = false
-          },
-          methodDown: () => {
-            this.hideAllPanels('info')
-            this.panelsVisibility.main = true
-          },
-          description: 'Show game info'
-        },
-        {
-          code: 'KeyF',
-          method: () => {
-            this.hideAllPanels('fleets')
-            this.panelsVisibility.fleets ^= true
-          },
-          description: 'Show fleets'
-        },
-        {
-          code: 'KeyA',
-          method: () => {
-            this.hideAllPanels('autoTasks')
-            this.panelsVisibility.autoTasks ^= true
-          },
-          description: 'Show auto tasks'
-        },
-        {
-          code: 'KeyT',
-          method: () => {
-            this.hideAllPanels('tasks')
-            this.panelsVisibility.tasks ^= true
-          },
-          description: 'Show tasks'
-        },
-        {
-          code: 'KeyN',
-          method: () => {
-            this.hideAllPanels('notifications')
-            this.panelsVisibility.notifications ^= true
-          },
-          description: 'Show notifications'
-        },
-        {
-          code: 'Space',
-          method: this.endTurn,
-          modalLock: true,
-          description: 'End turn'
-        },
-        {
-          code: 'Escape',
-          method: this.hideAllPanels
-        }
-      ],
+      hotKeys,
       panelsVisibility: {
         main: false,
         tasks: false,
         autoTasks: false,
         notifications: false,
-        fleets: false
+        fleets: false,
+        bookmarks: false
       }
     }
   },
@@ -173,6 +193,9 @@ export default {
     ...mapActions({
       delTask: 'tasks/del'
     }),
+    setBookmark (planetID) {
+      this.$refs.bookmarks.setBookmark(planetID)
+    },
     onPanelClicked (event, data) {
       if ((data.length !== undefined && data.length === 0) ||
         Object.values(data).length === 0) {
@@ -203,6 +226,9 @@ export default {
       }
     },
     hideAllPanels (except = '') {
+      if (this.panelsVisibility.bookmarks) {
+        this.$refs.bookmarks.resetSelection()
+      }
       for (let k in this.panelsVisibility) {
         if (k === except) {
           continue

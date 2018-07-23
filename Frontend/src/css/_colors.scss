@@ -4,7 +4,8 @@ $pallets: (
     'text': (
       rgb(79, 125, 146), // main
       rgb(3, 154, 255), // highlighted
-      rgb(255,255,255) // button
+      rgb(255,255,255), // button
+      rgba(128, 128, 128, 0.7) // additional info
     ),
     'background': (
       black, // body
@@ -28,7 +29,8 @@ $pallets: (
     'text': (
       rgb(9, 15, 66), // main
       rgb(0, 85, 141), // header
-      rgb(255,255,255) // button
+      rgb(255,255,255), // button
+      rgba(43, 60, 187, 0.603) // additional info
     ),
     'background': (
       white, // body
@@ -86,6 +88,8 @@ $colorTextTableHeader: color("text", 2);
 $colorTextWindowHeader: color("text", 2);
 $colorHighlighted: color("text", 2);
 $colorToastText: color("text", 2);
+$colorAdditionalText: color("text", 4);
+
 
 /* ================ BORDERS ================ */
 

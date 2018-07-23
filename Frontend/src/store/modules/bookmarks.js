@@ -19,9 +19,9 @@ const mutations = {
 }
 
 const actions = {
-  set ({ commit }, { slot, planetID }) {
-    if (slot > MIN_BOOKMARK_SLOT &&
-      slot < MAX_BOOKMARK_SLOT &&
+  setSlot ({ commit }, { slot, planetID }) {
+    if (slot >= MIN_BOOKMARK_SLOT &&
+      slot <= MAX_BOOKMARK_SLOT &&
       Math.floor(slot) === Math.ceil(slot)) {
       commit('SET_BOOKMARK', { slot, planetID })
       sessionStorage.setItem(STORAGE_BOOKMARKS,
@@ -30,7 +30,7 @@ const actions = {
     }
     return false
   },
-  reset ({ commit }, { slot }) {
+  resetSlot ({ commit }, slot) {
     commit('DEL_BOOKMARK', slot)
     sessionStorage.setItem(STORAGE_BOOKMARKS,
       JSON.stringify(state.bookmarks))
@@ -38,14 +38,26 @@ const actions = {
 }
 
 const getters = {
-  // returns planet for slot or undefined
-  bySlot (state, _, __, rootGetters) {
-    return (slot) => {
-      let pID = state.bookmarks[slot]
-      if (pID) {
-        return rootGetters.planetByID(pID)
+  count (state) {
+    let count = 0
+    Object.values(state.bookmarks).forEach(planetID => {
+      if (planetID) {
+        count++
       }
+    })
+    return count
+  },
+  all (state, _, __, rootGetters) {
+    let slots = {}
+    for (let i = MIN_BOOKMARK_SLOT; i <= MAX_BOOKMARK_SLOT; ++i) {
+      let pID = state.bookmarks[i]
+      let p
+      if (pID) {
+        p = rootGetters.planetByID(pID)
+      }
+      slots[i] = p
     }
+    return slots
   }
 }
 
