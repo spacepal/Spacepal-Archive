@@ -10,6 +10,7 @@ import members from './modules/members'
 import planets from './modules/planets'
 import profile from './modules/profile'
 import tasks from './modules/tasks'
+import bookmarks from './modules/bookmarks'
 
 Vue.use(Vuex)
 
@@ -173,7 +174,8 @@ export default new Vuex.Store({
     members,
     planets,
     profile,
-    tasks
+    tasks,
+    bookmarks
   },
   strict: true
 })

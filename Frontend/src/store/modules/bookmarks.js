@@ -3,10 +3,10 @@
 import Vue from 'vue'
 import { MIN_BOOKMARK_SLOT, MAX_BOOKMARK_SLOT } from '../../common/constants.js'
 
-const STORAGE_BOOKMARKS = "bookmarks"
+const STORAGE_BOOKMARKS = 'bookmarks'
 
 const state = {
-  bookmarks: JSON.parse(sessionStorage.getItem(STORAGE_BOOKMARKS)) || {},
+  bookmarks: JSON.parse(sessionStorage.getItem(STORAGE_BOOKMARKS)) || {}
 }
 
 const mutations = {
@@ -22,7 +22,7 @@ const actions = {
   set ({ commit }, { slot, planetID }) {
     if (slot > MIN_BOOKMARK_SLOT &&
       slot < MAX_BOOKMARK_SLOT &&
-      Math.floor(slot) == Math.ceil(slot)) {
+      Math.floor(slot) === Math.ceil(slot)) {
       commit('SET_BOOKMARK', { slot, planetID })
       sessionStorage.setItem(STORAGE_BOOKMARKS,
         JSON.stringify(state.bookmarks))
