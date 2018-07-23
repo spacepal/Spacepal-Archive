@@ -1,10 +1,10 @@
 <template>
   <div @wheel="mousewheel" class="field" :class="labelClass + ' ' + statusClass">
     <div class="label" v-if="hasLabel">{{label}}</div>
-    <input ref="inp" type="text" :maxlength="maxLength"
+    <input ref="inp" :maxlength="maxLength"
+      :type="type" :min="min" :max="max"
       :placeholder="placeholder" v-model="text"
-      @keyup="onKey" @keydown="onKey" @keypress="onKey"
-      @click="$event.target.select()">
+      @keydown="onKey" @click="$event.target.select()">
     <div class="counter" v-show="text.length !== 0" v-if="hasCounter">
       {{text.length}}\{{max}}
     </div>
@@ -14,10 +14,6 @@
 <script>
 const TYPE_TEXT = 'text'
 const TYPE_NUMBER = 'number'
-const ZERO_CHAR = '0'.charCodeAt(0)
-const NINE_CHAR = '9'.charCodeAt(0)
-const NUMPAD_ZERO_CHAR = ZERO_CHAR + 48
-const NUMPAD_NINE_CHAR = NINE_CHAR + 48
 const SPACE_CHAR = ' '.charCodeAt(0)
 const LAST_SPECIAL_CODE = 46 // key 'del'
 
@@ -41,11 +37,11 @@ export default {
     },
     min: {
       type: Number,
-      default: undefined
+      default: -2147483647
     },
     max: {
       type: Number,
-      default: undefined
+      default: 2147483647
     },
     enableValidation: {
       type: Boolean,
@@ -93,14 +89,7 @@ export default {
   methods: {
     onKey (e) {
       if (e.keyCode > LAST_SPECIAL_CODE || e.keyCode === SPACE_CHAR) {
-        if (this.type === TYPE_NUMBER) {
-          if (!((e.keyCode >= ZERO_CHAR && e.keyCode <= NINE_CHAR) ||
-            (e.keyCode >= NUMPAD_ZERO_CHAR && e.keyCode <= NUMPAD_NINE_CHAR))) {
-            e.preventDefault()
-          }
-        } else {
-          e.stopPropagation()
-        }
+        e.stopPropagation()
       }
     },
     focus () {

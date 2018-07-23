@@ -62,7 +62,7 @@
     }
 
     .field:hover input::placeholder, .label-out input::placeholder {
-      color: map_get($colorText, $theme) !important;
+      color: transparentize(map_get($colorText, $theme), 0.7) !important;
     }
 
     .field input::placeholder {
