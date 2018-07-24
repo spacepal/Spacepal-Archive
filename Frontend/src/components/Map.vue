@@ -263,7 +263,7 @@ export default {
     }
     this._unwatch = []
     this._unwatch.push(
-      this.$store.watch((_, getters) => getters.sync['game'], () => {
+      this.$store.watch((_, getters) => getters.sync['game'], (info) => {
         if (this.mapSizeWidth !== this.mapSize.width ||
           this.mapSizeHeight !== this.mapSize.height) {
           this.init(context, this.hexSize, this.mapSizeWidth,

@@ -6,11 +6,13 @@ const STATE_ROOM = 1
 const STATE_GAME = 2
 const STATE_END = 3
 
+const DEFAULT_INFO = {
+  state: STATE_UNKNOWN,
+  turnNumber: 0
+}
+
 const state = {
-  info: {
-    state: STATE_UNKNOWN,
-    turnNumber: 0
-  }
+  info: DEFAULT_INFO
 }
 
 const mutations = {
@@ -22,6 +24,9 @@ const mutations = {
 }
 
 const actions = {
+  reset ({ state }) {
+    state.gameInfo = DEFAULT_INFO
+  },
   setInfo ({ commit, dispatch }, gameInfo) {
     commit('SET_GAME_INFO', gameInfo)
     dispatch('syncSet', 'game', { root: true })
