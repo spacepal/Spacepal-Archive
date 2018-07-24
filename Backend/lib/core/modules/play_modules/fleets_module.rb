@@ -1,6 +1,7 @@
 module FleetModule
 
   def execute_fleets
+    "       fleet: execute_fleets".bg(:magenta).color(:black).out
     Game[@game_id].players.each do |player|
       player.fleets.each do |fleet|
         fleet_start fleet

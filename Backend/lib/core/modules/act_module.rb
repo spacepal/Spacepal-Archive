@@ -1,6 +1,7 @@
 module Actable
 
   def start_playing
+    "   act: start_playing".bg(:yellow).color(:black)
     game = Game[@game_id]
     game.get_planets_to_players
     game.set_players_colors
@@ -14,12 +15,14 @@ module Actable
   end
 
   def player_ends_turn array_fleets_hash = []
+    "   act: player_ends_turn".bg(:yellow).color(:black)
     player = Player[@player_id]
     save_fleets(array_fleets_hash) unless array_fleets_hash.empty? 
     set_player_ends_turn
   end
 
   def everybody_ends_turn?
+    "   act: everybody_ends_turn?".bg(:yellow).color(:black)
     Game[@game_id].everybody_ends_turn?
   end
 

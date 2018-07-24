@@ -97,19 +97,11 @@ class Api::GameController < ApplicationController
   def create_bot_fleets
     "create_bot_fleets".bg(:green).color(:black).out
     game_id = params[:game_id]
-    "game_id = #{game_id}".color(:yellow)
     game = Game[game_id]
-    p "cbf1"
     if game.step.to_i <= params[:step_id].to_i
-      p "cbf2"
       core = Core.new game_id, nil
-      p "cbf3"
-      "bot_fleets_params".color(:yellow).print_
-      p bot_fleets_params
       core.bot_make_turn bot_fleets_params
-      p "cbf4"
     end
-    p "cbf5"
     render 200
   end
 

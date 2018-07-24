@@ -7,7 +7,8 @@ module PirateModule
   @@PIRATES_ATTACK_FLEET_MAX_DAMAGE = 5
 
   def execute_pirates
-    game = Game[@game_id]
+    "       pirate: execute_pirates".bg(:magenta).color(:black).out
+        game = Game[@game_id]
     if game.pirates
       game.players.each do |player|
         player.planets.each do |planet| 

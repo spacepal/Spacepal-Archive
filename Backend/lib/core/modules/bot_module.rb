@@ -15,19 +15,19 @@ module Botable
   end
 
   def bot_make_step
-    "bot_make_step".bg(:green).color(:black).out
+    "   bot: bot_make_step".bg(:orange).color(:black).out
     if Game[@game_id].bots?
       self.post_info_to_bot
     end
   end
 
   def save_bot_fleets bot_fleets
-    "save_bot_fleets".bg(:green).color(:black).out
+    "   bot: save_bot_fleets".bg(:orange).color(:black).out
     Creation.create_bot_fleets bot_fleets
   end
 
   def bot_end_turn
-    "bot_end_game".bg(:green).color(:black).out
+    "   bot: bot_end_turn".bg(:orange).color(:black).out
     Game[@game_id].bots.each { |bot| bot.end_turn }
   end
 
