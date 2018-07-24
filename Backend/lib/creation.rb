@@ -89,6 +89,13 @@ class Creation
       Creation.create_fleet player_id,fleet_hash
     end
   end
+
+  def self.create_bot_fleets bot_array_fleets_hash
+    bot_array_fleets_hash.each do |fleet_hash|
+      Creation.create_fleet fleet_hash["player"], fleet_hash
+    end
+  end
+
   def self.create_fleet player_id, fleet_hash
     if Planet[fleet_hash["from"]].ships >= fleet_hash["count"]
       player = Player[player_id]
