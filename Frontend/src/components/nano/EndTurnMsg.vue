@@ -30,7 +30,7 @@ export default {
     }
   },
   mounted () {
-    this.$store.watch((_, getters) => getters.sync.game, () => {
+    this._unwatch = this.$store.watch((_, getters) => getters.sync.game, () => {
       if (!this.sync['endTurn'] || !this.sync['game']) {
         return
       }
@@ -42,6 +42,9 @@ export default {
       this.isShowed = true
       this.$emit('onTurnEnded')
     })
+  },
+  beforeDestroy () {
+    this._unwatch()
   }
 }
 </script>

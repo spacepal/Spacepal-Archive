@@ -261,21 +261,32 @@ export default {
     this._mouseUpListener = () => {
       this.drag = false
     }
-    this.$store.watch((_, getters) => getters.sync['game'], () => {
-      if (this.mapSizeWidth !== this.mapSize.width ||
-        this.mapSizeHeight !== this.mapSize.height) {
-        this.init(context, this.hexSize, this.mapSizeWidth,
-          this.mapSizeHeight, this.offsetX)
-      }
-    })
-    this.$store.watch((_, getters) => getters.planets, () => this.tick())
-    this.$store.watch((_, getters) => getters.sync['members'], () => this.tick())
-    this.$store.watch((_, getters) => getters['tasks/all'], () => this.tick())
+    this._unwatch = []
+    this._unwatch.push(
+      this.$store.watch((_, getters) => getters.sync['game'], () => {
+        if (this.mapSizeWidth !== this.mapSize.width ||
+          this.mapSizeHeight !== this.mapSize.height) {
+          this.init(context, this.hexSize, this.mapSizeWidth,
+            this.mapSizeHeight, this.offsetX)
+        }
+      }))
+    this._unwatch.push(
+      this.$store.watch((_, getters) => getters.planets,
+        () => this.tick()))
+    this._unwatch.push(
+      this.$store.watch((_, getters) => getters.sync['members'],
+        () => this.tick()))
+    this._unwatch.push(
+      this.$store.watch((_, getters) => getters['tasks/all'],
+        () => this.tick()))
     window.addEventListener('mouseup', this._mouseUpListener)
   },
   beforeDestroy () {
     window.removeEventListener('mouseup', this._mouseUpListener)
     window.removeEventListener('resize', this._onResizeFunc)
+    this._unwatch.forEach(unwatch => {
+      unwatch()
+    })
   },
   methods: {
     safePause () {

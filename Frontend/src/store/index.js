@@ -138,7 +138,8 @@ const actions = {
     commit('LOGOUT')
     return dispatch('game/logout', gID)
   },
-  login ({ commit, getters }, gameID) {
+  login ({ commit, getters, dispatch }, gameID) {
+    dispatch('reset')
     localStorage.setItem(STORAGE_GAME_ID, gameID)
     commit('LOGIN', { gameID })
     commit('ENABLE_CABLE', getters.backendWS)

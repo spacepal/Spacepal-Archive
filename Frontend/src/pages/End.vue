@@ -10,7 +10,7 @@
           Loading...
         </h1>
       </template>
-      <Members></Members>
+      <Members class="members"></Members>
       <div class="button" @click="exit">Exit</div>
     </div>
   </div>
@@ -47,5 +47,8 @@ export default {
   min-height: 100%;
   min-width: 100%;
   text-align: center;
+}
+.members {
+  text-align: left;
 }
 </style>

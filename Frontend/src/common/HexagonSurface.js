@@ -43,6 +43,9 @@ export default {
     }
   },
   mounted () {
+    this._all = []
+    this._active = []
+
     this._fpsTimeout = undefined
     let fpsFunc = () => {
       this.fps = this.frames
@@ -57,17 +60,19 @@ export default {
         cell.isCentered = !cell.isCentered
         cell.render(this.context)
       }
-      setTimeout(this._centeredAnimTimerFunc, 350)
+      this._centeredAnimTimeout = setTimeout(this._centeredAnimTimerFunc, 350)
     }
     this._centeredAnimTimerFunc()
   },
   beforeDestroy () {
+    this._all = []
+    this._active = []
+    clearTimeout(this._centeredAnimTimeout)
+    clearTimeout(this._fpsTimeout)
     clearTimeout(this._fpsTimeout)
   },
   methods: {
     _genSurface (a) {
-      this._active = []
-      this._all = []
       for (let y = 0, count = 1; y < this.mapSize.height; ++y) {
         for (let x = 0; x < this.mapSize.width; ++x) {
           this._all.push(new Cell({ x, y }, a, count++, this.degree))
