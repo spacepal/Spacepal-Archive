@@ -3,7 +3,7 @@
     <Form class="members-info has-spinner" :class="loadingClass">
       <div class="members">
         <template v-for='i in 4' v-if="Object.keys(members).length === 0">
-          <Member :key="i + '_1'" :id="-1"></Member>
+          <Member :key="i + '_1'" :id="-2"></Member>
           <span :key="i + '_2'" class="mdi mdi-radiobox-blank mdi-16px"></span>
           <span :key="i + '_3'"></span>
           <span :key="i + '_4'"></span>
