@@ -8,6 +8,7 @@ const DEFAULT_SCALE = 2.0
 export default {
   data () {
     return {
+      tickFlag: false,
       offsetDX: 0,
       degree: 2.0 / 3.0 * Math.PI,
       a: 0,
@@ -15,10 +16,6 @@ export default {
       dy: 0,
       context: undefined,
       scale: DEFAULT_SCALE,
-      cells: {
-        all: [],
-        active: []
-      },
       centeredIndex: -1,
       hoveredIndex: undefined,
       selectedIndex: -1,
@@ -42,7 +39,7 @@ export default {
       theBestPlanet: 'theBestPlanet'
     }),
     renderedCount () {
-      return this.cells.active.length
+      return this._active.length
     }
   },
   mounted () {
@@ -55,7 +52,7 @@ export default {
     fpsFunc()
 
     this._centeredAnimTimerFunc = () => {
-      let cell = this.cells.all[this.centeredIndex]
+      let cell = this._all[this.centeredIndex]
       if (cell) {
         cell.isCentered = !cell.isCentered
         cell.render(this.context)
@@ -69,11 +66,11 @@ export default {
   },
   methods: {
     _genSurface (a) {
-      this.cells.active = []
-      this.cells.all = []
+      this._active = []
+      this._all = []
       for (let y = 0, count = 1; y < this.mapSize.height; ++y) {
         for (let x = 0; x < this.mapSize.width; ++x) {
-          this.cells.all.push(new Cell({ x, y }, a, count++, this.degree))
+          this._all.push(new Cell({ x, y }, a, count++, this.degree))
         }
       }
     },
@@ -111,7 +108,7 @@ export default {
       }
     },
     _switchCell (cellID, selected) {
-      let cell = this.cells.all[cellID]
+      let cell = this._all[cellID]
       cell.isSelected = selected
       cell.render(this.context)
     },
@@ -125,7 +122,7 @@ export default {
     _resolveCell (ctx, {mx, my}) {
       let calc = this._relPosCalculator(ctx)
       let pos = calc({x: mx, y: my})
-      return this.cells.active.find(cell => cell.isPointOver(pos))
+      return this._active.find(cell => cell.isPointOver(pos))
     },
     onSurfaceMouseMove ({ mx, my }) {
       if (this._moveLock) {
@@ -134,8 +131,8 @@ export default {
       this._moveLock = true
 
       if (this.hoveredIndex !== undefined) {
-        this.cells.all[this.hoveredIndex].isHovered = false
-        this.cells.all[this.hoveredIndex].render(this.context)
+        this._all[this.hoveredIndex].isHovered = false
+        this._all[this.hoveredIndex].render(this.context)
       }
 
       let cell = this._resolveCell(this.context, {mx, my})
@@ -167,16 +164,17 @@ export default {
       this._genSurface(a)
       if (!this._tick) {
         this._tick = () => {
-          if (!this.paused) {
+          if (!this.paused || this.tickFlag) {
+            this.tickFlag = false
             this.redraw(this.context)
           }
-          requestAnimationFrame(this._tick)
+          setTimeout(this._tick, 0)
         }
-        requestAnimationFrame(this._tick)
+        setTimeout(this._tick, 0)
       }
     },
     tick () {
-      requestAnimationFrame(() => this.redraw(this.context))
+      this.tickFlag = true
     },
     translateSurface ({dx, dy}, considerScale = false) {
       this.pending.dx += dx * (considerScale
@@ -198,7 +196,7 @@ export default {
       if (p) {
         return this.goToCell(p.cellID, false)
       }
-      let firstCell = this.cells.all[0]
+      let firstCell = this._all[0]
       if (!firstCell) {
         return this.clearOffset()
       }
@@ -212,7 +210,7 @@ export default {
     },
     highlightCenterize (cellIndex) {
       let _highlightCenterize = (cI, centered) => {
-        let cell = this.cells.all[cI]
+        let cell = this._all[cI]
         if (cell) {
           cell.isCentered = centered
           cell.render(this.context)
@@ -223,7 +221,7 @@ export default {
       this.centeredIndex = cellIndex
     },
     goToCell (cellID, highlight = true) {
-      let cell = this.cells.all[cellID - 1]
+      let cell = this._all[cellID - 1]
       if (!cell) {
         return
       }
@@ -263,7 +261,9 @@ export default {
 
       ctx.setTransform(1, 0, 0, 1, 0, 0)
       let { width, height } = ctx.canvas
-      ctx.clearRect(0, 0, width, height)
+
+      ctx.clearRect(0, 0, width, height) // slow
+
       ctx.translate(this.dx, this.dy)
       this._scaleOverCenter(ctx, this.scale)
 
@@ -278,15 +278,19 @@ export default {
         x: rect.width + visibilityOffset,
         y: rect.height + visibilityOffset
       })
-      this.cells.active = this.cells.all.filter(cell => {
+
+      this._active = this._all.filter(cell => {
         if (cell.firstPoint.x > startPoint.x &&
           cell.firstPoint.x < endPoint.x &&
           cell.firstPoint.y > startPoint.y &&
           cell.firstPoint.y < endPoint.y) {
-          cell.render(ctx)
+          requestAnimationFrame(() => {
+            cell.render(ctx)
+          })
           return true
         }
       })
+
       this.frames++
     }
   }
