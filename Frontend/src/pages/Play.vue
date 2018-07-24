@@ -13,6 +13,7 @@
     </transition>
     <div class="info-panel-bg"
       v-if="panelsVisibility.tasks"
+      @click.self="hideAllPanels"
       @click="onPanelClicked($event, tasks)">
       <Form class="info-panel-body" @click="false">
         <Fleets
@@ -29,11 +30,12 @@
     </div>
     <div class="info-panel-bg"
       v-if="panelsVisibility.fleets"
+      @click.self="hideAllPanels"
       @click="onPanelClicked($event, fleets)">
-      <Form class="info-panel-body" @click="false">
+      <Form class="info-panel-body">
         <Fleets
           :canDelete="false"
-          :syncs="['fleets']"
+          :syncs="['fleets', 'planets']"
           :fleets="fleets"
           @goToCell="goToCell">
           <template slot="noFleets">
@@ -49,7 +51,7 @@
       <Form class="info-panel-body" @click="false">
         <Fleets
           :canDelete="true"
-          :syncs="[]"
+          :syncs="['planets']"
           :fleets="autoTasks"
           @goToCell="goToCell"
           @delete="delTask"
