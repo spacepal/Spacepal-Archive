@@ -13,7 +13,7 @@
       @confirm="taskConfirm" @reject="taskReject" :enabled="task.isValid">
       <Form ref="taskForm" class="withoutborder">
         <TextInput type="number"
-          :label="`Max ships count: ${task.maxCount}`"
+          :label="`Ships: ${task.maxCount}`"
           :min="(task.isHoldAutoTask ? 0 : 1)"
           :max="(isAutoTask ? Number.MAX_VALUE : task.maxCount)"
           v-model="task.count"
@@ -370,14 +370,12 @@ export default {
         }
       } else if (!this.isOwner(planet.id)) {
         this.$toast(`This is foreign planet`)
-      } else if (this.availableShips(planet.id) <= 0) {
-        this.$toast(`Lack of ships`)
       } else {
         this.selectCell(planet.cellID - 1)
         this.task.from = planet.id
         this.task.maxCount = this.availableShips(planet.id)
         this.task.count = 0
-        this.task.isHoldAutoTask = false
+        this.task.isHoldAutoTask = this.availableShips(planet.id) === 0
         this.task.isDispatchAutoTask = false
       }
     },
