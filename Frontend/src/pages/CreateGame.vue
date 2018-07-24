@@ -162,7 +162,9 @@ export default {
       }
     },
     checkForm () {
-      this.createButtonClass = this.$refs.form.isValid() ? '' : 'disabled'
+      this.$nextTick(() => {
+        this.createButtonClass = this.$refs.form.isValid() ? '' : 'disabled'
+      })
     }
   }
 }
