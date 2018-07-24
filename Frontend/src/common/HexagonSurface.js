@@ -67,12 +67,13 @@ export default {
   beforeDestroy () {
     this._all = []
     this._active = []
+    clearTimeout(this._tickTimeout)
     clearTimeout(this._centeredAnimTimeout)
-    clearTimeout(this._fpsTimeout)
     clearTimeout(this._fpsTimeout)
   },
   methods: {
     _genSurface (a) {
+      this._all = []
       for (let y = 0, count = 1; y < this.mapSize.height; ++y) {
         for (let x = 0; x < this.mapSize.width; ++x) {
           this._all.push(new Cell({ x, y }, a, count++, this.degree))
@@ -173,9 +174,9 @@ export default {
             this.tickFlag = false
             this.redraw(this.context)
           }
-          setTimeout(this._tick, 0)
+          this._tickTimeout = setTimeout(this._tick, 0)
         }
-        setTimeout(this._tick, 0)
+        this._tick()
       }
     },
     tick () {

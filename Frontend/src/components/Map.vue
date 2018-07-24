@@ -271,7 +271,7 @@ export default {
         }
       }))
     this._unwatch.push(
-      this.$store.watch((_, getters) => getters.planets,
+      this.$store.watch((_, getters) => getters.sync['planets'],
         () => this.tick()))
     this._unwatch.push(
       this.$store.watch((_, getters) => getters.sync['members'],

@@ -15,6 +15,7 @@ const HotKeysPlugin = {
         }
         registeredHotkeys.add(this.hotKeys)
         this._hotKeysEvent = (e) => {
+          console.log(e)
           this.hotKeys.forEach((key) => {
             if (!isEnabled && (key.code.startsWith('Key') || key.modalLock)) {
               return

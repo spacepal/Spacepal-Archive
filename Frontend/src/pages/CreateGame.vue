@@ -106,12 +106,16 @@ export default {
     }
   },
   mounted () {
+    this.$disableHotKeys()
     if (this.$route.params['auto']) {
       this.setRandom()
       this.$nextTick(() => {
         this.createGame(true)
       })
     }
+  },
+  beforeDestroy () {
+    this.$enableHotKeys()
   },
   methods: {
     setRandom () {
