@@ -1,6 +1,7 @@
 module PlanetModule
 
   def execute_planets
+    "       planet: execute_planets".bg(:magenta).color(:black).out
     game = Game[@game_id] 
     if game.accumulative
       game.planets.each do |planet|

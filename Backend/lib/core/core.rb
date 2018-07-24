@@ -34,6 +34,7 @@ class Core
   end
 
   def start_game
+    "end_turn".bg(:green).color(:black).out
     self.start_playing
     self.gain_players_planet_exp 
     self.broadcast_on_start_game
@@ -41,45 +42,44 @@ class Core
   end
 
   def end_turn fleets = []
-    "end_turn".bg(:yellow).color(:black).out
+    "end_turn".bg(:green).color(:black).out
     player = Player[@player_id]
-    p "et1"
     unless player.end_turn?
-      p "et2"
       game = player.game
-      p "et3"
       self.player_ends_turn fleets
-      p "et4"
       if self.everybody_ends_turn?
-        p "et5"
-        self.make_step #there was without self here ??????????
-        p "et6"
-        if game.over?
-          p "et7"
-          self.broadcast_on_end_game
-          p "et8"
-        else
-          p "et9"
-          self.broadcast_on_everybody_ends_turn
-          p "et10"
-          self.bot_make_step
-          p "et11"
-        end
-          p "et12"
-      else
-        p "et13"
+        self.game_end_turn
+      else 
         self.broadcast_on_player_ends_turn
-        p "et14"
         self.broadcast_player
-        p "et15"
       end
     end
   end
 
+  def game_end_turn
+    "game_end_turn".bg(:green).color(:black).out
+    game = Game[@game_id]
+    self.make_step #there was without self here ??????????
+    p "game_over? #{game.over?}"
+    if game.over?
+      self.broadcast_on_end_game
+    else
+      p "on false"
+      self.broadcast_on_everybody_ends_turn
+      "before bot_make_step".ljust(300).bg(:red).color(:black).out
+      self.bot_make_step
+    end
+  end
+
   def bot_make_turn fleets
+    "bot_end_turn".bg(:green).color(:black).out
     self.save_bot_fleets fleets
     self.bot_end_turn
-    self.broadcast_players
+    if self.everybody_ends_turn?
+        self.game_end_turn
+    else 
+      self.broadcast_players
+    end
   end
 
   def send_asked_data
