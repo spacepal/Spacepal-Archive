@@ -11,6 +11,7 @@ module PlanetModule
     else
       game.planets.each do |planet|
         product_ships planet, game.production_after_capture?
+        make_zero_experience planet
       end
     end
   end
@@ -21,6 +22,10 @@ module PlanetModule
     else
       planet.product_ships
     end
+  end
+
+  def make_zero_experience planet
+    planet.experience = 0
   end
 
   def gain_players_planet_exp
