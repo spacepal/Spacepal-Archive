@@ -41,7 +41,7 @@ export default {
     },
     max: {
       type: Number,
-      default: 2147483647
+      default: undefined
     },
     enableValidation: {
       type: Boolean,
