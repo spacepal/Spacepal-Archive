@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     post 'games' => 'game#create'
     put 'games/(:id)/join' => 'game#join'
     delete 'games/(:id)/player' => 'game#leave'
+    post 'games/(:game_id)/steps/(:step_id)' => 'game#create_bot_fleets'
 
     get 'games/status' => 'game#check_status'
 

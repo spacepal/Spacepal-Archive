@@ -13,11 +13,17 @@ module Playable
   include GameModule
 
   def make_step
+    "make_step".bg(:yellow).color(:black).out
     execute_pirates
+    p "ms1"
     execute_fleets
+    p "ms2"
     execute_planets
+    p "ms3"
     execute_players
+    p "ms4"
     execute_game
+    p "ms5"
   end
 
 end

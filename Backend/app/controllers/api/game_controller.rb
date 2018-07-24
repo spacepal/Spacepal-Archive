@@ -6,7 +6,7 @@ class Api::GameController < ApplicationController
   end
 
   def create
-    data = self.game_params
+    data = game_params
     player = Creation.create_player data[:username]
     unless player.errors.empty?
       render :json => { errors: player.errors.messages.flatten }
@@ -40,7 +40,7 @@ class Api::GameController < ApplicationController
     else
       game_id ||= params[:id].to_i
     end
-    data = self.game_params
+    data = game_params
     game = Game[game_id]
     unless game
       render :json => { errors: ["can't find the game"] }
@@ -94,12 +94,37 @@ class Api::GameController < ApplicationController
     end
   end
 
+  def create_bot_fleets
+    "create_bot_fleets".bg(:green).color(:black).out
+    game_id = params[:game_id]
+    "game_id = #{game_id}".color(:yellow)
+    game = Game[game_id]
+    p "cbf1"
+    if game.step.to_i <= params[:step_id].to_i
+      p "cbf2"
+      core = Core.new game_id, nil
+      p "cbf3"
+      "bot_fleets_params".color(:yellow).print_
+      p bot_fleets_params
+      core.bot_make_turn bot_fleets_params
+      p "cbf4"
+    end
+    p "cbf5"
+    render 200
+  end
+
   def check_status
     render ""
   end
 
+private
+
   def game_params
     params.require(:data).permit!
+  end
+
+  def bot_fleets_params
+    params.require(:tasks).map { |task| task.to_unsafe_hash.to_h }
   end
 
 end

@@ -238,6 +238,14 @@ class Game < Ohm::Model
     (self.players.map { |player| player unless player.ai? }).compact
   end
 
+  def bots
+    (self.players.map { |player| player if player.is_ai }).compact
+  end
+
+  def bots?
+    return self.bots.count > 0
+  end
+
   def remove_bot player_id
     if Player[player_id].ai?
       self.remove_player(player_id) 
@@ -245,7 +253,6 @@ class Game < Ohm::Model
   end
 
   def remove_player player_id
-    "self.players_not_bot.count = #{self.players_not_bot.count}".bg(:yellow)
     if self.room?
       if self.players_not_bot.count == 1 and !Player[player_id].ai?
         Deletion.delete_game self
@@ -300,6 +307,26 @@ class Game < Ohm::Model
     (array = Game.all.map { |game| 
         game.id if game.room? and game.pin_code.nil? 
       }).compact
+  end
+
+  def planets_info
+    self.planets.map do |planet|
+      {
+        "id"=> planet.id.to_i,
+        "ownerID"=> planet.player_id.to_i,
+        "cellID"=> planet.cell.relative_id.to_i,
+        "production"=> planet.production.to_i,
+        "killPerc"=> planet.kill_perc.to_f,
+        "ships"=> planet.ships.to_i
+      }
+    end
+  end
+
+  def map_size
+    {
+      "width" => self.width.to_i,
+      "height" => self.height.to_i
+    }
   end
 
   def update hash
