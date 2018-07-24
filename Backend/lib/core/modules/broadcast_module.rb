@@ -175,7 +175,7 @@ module Broadcastable
         id: planet.id.to_i,
         ownerID: (planet.player_id or -1).to_i, # player ID
         cellID: planet.cell.relative_id.to_i, # 1 ... width * height
-        production: (planet.production + planet.experience).to_i,
+        production: (planet.get_whole_production).to_i,
         killPerc: planet.kill_perc.to_f,
         ships: planet.ships.to_i,
         isCapital: (planet.is_capital or false)

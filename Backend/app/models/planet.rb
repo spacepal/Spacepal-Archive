@@ -146,15 +146,28 @@ class Planet < Ohm::Model
 
   def product_ships
     if self.player
-      if self.experience == -1
-        self.ships += self.production
-      else
+      if self.experience != -1 and self.game.accumulative?
         self.ships += self.production + self.experience
+      else
+        self.ships += self.production
       end
     else
       self.ships += 10
     end
     self.save
+  end
+
+  def make_zero_experience
+    self.experience = 0
+    self.save
+  end
+
+  def get_whole_production
+    if self.game.accumulative? and self.game.step != -1
+      return self.production.to_i + self.experience.to_i
+    else
+      return self.production.to_i
+    end
   end
 
   def gain_experience exp = 1

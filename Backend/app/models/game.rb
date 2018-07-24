@@ -67,6 +67,10 @@ class Game < Ohm::Model
     self.production_after_capture == true
   end
 
+  def accumulative?
+    self.accumulative == true
+  end
+
   def self.in_room_count
     arr = self.all.reduce (0) { |count, game| count = game.room? ? count += 1 : count }
   end
