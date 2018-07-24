@@ -92,10 +92,12 @@ class Planet < Ohm::Model
 
   def fleet_took_off fleet
     #"planet:#{ self.cell.relative_id } -> #{ self.attributes } | fleet:#{fleet.id} (#{ fleet.player.name }) -> #{ fleet.attributes }".bg(:silver).color(:black).out
-    unless self.ships < fleet.ships 
-      self.ships -= fleet.ships
-      self.save
+    if self.ships < fleet.ships 
+      fleet.ships = self.ships
+      fleet.save
     end
+    self.ships -= fleet.ships
+    self.save
   end  
 
   def took_fleet fleet

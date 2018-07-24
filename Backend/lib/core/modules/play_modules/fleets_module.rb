@@ -4,20 +4,23 @@ module FleetModule
     "       fleet: execute_fleets".bg(:magenta).color(:black).out
     Game[@game_id].players.each do |player|
       player.fleets.each do |fleet|
-        fleet_start fleet
-        fleet_move fleet
-        fleet_reach fleet
+        self.fleet_start fleet
+      end
+    end
+    Game[@game_id].players.each do |player|
+      player.fleets.each do |fleet|
+        self.fleet_move fleet
+        self.fleet_reach fleet
       end
     end
   end
 
   def fleet_start fleet
+    p "fleet start #{fleet}"
     unless fleet.started?
       planet_from = Planet[fleet.planet_from_id]
-      unless planet_from.ships < fleet.ships
-        planet_from.fleet_took_off fleet
-        fleet.start
-      end
+      planet_from.fleet_took_off fleet
+      fleet.start
     end
   end
 
