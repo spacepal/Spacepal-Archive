@@ -4,7 +4,7 @@
     <input ref="inp" :maxlength="maxLength"
       :type="type" :min="min" :max="max"
       :placeholder="placeholder" v-model="text"
-      @keydown="onKey" @click="$event.target.select()">
+      @keyup="onKey" @click="$event.target.select()">
     <div class="counter" v-show="text.length !== 0" v-if="hasCounter">
       {{text.length}}\{{max}}
     </div>
@@ -14,7 +14,6 @@
 <script>
 const TYPE_TEXT = 'text'
 const TYPE_NUMBER = 'number'
-const SPACE_CHAR = ' '.charCodeAt(0)
 const LAST_SPECIAL_CODE = 46 // key 'del'
 
 export default {
@@ -88,7 +87,7 @@ export default {
   },
   methods: {
     onKey (e) {
-      if (e.keyCode > LAST_SPECIAL_CODE || e.keyCode === SPACE_CHAR) {
+      if (e.keyCode > LAST_SPECIAL_CODE) {
         e.stopPropagation()
       }
     },

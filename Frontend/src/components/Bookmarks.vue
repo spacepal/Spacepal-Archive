@@ -58,7 +58,8 @@ export default {
             }
           }
         },
-        isKey: true
+        isKey: true,
+        modalLock: true
       })
     }
     return {

@@ -163,7 +163,8 @@ export default {
           code: '0',
           isKey: true,
           method: this.zoomReset,
-          description: 'Default zoom'
+          description: 'Default zoom',
+          modalLock: true
         },
         {
           code: 'Space',
