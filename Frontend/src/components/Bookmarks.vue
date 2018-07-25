@@ -2,7 +2,8 @@
   <div class="bookmarkInfo">
     <!-- NODATA -->
     <span v-if="count === 0 && isSelectMode == false" class="text-additional emptySlot">
-      You don't have bookmarks.<br>Hold KeyB and select planet for create ones.
+      You don't have bookmarks.<br>
+      Hold KeyB and select planet for create ones.
     </span>
     <!-- HEADER -->
     <template v-else>
@@ -58,6 +59,7 @@ export default {
             }
           }
         },
+        description: 'Goto bookmark',
         isKey: true,
         modalLock: true
       })

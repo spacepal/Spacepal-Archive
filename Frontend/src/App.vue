@@ -52,7 +52,7 @@ export default {
           method: () => {
             this.$refs.settings.show()
           },
-          description: 'Open advanced settings'
+          description: 'Advanced settings'
         },
         {
           code: 'KeyS',
@@ -62,15 +62,15 @@ export default {
           methodDown: () => {
             this.$refs.signal.show()
           },
-          description: 'Show connection status'
+          description: 'Connection status'
         },
         {
           code: 'Space',
           ctrl: true,
           method: () => {
             this.currentTheme = (this.currentTheme + 1) % themes.length
-          },
-          description: 'Change theme'
+          }
+          // description: 'Change theme'
         },
         {
           code: 'KeyK',
@@ -134,7 +134,7 @@ export default {
 
 .hotKeysGrid {
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: 170px auto auto;
   .splitter {
     margin: 0 10px;
   }

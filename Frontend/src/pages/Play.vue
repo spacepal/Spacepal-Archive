@@ -128,7 +128,7 @@ export default {
           this.hideAllPanels('bookmarks')
           this.panelsVisibility.bookmarks ^= true
         },
-        description: 'Show bookmarks'
+        description: 'Bookmarks'
       },
       {
         code: 'KeyQ',
@@ -139,7 +139,7 @@ export default {
           this.hideAllPanels('info')
           this.panelsVisibility.main = true
         },
-        description: 'Show game info'
+        description: 'Game info'
       },
       {
         code: 'KeyF',
@@ -147,7 +147,7 @@ export default {
           this.hideAllPanels('fleets')
           this.panelsVisibility.fleets ^= true
         },
-        description: 'Show fleets'
+        description: 'Fleets in space'
       },
       {
         code: 'KeyA',
@@ -155,7 +155,7 @@ export default {
           this.hideAllPanels('autoTasks')
           this.panelsVisibility.autoTasks ^= true
         },
-        description: 'Show auto tasks'
+        description: 'Automatic tasks'
       },
       {
         code: 'KeyT',
@@ -163,7 +163,7 @@ export default {
           this.hideAllPanels('tasks')
           this.panelsVisibility.tasks ^= true
         },
-        description: 'Show tasks'
+        description: 'Current tasks'
       },
       {
         code: 'KeyN',
@@ -171,7 +171,7 @@ export default {
           this.hideAllPanels('notifications')
           this.panelsVisibility.notifications ^= true
         },
-        description: 'Show notifications'
+        description: 'Notifications'
       },
       {
         code: 'Space',

@@ -173,13 +173,13 @@ export default {
         {
           code: 'KeyH',
           method: this.goHome,
-          description: 'Go to your planet'
+          description: 'Your best planet'
         },
         {
           code: 'Home',
           isKey: true,
           method: this.goHome,
-          description: 'Go to your planet'
+          description: 'Your best planet'
         },
         {
           code: 'Escape',
