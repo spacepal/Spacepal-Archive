@@ -78,6 +78,17 @@
     </div>
     <GameMenu @showPanel="showPanel" @goHome="goHome" />
     <EndTurnMsg @onTurnEnded="onTurnEnded" />
+    <Window ref="quickStart" type="alert" title="Quick start">
+      <template>
+        <span class="quick-start-p">At the start of the game you have only one planet — your capital (press <span class="mdi mdi-keyboard mdi-24px splitter"></span>Home for quick goto).</span>
+        <span class="quick-start-p">Besides it on the map are located neutral planets (peaceful) and planets of your opponents.</span>
+        <span class="quick-start-p">You can attack another planet and captures it. The power of attack per ship depends on kill percentage (kill) of planet-sender.</span>
+        <span class="quick-start-p">Every turn, count of ships on the planet is increased by production value (prod).</span>
+        <span class="quick-start-p">If you conquer planets of other players — you will win.</span>
+        <span class="quick-start-p">Press <span class="mdi mdi-keyboard mdi-24px splitter"></span>K for show all hotkeys</span>
+        <span class="quick-start-btn"><SwitchBox v-model="quickStartDisabled" label="Don't show again" title="You can press KeyL for show quick start again" /></span>
+      </template>
+    </Window>
   </div>
 </template>
 
@@ -89,6 +100,8 @@ import GameInfo from '../components/GameInfo'
 import Members from '../components/Members'
 import Notifications from '../components/Notifications'
 import Fleets from '../components/Fleets'
+import Window from '../components/Window'
+import SwitchBox from '../components/SwitchBox'
 import GameMenu from '../components/GameMenu'
 import EndTurnMsg from '../components/nano/EndTurnMsg'
 import Bookmarks from '../components/Bookmarks'
@@ -105,8 +118,15 @@ export default {
     Form,
     Notifications,
     Fleets,
+    Window,
+    SwitchBox,
     EndTurnMsg,
     Bookmarks
+  },
+  watch: {
+    quickStartDisabled (val) {
+      this.$store.dispatch('setQuickStart', !val)
+    }
   },
   data () {
     let hotKeys = [
@@ -121,6 +141,13 @@ export default {
           this.forceAutoEndTurn ^= true
         },
         modalLock: true
+      },
+      {
+        code: 'KeyL',
+        method: () => {
+          this.$refs.quickStart.show()
+        },
+        description: 'Quick start'
       },
       {
         code: 'KeyB',
@@ -184,8 +211,8 @@ export default {
         method: this.hideAllPanels
       }
     ]
-
     return {
+      quickStartDisabled: this.quickStart,
       winIsFocused: true,
       hotKeys,
       areNotificationsSupported: false,
@@ -206,7 +233,8 @@ export default {
       fleets: 'fleets/all',
       autoTasks: 'tasks/autoTasks',
       notifications: 'events/all',
-      game: 'game/info'
+      game: 'game/info',
+      quickStart: 'quickStart'
     })
   },
   methods: {
@@ -281,6 +309,11 @@ export default {
     this._focusFunc = () => { this.winIsFocused = true }
     window.addEventListener('focus', this._focusFunc)
     window.addEventListener('blur', this._blurFunc)
+
+    this.quickStartDisabled = !this.quickStart
+    if (!this.quickStartDisabled) {
+      this.$refs.quickStart.show()
+    }
   },
   beforeDestroy () {
     window.removeEventListener('focus', this._focusFunc)
@@ -302,5 +335,17 @@ export default {
   justify-content: center;
   align-items: center;
   margin: $margin;
+}
+
+.quick-start-btn, .quick-start-p {
+  display: inline-block;
+  margin: 8px 0;
+}
+.quick-start-p {
+  text-align: justify;
+}
+.quick-start-btn {
+  display: flex;
+  justify-content: center;
 }
 </style>

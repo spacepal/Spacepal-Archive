@@ -17,6 +17,7 @@ Vue.use(Vuex)
 const STORAGE_GAME_ID = 'game_id'
 const STORAGE_MENU_IS_SHOWED = 'menu_is_showed'
 const STORAGE_BACKEND_HOST = 'backend'
+const STORAGE_QUICKSTART = 'quickstart'
 
 var gID = localStorage.getItem(STORAGE_GAME_ID)
 
@@ -35,7 +36,8 @@ const state = {
   },
   endTurnLock: true,
   menuIsShowed: localStorage.getItem(STORAGE_MENU_IS_SHOWED) !== 'false',
-  backendServer: localStorage.getItem(STORAGE_BACKEND_HOST) || DEFAULT_HOST
+  backendServer: localStorage.getItem(STORAGE_BACKEND_HOST) || DEFAULT_HOST,
+  quickStart: localStorage.getItem(STORAGE_QUICKSTART)
 }
 
 const mutations = {
@@ -74,6 +76,9 @@ const mutations = {
   },
   END_TURN_UNLOCK (state) {
     state.endTurnLock = false
+  },
+  SET_QUICK_START (state, quickStart) {
+    state.quickStart = quickStart
   }
 }
 
@@ -153,10 +158,17 @@ const actions = {
     }
     dispatch('syncUnset', 'planets')
     state.cable.get(state.gameID).shuffleMap()
+  },
+  setQuickStart ({ commit }, quickStart) {
+    localStorage.setItem(STORAGE_QUICKSTART, quickStart)
+    commit('SET_QUICK_START', quickStart)
   }
 }
 
 const getters = {
+  quickStart: state => {
+    return state.quickStart !== 'false'
+  },
   backendAPI: (state) => 'http://' + state.backendServer + API_POSTFIX,
   backendWS: (state) => 'ws://' + state.backendServer + WS_POSTFIX,
   isPlayer: (state) => !!state.gameID,
