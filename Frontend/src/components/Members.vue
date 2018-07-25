@@ -20,6 +20,14 @@
                 class="mdi mdi-radiobox-blank mdi-16px">
               </span>
             </template>
+            <template>
+              <span title="Total ships" class="mdi mdi-rocket mdi-16px">
+                {{ m.currentFleetSize || 0 }}
+              </span>
+              <span title="Total production" class="mdi mdi-plus-box-outline mdi-16px">
+                {{ m.currentProduction || 0 }}
+              </span>
+            </template>
           </template>
           <template v-else>
             <span :key="m.username + '_2'">
@@ -27,6 +35,8 @@
                 class="mdi mdi-delete-forever"
                 @click="delBot(m.id)"></a>
             </span>
+            <span></span>
+            <span></span>
           </template>
         </template>
         <template v-if="isRoom && isCreator && hasFreePlace">
@@ -82,7 +92,7 @@ export default {
 <style lang="scss" scoped>
 .members {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: auto auto auto auto;
   span {
     margin: 0 3px;
   }
