@@ -72,6 +72,8 @@ export default class ActionCabel {
       store.dispatch('reset')
       store.dispatch('syncSet', 'endTurn')
       this.requestData()
+    } else if (data.type === 'notifications') {
+      store.dispatch('events/set', data.data.notifications)
     } else {
       console.warn(`ActionCable.js: Unknown type`)
     }

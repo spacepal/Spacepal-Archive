@@ -8,9 +8,8 @@ const state = {
 
 const mutations = {
   SET_FLEETS (state, fleets) {
-    let i = 0
     fleets.forEach(f => {
-      Vue.set(state.fleets, i++, f)
+      Vue.set(state.fleets, f.id, f)
     })
   },
   CLEAR_FLEETS (state) {
