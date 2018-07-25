@@ -66,7 +66,6 @@ class Core
     else
       p "on false"
       self.broadcast_on_everybody_ends_turn
-      "before bot_make_step".ljust(300).bg(:red).color(:black).out
       self.bot_make_step
     end
   end

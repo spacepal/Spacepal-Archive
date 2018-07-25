@@ -56,7 +56,7 @@ class Fleet < Ohm::Model
   end
 
   def started?
-    self.started
+    self.started == true
   end
 
   def start
