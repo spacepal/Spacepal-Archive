@@ -157,8 +157,10 @@ export default {
       if (this.$refs.form.isValid() || force) {
         this.$refs.loader.show()
         this.$store.dispatch('game/create', this.pref).then(gameID => {
-          this.$refs.loader.hide()
-          this.$router.push({ name: 'Game' })
+          this.$nextTick(() => {
+            this.$refs.loader.hide()
+            this.$router.push({ name: 'Game' })
+          })
         }).catch(err => {
           this.$refs.loader.hide()
           this.$toast(err.message)

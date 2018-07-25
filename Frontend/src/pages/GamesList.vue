@@ -183,8 +183,10 @@ export default {
       this.$store.dispatch('game/joinRandom', {
         username: this.usernameGenerator().next().value
       }).then(() => {
-        this.$refs.loader.hide()
-        this.$router.push({ name: 'Game' })
+        this.$nextTick(() => {
+          this.$refs.loader.hide()
+          this.$router.push({ name: 'Game' })
+        })
       }).catch(err => {
         this.$refs.loader.hide()
         this.$toast(err.message)
@@ -196,8 +198,10 @@ export default {
     joinConfirm () {
       this.$refs.loader.show()
       this.$store.dispatch('game/join', this.join).then(() => {
-        this.$refs.loader.hide()
-        this.$router.push({ name: 'Game' })
+        this.$nextTick(() => {
+          this.$refs.loader.hide()
+          this.$router.push({ name: 'Game' })
+        })
       }).catch(err => {
         this.$refs.loader.hide()
         this.$toast(err.message)
