@@ -93,6 +93,8 @@ import GameMenu from '../components/GameMenu'
 import EndTurnMsg from '../components/nano/EndTurnMsg'
 import Bookmarks from '../components/Bookmarks'
 
+const NOTIFICATION_ICON = 'https://avatars2.githubusercontent.com/u/41302202?s=400&v=4'
+
 export default {
   name: 'Play',
   components: {
@@ -184,7 +186,9 @@ export default {
     ]
 
     return {
+      winIsFocused: true,
       hotKeys,
+      areNotificationsSupported: false,
       forceAutoEndTurn: false,
       panelsVisibility: {
         main: false,
@@ -201,7 +205,8 @@ export default {
       tasks: 'tasks/all',
       fleets: 'fleets/all',
       autoTasks: 'tasks/autoTasks',
-      notifications: 'events/all'
+      notifications: 'events/all',
+      game: 'game/info'
     })
   },
   methods: {
@@ -222,7 +227,15 @@ export default {
     onTurnEnded () {
       this.panelsVisibility['main'] = false
       if (this.forceAutoEndTurn) {
-        setTimeout(this.endTurn, 300);
+        setTimeout(this.endTurn, 300)
+      } else if (!this.winIsFocused) {
+        if (this._notify) {
+          this._notify.close()
+        }
+        this._notify = new Notification('SpacePal', {
+          body: `Turn: ${this.game.turnNumber}`,
+          icon: NOTIFICATION_ICON
+        })
       }
     },
     showPanel (panelName) {
@@ -256,6 +269,22 @@ export default {
         this.panelsVisibility[k] = false
       }
     }
+  },
+  mounted () {
+    if (window.Notification && Notification.permission !== 'granted') {
+      Notification.requestPermission(permission => {
+        this.areNotificationsSupported = permission === 'granted'
+      })
+    }
+
+    this._blurFunc = () => { this.winIsFocused = false }
+    this._focusFunc = () => { this.winIsFocused = true }
+    window.addEventListener('focus', this._focusFunc)
+    window.addEventListener('blur', this._blurFunc)
+  },
+  beforeDestroy () {
+    window.removeEventListener('focus', this._focusFunc)
+    window.removeEventListener('blur', this._blurFunc)
   }
 }
 </script>
