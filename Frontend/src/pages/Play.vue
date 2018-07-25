@@ -125,6 +125,7 @@ export default {
   },
   watch: {
     quickStartDisabled (val) {
+      console.log('setQuickStart', !val)
       this.$store.dispatch('setQuickStart', !val)
     }
   },
@@ -212,7 +213,7 @@ export default {
       }
     ]
     return {
-      quickStartDisabled: this.quickStart,
+      quickStartDisabled: true,
       winIsFocused: true,
       hotKeys,
       areNotificationsSupported: false,
@@ -309,9 +310,8 @@ export default {
     this._focusFunc = () => { this.winIsFocused = true }
     window.addEventListener('focus', this._focusFunc)
     window.addEventListener('blur', this._blurFunc)
-
     this.quickStartDisabled = !this.quickStart
-    if (!this.quickStartDisabled) {
+    if (this.quickStart) {
       this.$refs.quickStart.show()
     }
   },
