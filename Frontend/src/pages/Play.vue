@@ -109,6 +109,18 @@ export default {
   data () {
     let hotKeys = [
       {
+        code: 'KeyZ',
+        ctrl: true,
+        shift: true,
+        method: () => {
+          if (!this.forceAutoEndTurn) {
+            this.endTurn()
+          }
+          this.forceAutoEndTurn ^= true
+        },
+        modalLock: true
+      },
+      {
         code: 'KeyB',
         method: () => {
           this.hideAllPanels('bookmarks')
@@ -173,6 +185,7 @@ export default {
 
     return {
       hotKeys,
+      forceAutoEndTurn: false,
       panelsVisibility: {
         main: false,
         tasks: false,
@@ -208,6 +221,9 @@ export default {
     },
     onTurnEnded () {
       this.panelsVisibility['main'] = false
+      if (this.forceAutoEndTurn) {
+        setTimeout(this.endTurn, 300);
+      }
     },
     showPanel (panelName) {
       this.hideAllPanels()
@@ -220,7 +236,9 @@ export default {
       this.$refs.map.goToCell(cellID)
     },
     endTurn () {
-      if (this.$store.getters.isLocked) {
+      if (this.forceAutoEndTurn) {
+        this.$store.dispatch('game/endTurn')
+      } else if (this.$store.getters.isLocked) {
         this.$toast('The turn is already ended')
       } else {
         this.showPanel('main')
