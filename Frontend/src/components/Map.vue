@@ -14,7 +14,7 @@
       @confirm="taskConfirm" @reject="taskReject" :enabled="task.isValid">
       <Form ref="taskForm" class="withoutborder">
         <TextInput type="number"
-          :label="`Ships: ${task.maxCount}`"
+          :label="taskLabel"
           :min="(task.isHoldAutoTask ? 0 : 1)"
           :max="(isAutoTask ? Number.MAX_VALUE : task.maxCount)"
           v-model="task.count"
@@ -210,6 +210,14 @@ export default {
       availableShips: 'tasks/availableShips',
       isLocked: 'isLocked'
     }),
+    taskLabel () {
+      let count = this.task.maxCount
+      if (this.task.isHoldAutoTask) {
+        count -= this.task.count
+      }
+      count = Math.max(count || 0, 0)
+      return `Ships: ${count}`
+    },
     bgPosStyle () {
       return {
         backgroundPosition: `${-this.dx / PARALLAX}px ${-this.dy / PARALLAX}px`
