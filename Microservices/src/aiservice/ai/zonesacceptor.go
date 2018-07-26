@@ -6,26 +6,34 @@ import (
 	"aiservice/helpers"
 	"aiservice/helpers/ihelpers"
 	"aiservice/model/imodel"
+	"math"
 )
 
-// Acceptor : planets collect ships on the one main planet
+const noviceScore = 0.3
+
+// ZonesAcceptor : planets collect ships on the one main planet
 // main planet attacks one foreign planet
 type ZonesAcceptor struct {
 	redistribution ilist.FactorGetter
 	attack         ilist.FactorGetter
+	initialAttack  ilist.FactorGetter
 }
 
 // NewZonesAcceptor is a factory method for Acceptor AI
 func NewZonesAcceptor(
 	redistribution ilist.FactorGetter,
 	attack ilist.FactorGetter,
+	initialAttack ilist.FactorGetter,
 ) iai.MoveMaker {
-	if redistribution.Quantity() < 0 || attack.Quantity() < 0 {
+	if redistribution.Quantity() < 0 ||
+		attack.Quantity() < 0 ||
+		initialAttack.Quantity() < 0 {
 		panic("Quantity is negative")
 	}
 	return &ZonesAcceptor{
 		redistribution: redistribution,
 		attack:         attack,
+		initialAttack:  initialAttack,
 	}
 }
 
@@ -46,18 +54,25 @@ func (b ZonesAcceptor) MakeMove(
 			group, group[0], b.redistribution.WithoutDistance())
 		var distanceSurface = helpers.NewDistanceSurface(
 			main.Cell(), mapSize)
-		for _, current := range group {
+		var lastPlanet = main
+		for i, current := range group {
 			if current.ID() == main.ID() {
 				continue
 			}
+			remotnessFactor := float64(i) / float64(len(group))
+			quantity := math.Max(b.redistribution.Quantity()*remotnessFactor, 0.1)
 			dist := distanceSurface.Calculate(current.Cell())
-			safeCreateTask(current, main,
-				b.redistribution.Quantity(), &tasks, dist)
+			safeCreateTask(current, lastPlanet, quantity, &tasks, dist)
+			lastPlanet = current
+		}
+		var attackFactor = b.attack
+		if globStat.RelatedScore(main.Owner()) < noviceScore {
+			attackFactor = b.initialAttack
 		}
 		var planetToAttack, attackDist = chooser.MakeChoice(
-			planets.Foreign(), main, b.attack)
+			planets.Foreign(), main, attackFactor)
 		safeCreateTask(main, planetToAttack,
-			b.attack.Quantity(), &tasks, attackDist)
+			attackFactor.Quantity(), &tasks, attackDist)
 	}
 	return tasks
 }

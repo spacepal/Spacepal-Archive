@@ -94,5 +94,15 @@ func RegisterAll(r iai.ManagerRegister) {
 			ships:       +0.0,
 			playerPower: +0.0,
 			distance:    -2.0,
+		},
+		&factor{ // attack on first steps
+			quantity:    +0.9,
+			random:      +1.0,
+			prod:        +0.0,
+			kill:        -3.0,
+			power:       +0.0,
+			ships:       +0.0,
+			playerPower: +0.0,
+			distance:    -2.0,
 		}))
 }

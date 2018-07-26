@@ -1,6 +1,9 @@
 package helpers
 
-import "aiservice/model/imodel"
+import (
+	"aiservice/model/imodel"
+	"log"
+)
 
 // Planets stores player & opponents planets
 type Planets struct {
@@ -45,7 +48,7 @@ func (p Planets) SelfGroups(radius int) map[int][]imodel.PlanetGetter {
 		zones[zoneID] = make([]imodel.PlanetGetter, 1)
 		zones[zoneID][0] = self
 		for _, union := range p.selfPlanets {
-			if _, ok := usedPlanets[self.ID()]; ok {
+			if _, ok := usedPlanets[union.ID()]; ok {
 				continue
 			}
 			if dist := distSurf.Calculate(union.Cell()); dist > radius {
@@ -55,6 +58,7 @@ func (p Planets) SelfGroups(radius int) map[int][]imodel.PlanetGetter {
 			zones[zoneID] = append(zones[zoneID], union)
 		}
 	}
+	log.Print("Zones: ", len(zones), " R: ", radius)
 	return zones
 }
 
