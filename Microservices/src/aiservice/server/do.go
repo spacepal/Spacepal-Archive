@@ -45,6 +45,7 @@ func (h *DoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			fmt.Sprintf("406 - Not Acceptable. Error: %v.", err),
 			http.StatusNotAcceptable)
 		log.Error("handler.do.go: ", err)
+		return
 	}
 	h.handler.Handle(in)
 	log.Print(in)
