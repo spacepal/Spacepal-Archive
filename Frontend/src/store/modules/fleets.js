@@ -24,6 +24,9 @@ const actions = {
     commit('CLEAR_FLEETS')
     commit('SET_FLEETS', fleets)
     dispatch('syncSet', 'fleets', { root: true })
+  },
+  clear ({ commit }) {
+    commit('CLEAR_FLEETS')
   }
 }
 

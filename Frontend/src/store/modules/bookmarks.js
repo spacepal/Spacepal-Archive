@@ -15,6 +15,9 @@ const mutations = {
   },
   DEL_BOOKMARK (state, slot) {
     Vue.delete(state.bookmarks, slot)
+  },
+  DELETE_ALL (state) {
+    state.bookmarks = {}
   }
 }
 
@@ -34,6 +37,9 @@ const actions = {
     commit('DEL_BOOKMARK', slot)
     sessionStorage.setItem(STORAGE_BOOKMARKS,
       JSON.stringify(state.bookmarks))
+  },
+  clear ({commit}) {
+    commit('DELETE_ALL')
   }
 }
 

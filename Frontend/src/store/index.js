@@ -65,6 +65,9 @@ const mutations = {
     let cable = new ActionCabel(state.gameID, wsServer)
     state.cable.set(state.gameID, cable)
   },
+  DISABLE_CABLE (state) {
+    state.cable.clear()
+  },
   LOGIN (state, { gameID }) {
     state.gameID = gameID
   },
@@ -110,6 +113,12 @@ const actions = {
     commit('ENABLE_CABLE', getters.backendWS)
     return state.cable.get(state.gameID).isOk
   },
+  disableCable ({ state, commit }) {
+    state.cable.forEach(cable => {
+      cable.close()
+    })
+    commit('DISABLE_CABLE')
+  },
   reset ({ commit, dispatch }) { // turn_ended from ActionCable
     console.log('RESET')
     dispatch('lock') // it does not matter
@@ -136,17 +145,27 @@ const actions = {
       dispatch('tasks/doAutoTasks')
     }
   },
-  logout ({ commit, dispatch, state }) {
-    let gID = state.gameID
+  clear ({ dispatch }) {
     dispatch('reset')
+    dispatch('bookmarks/clear')
+    dispatch('events/clear')
+    dispatch('fleets/clear')
     dispatch('game/reset')
+    dispatch('clearMembers')
+    dispatch('clearPlanets')
+    dispatch('clearProfile')
+    dispatch('tasks/clear')
+  },
+  logout ({ commit, dispatch, state }) {
+    dispatch('disableCable')
+    let gID = state.gameID
+    dispatch('clear')
     localStorage.removeItem(STORAGE_GAME_ID)
     commit('LOGOUT')
     return dispatch('game/logout', gID)
   },
   login ({ commit, getters, dispatch }, gameID) {
-    dispatch('reset')
-    dispatch('game/reset')
+    dispatch('clear')
     localStorage.setItem(STORAGE_GAME_ID, gameID)
     commit('LOGIN', { gameID })
     commit('ENABLE_CABLE', getters.backendWS)

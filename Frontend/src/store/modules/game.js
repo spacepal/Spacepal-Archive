@@ -7,12 +7,24 @@ const STATE_GAME = 2
 const STATE_END = 3
 
 const DEFAULT_INFO = {
-  state: STATE_UNKNOWN,
-  turnNumber: 0
+  accumulative: null,
+  buffs: null,
+  creator: '',
+  id: null,
+  mapHeight: null,
+  mapWidth: null,
+  name: null,
+  pinCode: null,
+  pirates: null,
+  planets: null,
+  playersLimit: null,
+  productionAfterCapture: null,
+  turnNumber: 0,
+  state: STATE_UNKNOWN
 }
 
 const state = {
-  info: DEFAULT_INFO
+  info: Object.assign({}, DEFAULT_INFO)
 }
 
 const mutations = {
@@ -24,8 +36,8 @@ const mutations = {
 }
 
 const actions = {
-  reset ({ state }) {
-    state.gameInfo = DEFAULT_INFO
+  reset ({ commit }) {
+    commit('SET_GAME_INFO', DEFAULT_INFO)
   },
   setInfo ({ commit, dispatch }, gameInfo) {
     commit('SET_GAME_INFO', gameInfo)

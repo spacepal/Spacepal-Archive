@@ -22,6 +22,9 @@ const actions = {
     commit('CLEAR_MEMBERS')
     commit('SET_MEMBERS', members)
     dispatch('syncSet', 'members', { root: true })
+  },
+  clearMembers ({ commit }) {
+    commit('CLEAR_MEMBERS')
   }
 }
 

@@ -25,6 +25,9 @@ const actions = {
     commit('CLEAR_PLANETS')
     commit('SET_PLANETS', planets)
     dispatch('syncSet', 'planets', { root: true })
+  },
+  clearPlanets ({ commit }) {
+    commit('CLEAR_PLANETS')
   }
 }
 

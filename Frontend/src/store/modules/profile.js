@@ -2,14 +2,16 @@ import Vue from 'vue'
 
 const INTIAIL_PROFILE = {
   id: null,
-  username: null,
-  isCreator: null,
-  isEndTurn: true,
-  isGameOver: null
+  username: '',
+  isCreator: false,
+  isEndTurn: false,
+  isGameOver: false,
+  color: 'neutral',
+  isArtificialIntelligence: false
 }
 
 const state = {
-  profile: INTIAIL_PROFILE
+  profile: Object.assign({}, INTIAIL_PROFILE)
 }
 
 const mutations = {
@@ -24,6 +26,9 @@ const actions = {
   setProfile ({ commit, dispatch }, profile) {
     commit('SET_PROFILE', profile)
     dispatch('syncSet', 'profile', { root: true })
+  },
+  clearProfile ({ commit }) {
+    commit('SET_PROFILE', INTIAIL_PROFILE)
   }
 }
 

@@ -37,6 +37,14 @@ export default class ActionCabel {
       this._okRejectPromise(false)
     }
   }
+  close () {
+    if (this._gameRoom) {
+      this._gameRoom.unsubscribe()
+    }
+    if (this._playerRoom) {
+      this._playerRoom.unsubscribe()
+    }
+  }
   onReceived (data) {
     console.info(`Action cable: data recieved`)
     console.info(data)
