@@ -8,6 +8,7 @@
       @mouseup="mouseup"
       @wheel="mousewheel"
       :class="canvasClass"
+      :style="bgPosStyle"
       ref="canvas"></canvas>
     <Window type="confirm" ref="taskWindow" title="Create task"
       @confirm="taskConfirm" @reject="taskReject" :enabled="task.isValid">
@@ -41,6 +42,7 @@ import TextInput from './TextInput'
 import Form from './Form'
 import SwitchBox from './SwitchBox'
 
+const PARALLAX = 34 // divider
 const RESOLUTION_FACTOR = 1.5
 const KEY_SCALE_FACTOR = 0.04 // for '+' and '-'
 const KEY_LARGE_SCALE_FACTOR = 0.5
@@ -66,6 +68,10 @@ export default {
   components: { Window, TextInput, Form, SwitchBox },
   data () {
     return {
+      mouse: {
+        x: 0,
+        y: 0
+      },
       isBookmarkMode: false,
       task: {
         from: null,
@@ -204,6 +210,11 @@ export default {
       availableShips: 'tasks/availableShips',
       isLocked: 'isLocked'
     }),
+    bgPosStyle () {
+      return {
+        backgroundPosition: `${-this.dx / PARALLAX}px ${-this.dy / PARALLAX}px`
+      }
+    },
     isAutoTask () {
       return this.task.isHoldAutoTask || this.task.isDispatchAutoTask
     },
@@ -435,6 +446,8 @@ export default {
     width: 100%;
     height: 100%;
     border: $border solid rgb(54, 129, 221);
+    background: url('/static/background.jpg');
+    background-size: cover;
   }
 
   .full {
@@ -447,7 +460,7 @@ export default {
   }
 
   .dragged {
-    cursor: crosshair
+    cursor: crosshair;
   }
 
 </style>

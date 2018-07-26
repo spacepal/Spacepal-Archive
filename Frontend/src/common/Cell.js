@@ -113,19 +113,14 @@ class Cell {
       }
       ctx.fillStyle = memberColor.bg
     } else {
-      ctx.fillStyle = 'black'
+      ctx.fillStyle = 'rgba(255, 255, 255, 0)'
     }
     ctx.fill()
-    if (this._isHovered) {
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.1)'
-    }
-    ctx.fill()
-    ctx.stroke()
-
-    ctx.restore()
-    ctx.save()
-
     if (planet) {
+      if (this._isHovered) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)'
+      }
+      ctx.fill()
       ctx.font = '96px Material Design Icons'
       ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'
       if (this.isCentered) {
@@ -137,6 +132,7 @@ class Cell {
         this.firstPoint.x + this._a / 2,
         this.firstPoint.y + 125)
     }
+    ctx.stroke()
 
     ctx.restore()
     ctx.save()

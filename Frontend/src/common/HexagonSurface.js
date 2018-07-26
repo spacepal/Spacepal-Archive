@@ -269,7 +269,6 @@ export default {
       let { width, height } = ctx.canvas
 
       ctx.clearRect(0, 0, width, height) // slow
-
       ctx.translate(this.dx, this.dy)
       this._scaleOverCenter(ctx, this.scale)
 
