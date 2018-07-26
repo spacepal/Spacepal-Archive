@@ -50,6 +50,14 @@ class Fleet < Ohm::Model
   validates :planet_to_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :started, inclusion: { in: [true, false,"true", "false"] }, allow_nil: true
 
+  def id
+    super.to_i
+  end
+
+  def player_id
+    self.attributes[:player_id].to_i
+  end
+
   def move steps = 1
     self.steps_left -= steps
     self.save

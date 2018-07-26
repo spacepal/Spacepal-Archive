@@ -14,6 +14,18 @@ class Cell < Ohm::Model
   validates :x, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 64, greater_than_or_equal_to: 1}
   validates :y, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 64, greater_than_or_equal_to: 1}
 
+  def id
+    super.to_i
+  end
+
+  def planet_id
+    self.attributes[:planet_id].to_i
+  end
+
+  def game_id
+    self.attributes[:game_id].to_i
+  end
+
   def relative_id
     return self.id.to_i - self.game.cells.first.id.to_i + 1
   end

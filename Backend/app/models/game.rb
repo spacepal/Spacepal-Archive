@@ -48,6 +48,7 @@ class Game < Ohm::Model
   attribute :buffs, lambda { |x| x.to_bool }
   attribute :pirates, lambda { |x| x.to_bool }
   attribute :production_after_capture, lambda { |x| x.to_bool }
+  attribute :notifications
 
   index :step
 
@@ -62,6 +63,47 @@ class Game < Ohm::Model
   validates :buffs, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
   validates :pirates, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
   validates :production_after_capture, inclusion: { in: [true, false, "true", "false"] }, allow_nil: true
+
+  def id
+    super.to_i
+  end
+
+  def set_notifications _hash
+    "set_notifications".color(:cyan).out
+    p _hash.to_json
+    self.notifications = _hash.to_json
+    p self.notifications
+    self.save
+  end
+
+  def get_notifications
+    "get_notifications".color(:cyan).out
+    if self.notifications
+      p "gn1"
+      "notifications: #{self.notifications}: #{self.notifications.class}".out
+      p JSON.parse self.notifications
+      JSON.parse self.notifications
+    else
+      p "gn3"
+      nil
+    end 
+  end
+
+  def clear_notifications
+    "clear_notifications".color(:cyan).out
+    self.notifications = {}
+    p "cn1"
+    self.players.each do |player|
+      p "cn2"
+      notifications[player.id] = []
+      p "cn3"
+    end
+    p "cn4"
+    self.notifications = self.notifications.to_json 
+    p "cn5"
+    self.save
+    p "cn6"
+  end
 
   def production_after_capture?
     self.production_after_capture == true
@@ -84,8 +126,7 @@ class Game < Ohm::Model
     self.get_capital_planets.each do |planet| 
       planet.is_capital = false
       unless planet.player
-        planet.set_production 
-        planet.set_kill_percent
+        planet.set_properties
       end
       planet.save
     end

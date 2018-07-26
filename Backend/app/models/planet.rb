@@ -26,6 +26,22 @@ class Planet < Ohm::Model
   validates :experience, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: -1 }
   validates :ships, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
+  def id
+    super.to_i
+  end
+
+  def game_id
+    self.attributes[:game_id].to_i
+  end
+
+  def player_id
+    self.attributes[:player_id].to_i
+  end
+
+  def cell_id
+    self.attributes[:cell_id].to_i
+  end
+
   def set_properties
     self.set_production
     self.set_kill_percent
@@ -109,6 +125,7 @@ class Planet < Ohm::Model
   end
 
   def defend_against_fleet fleet
+    result = ""
     rand = Random.new
     planet_ships = self.ships
     fleet_ships = fleet.ships
@@ -124,20 +141,25 @@ class Planet < Ohm::Model
       self.ships = winner_ships == 0 ? rand(1..3) : winner_ships
       "ships = #{self.ships} PLANET WIN".color(:orange).out
       self.save
+      result = "planet"
     elsif winner_force == 0
       self.ships = 0
       self.save
       "ships = #{self.ships} NOBODY NOT LOSE".color(:orange).out
+      result = "planet"
     elsif winner_force < 0
       winner_ships = (winner_force / fleet.kill_perc).to_i.abs
       self.change_player fleet.player
       self.ships = winner_ships == 0 ? rand(1..3) : winner_ships
       "ships = #{self.ships} FLEET WIN".color(:orange).out
       self.save
+      result = "fleet"
     end
-      fleet.player = nil
-      fleet.save
-      fleet.delete
+    fleet.player = nil
+    fleet.save
+    fleet.delete
+    p result
+    return result
   end
 
   def change_player player
