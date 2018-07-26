@@ -134,7 +134,6 @@ const actions = {
       state.sync.game &&
       state.sync.profile &&
       state.sync.planets &&
-      state.sync.endTurnClear &&
       getters['game/isGame'] &&
       !getters['profile'].isEndTurn &&
       !getters['profile'].isGameOver) {
