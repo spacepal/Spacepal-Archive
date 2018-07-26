@@ -17,12 +17,12 @@
         <p :key="n.id" v-if="n.type === 'ATTACK_FAILED'">
           <span class="mdi mdi-target mdi-16px text-fail"></span>
           Attack to <Planet @goToCell="goToCell" :id="n.target"></Planet>
-          <Member :id="n.member"></Member> is failed
+          <Member :id="n.member"></Member> was failed
         </p>
         <p :key="n.id" v-if="n.type === 'ATTACK_SUCCESS'">
           <span class="mdi mdi-target mdi-16px text-success"></span>
-          Attack to <Planet @goToCell="goToCell" :id="n.target"></Planet>
-          <Member :id="n.member"></Member> is succeeded
+          Attack on the planet <Planet @goToCell="goToCell" :id="n.target"></Planet>
+          <Member :id="n.member"></Member> was successful
         </p>
         <p :key="n.id" v-if="n.type === 'PIRATES_DAMAGED_PLANET'">
           <span class="mdi mdi-pirate mdi-16px text-fail"></span>
@@ -33,7 +33,7 @@
         <p :key="n.id" v-if="n.type === 'PIRATES_DAMAGED_FLEET'">
           <span class="mdi mdi-skull mdi-16px text-fail"></span>
           Fleet
-          <Fleet  @goToCell="goToCell" :id="n.target" />
+          <Fleet @goToCell="goToCell" :id="n.target" />
           is damaged by pirates
         </p>
         <p :key="n.id" v-if="n.type === 'PLAYER_LOST'">
@@ -44,9 +44,8 @@
         </p>
         <p :key="n.id" v-if="n.type === 'FLEET_LAND'">
           <span class="mdi mdi-airplane-landing mdi-16px text-success"></span>
-          Fleet to
-          <planet :id="n.target"></planet>
-          is landed
+          Fleet landed to
+          <Planet :id="n.target" @goToCell="goToCell"></Planet>
         </p>
       </template>
     </div>
