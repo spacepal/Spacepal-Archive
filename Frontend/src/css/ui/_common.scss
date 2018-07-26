@@ -23,6 +23,14 @@
     .text-additional {
       color: map_get($colorAdditionalText, $theme)
     }
+
+    .text-success {
+      color: map_get($colorSuccessText, $theme)
+    }
+
+    .text-fail {
+      color: map_get($colorFailText, $theme)
+    }
   }
 }
 

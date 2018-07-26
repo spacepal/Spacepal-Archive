@@ -5,7 +5,9 @@ $pallets: (
       rgb(79, 125, 146), // main
       rgb(3, 154, 255), // highlighted
       rgb(255,255,255), // button
-      rgba(128, 128, 128, 0.7) // additional info
+      rgba(128, 128, 128, 0.7), // additional info,
+      rgb(3, 255, 79), // success
+      rgb(255, 167, 3) // fail
     ),
     'background': (
       black, // body
@@ -30,7 +32,9 @@ $pallets: (
       rgb(9, 15, 66), // main
       rgb(0, 85, 141), // header
       rgb(255,255,255), // button
-      rgba(43, 60, 187, 0.603) // additional info
+      rgba(43, 60, 187, 0.603), // additional info
+      rgb(3, 255, 171), // success
+      rgb(255, 154, 3) // fail
     ),
     'background': (
       white, // body
@@ -89,6 +93,8 @@ $colorTextWindowHeader: color("text", 2);
 $colorHighlighted: color("text", 2);
 $colorToastText: color("text", 2);
 $colorAdditionalText: color("text", 4);
+$colorSuccessText: color("text", 5);
+$colorFailText: color("text", 6);
 
 
 /* ================ BORDERS ================ */

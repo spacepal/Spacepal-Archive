@@ -2,23 +2,52 @@
   <div class="has-spinner" :class="loadingClass">
     <div v-if="notifications.length > 0" class="notifications">
       <template v-for="n in notifications">
-        <template v-if="n.type in ['PLANET_LOST', 'PLANET_SAVED', 'ATTACK_FAILED', 'ATTACK_SUCCESS']">
-          <Planet :key="n.id + '_1'" @goToCell="goToCell" :id="n.target"></Planet>
-          <span :key="n.id + '_2'">{{ n.message }}</span>
-          <Member :key="n.id + '_3'" :id="n.member"></Member>
-        </template>
-        <template v-if="n.type in ['PIRATES_DAMAGED_PLANET', 'FLEET_LAND']">
-          <Planet :key="n.id + '_1'" @goToCell="goToCell" :id="n.target"></Planet>
-          <span :key="n.id + '_2'" class="span-1-2">{{ n.message }}</span>
-        </template>
-        <template v-if="n.type == 'PIRATES_DAMAGED_FLEET'">
-          <Fleet  @goToCell="goToCell" :id="n.target" :key="n.id + '_1'" />
-          <span :key="n.id + '_2'" class="span-1-2">{{ n.message }}</span>
-        </template>
-        <template v-if="n.type === 'PLAYER_LOST'">
-          <Member :key="n.id + '_1'" :id="n.member"></Member>
-          <span :key="n.id + '_2'" class="span-1-2">{{ n.message }}</span>
-        </template>
+        <p :key="n.id" v-if="n.type === 'PLANET_LOST'">
+          <span class="mdi mdi-security-close mdi-16px text-fail"></span>
+          Planet <Planet @goToCell="goToCell" :id="n.target"></Planet>
+          is lost. Agressor:
+          <Member :id="n.member"></Member>
+        </p>
+        <p :key="n.id" v-if="n.type === 'PLANET_SAVED'">
+          <span class="mdi mdi-security mdi-16px text-success"></span>
+          Planet <Planet @goToCell="goToCell" :id="n.target"></Planet>
+          is saved. Agressor:
+          <Member :id="n.member"></Member>
+        </p>
+        <p :key="n.id" v-if="n.type === 'ATTACK_FAILED'">
+          <span class="mdi mdi-target mdi-16px text-fail"></span>
+          Attack to <Planet @goToCell="goToCell" :id="n.target"></Planet>
+          <Member :id="n.member"></Member> is failed
+        </p>
+        <p :key="n.id" v-if="n.type === 'ATTACK_SUCCESS'">
+          <span class="mdi mdi-target mdi-16px text-success"></span>
+          Attack to <Planet @goToCell="goToCell" :id="n.target"></Planet>
+          <Member :id="n.member"></Member> is succeeded
+        </p>
+        <p :key="n.id" v-if="n.type === 'PIRATES_DAMAGED_PLANET'">
+          <span class="mdi mdi-pirate mdi-16px text-fail"></span>
+          Planet
+          <Planet @goToCell="goToCell" :id="n.target"></Planet>
+          is damaged by pirates
+        </p>
+        <p :key="n.id" v-if="n.type === 'PIRATES_DAMAGED_FLEET'">
+          <span class="mdi mdi-skull mdi-16px text-fail"></span>
+          Fleet
+          <Fleet  @goToCell="goToCell" :id="n.target" />
+          is damaged by pirates
+        </p>
+        <p :key="n.id" v-if="n.type === 'PLAYER_LOST'">
+          <span class="mdi mdi-account-off mdi-16px text-success"></span>
+          Player
+          <Member :id="n.member"></Member>
+          lost
+        </p>
+        <p :key="n.id" v-if="n.type === 'FLEET_LAND'">
+          <span class="mdi mdi-airplane-landing mdi-16px text-success"></span>
+          Fleet to
+          <planet :id="n.target"></planet>
+          is landed
+        </p>
       </template>
     </div>
     <p v-else>No notifications</p>
@@ -37,8 +66,8 @@ const MESSAGES = {
   ATTACK_FAILED: 'The attack is repelled',
   ATTACK_SUCCESS: 'The attack is succeeded',
   PIRATES_DAMAGED_PLANET: 'Damage by pirates',
-  PIRATES_DAMAGED_FLEET: 'Damage by pirates',
-  PLAYER_LOST: 'Player lost',
+  PIRATES_DAMAGED_FLEET: 'Fleet damaged by pirates',
+  PLAYER_LOST: `Player lost`,
   FLEET_LAND: 'Fleet landed',
   UNKNOWN: 'Unknow event'
 }
@@ -71,6 +100,7 @@ export default {
       this.$emit('goToCell', cellID)
     },
     notification (event) {
+      console.log(event.type)
       return {
         id: this.counter++,
         target: event.target,
@@ -84,15 +114,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.notifications {
-  display: grid;
-  min-height: 100%;
-  grid-template-columns: auto auto auto
-}
-.notifications > span {
-  margin: 5px 20px
-}
-.span-1-2 {
-  grid-column: 1, 2;
-}
 </style>

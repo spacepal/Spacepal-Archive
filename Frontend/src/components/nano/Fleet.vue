@@ -4,8 +4,10 @@
       <Planet @goToCell="goToCell" :id="fleet.from"></Planet>
       <span class="mdi mdi-arrow-right mdi-16px" />
       <Planet @goToCell="goToCell" :id="fleet.to"></Planet>
-      <span>/{{ fleet.steps }}</span>
-      <span> ({{ fleet.count }})</span>
+      <span title="Steps left">/ {{ fleet.stepsLeft }}</span>
+      <span title="Ships count">
+        <span class="mdi mdi-rocket mdi-16px">{{ fleet.count }}</span>
+      </span>
     </template>
     <span v-else>
       Loading...
