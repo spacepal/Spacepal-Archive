@@ -59,16 +59,16 @@ import Member from './nano/Member'
 import Planet from './nano/Planet'
 import Fleet from './nano/Fleet'
 
-const MESSAGES = {
-  PLANET_LOST: 'The planet is lost',
-  PLANET_SAVED: 'The planet is saved',
-  ATTACK_FAILED: 'The attack is repelled',
-  ATTACK_SUCCESS: 'The attack is succeeded',
-  PIRATES_DAMAGED_PLANET: 'Damage by pirates',
-  PIRATES_DAMAGED_FLEET: 'Fleet damaged by pirates',
-  PLAYER_LOST: `Player lost`,
-  FLEET_LAND: 'Fleet landed',
-  UNKNOWN: 'Unknow event'
+const EVENTS_PRIORITY = {
+  PLANET_LOST: 1,
+  PLANET_SAVED: 2,
+  ATTACK_FAILED: 3,
+  ATTACK_SUCCESS: 4,
+  PIRATES_DAMAGED_PLANET: 5,
+  PIRATES_DAMAGED_FLEET: 6,
+  PLAYER_LOST: 7,
+  FLEET_LAND: 8,
+  UNKNOWN: 9
 }
 
 export default {
@@ -91,7 +91,9 @@ export default {
         ? '' : 'loading'
     },
     notifications () {
-      return this.events.map(this.notification)
+      return this.events.map(this.notification).sort((a, b) => {
+        return a.priority - b.priority
+      })
     }
   },
   methods: {
@@ -103,7 +105,7 @@ export default {
       return {
         id: this.counter++,
         target: event.target,
-        message: MESSAGES[event.type] || MESSAGES['UNKNOWN'],
+        priority: EVENTS_PRIORITY[event.type] || 10,
         member: event.member,
         type: event.type
       }
