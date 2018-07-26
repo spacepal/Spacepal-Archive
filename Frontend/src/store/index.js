@@ -32,6 +32,7 @@ const state = {
     planets: false,
     profile: false,
     events: false,
+    endTurnClear: false,
     autotasks: false // complete
   },
   endTurnLock: true,
@@ -122,8 +123,6 @@ const actions = {
   reset ({ commit, dispatch }) { // turn_ended from ActionCable
     console.log('RESET')
     dispatch('lock') // it does not matter
-    dispatch('events/clear')
-    dispatch('tasks/clear')
     commit('SYNC_RESET')
   },
   syncUnset ({ commit }, syncType) {
@@ -135,10 +134,16 @@ const actions = {
       state.sync.game &&
       state.sync.profile &&
       state.sync.planets &&
+      state.sync.endTurnClear &&
       getters['game/isGame'] &&
       !getters['profile'].isEndTurn &&
       !getters['profile'].isGameOver) {
       dispatch('unlock')
+    }
+    if (state.sync.endTurn && !state.sync.endTurnClear) {
+      dispatch('syncSet', 'endTurnClear')
+      dispatch('events/clear')
+      dispatch('tasks/clear')
     }
     if (!state.sync.autotasks &&
       !state.endTurnLock) {
@@ -155,6 +160,7 @@ const actions = {
     dispatch('clearPlanets')
     dispatch('clearProfile')
     dispatch('tasks/clear')
+    dispatch('tasks/clearAutoTasks')
   },
   logout ({ commit, dispatch, state }) {
     dispatch('disableCable')

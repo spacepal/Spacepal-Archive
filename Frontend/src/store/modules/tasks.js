@@ -4,21 +4,27 @@ import Vue from 'vue'
 import { calcDistance } from '../../common/DistanceHelper.js'
 
 const STORAGE_AUTOTASKS = 'autotasks'
+const STORAGE_TASKS = 'tasks'
 
 const state = {
-  tasks: {},
+  tasks: JSON.parse(sessionStorage.getItem(STORAGE_TASKS)) || {},
   shipsDecreasing: {},
   autoTasks: JSON.parse(sessionStorage.getItem(STORAGE_AUTOTASKS)) || {},
   lastTaskID: 0
 }
 
 const mutations = {
-  CLEAR (state) {
+  CLEAR_TASKS (state) {
     Object.keys(state.tasks).forEach(key => {
       Vue.delete(state.tasks, key)
     })
     Object.keys(state.shipsDecreasing).forEach(key => {
       Vue.delete(state.shipsDecreasing, key)
+    })
+  },
+  CLEAR_AUTO_TASKS (state) {
+    Object.keys(state.autoTasks).forEach(key => {
+      Vue.delete(state.autoTasks, key)
     })
   },
   ADD_TASK ({ tasks, lastTaskID }, task) {
@@ -90,6 +96,7 @@ const actions = {
       let task = state.tasks[taskID]
       commit('REMOVE_TASK', taskID)
       commit('INCREASE_SHIPS', { planetID: task.from, count: task.count })
+      sessionStorage.setItem(STORAGE_TASKS, JSON.stringify(state.tasks))
     } else {
       console.warn('tasks.del: invalid taskID')
     }
@@ -150,9 +157,15 @@ const actions = {
     commit('DECREASE_SHIPS', { planetID: from, count })
     commit('ADD_TASK', { from, to, count, stepsLeft })
     commit('INCREASE_ID')
+    sessionStorage.setItem(STORAGE_TASKS, JSON.stringify(state.tasks))
   },
   clear ({ commit }) {
-    commit('CLEAR')
+    commit('CLEAR_TASKS')
+    sessionStorage.removeItem(STORAGE_TASKS)
+  },
+  clearAutoTasks ({ commit }) {
+    commit('CLEAR_AUTO_TASKS')
+    sessionStorage.removeItem(STORAGE_AUTOTASKS)
   }
 }
 
