@@ -16,6 +16,10 @@ class Core
   def initialize game_id, player_id
     @game_id = game_id
     @player_id = player_id
+    @notifications = Hash.new
+    Game[@game_id].players.each do |player|
+      @notifications[player.id] = Array.new
+    end
   end
 
   def shuffle
@@ -36,7 +40,8 @@ class Core
   def start_game
     "end_turn".bg(:green).color(:black).out
     self.start_playing
-    self.gain_players_planet_exp 
+    self.gain_players_planet_exp
+    self.clear_notifications
     self.broadcast_on_start_game
     self.bot_make_step
   end
@@ -59,12 +64,13 @@ class Core
   def game_end_turn
     "game_end_turn".bg(:green).color(:black).out
     game = Game[@game_id]
-    self.make_step #there was without self here ??????????
-    p "game_over? #{game.over?}"
+    self.make_step
+    "@notifications: #{@notifications}".out
     if game.over?
+      "@notifications: #{@notifications}".out
       self.broadcast_on_end_game
     else
-      p "on false"
+      "@notifications: #{@notifications}".out
       self.broadcast_on_everybody_ends_turn
       self.bot_make_step
     end

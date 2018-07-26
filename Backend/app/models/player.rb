@@ -39,6 +39,14 @@ class Player < Ohm::Model
   validates :is_admin, inclusion: { in: [true, false] }, allow_nil: true
   validates :is_ai, inclusion: { in: [true, false] }, allow_nil: true
 
+  def id
+    super.to_i
+  end
+
+  def game_id
+    self.attributes[:game_id].to_i
+  end
+
   def ai?
     self.is_ai == true
   end

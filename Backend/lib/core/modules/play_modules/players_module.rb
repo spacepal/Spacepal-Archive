@@ -10,6 +10,7 @@ module PlayerModule
       else
         unless player.fleets.count > 0
           player.end_game
+          self.add_notification type: 6, player_id1: player.id
         end
       end
     end

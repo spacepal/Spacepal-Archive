@@ -9,59 +9,74 @@ module Broadcastable
   NOTIFICATION_TYPE = :notifications
 
   def broadcast_on_subscribe
+    "broadcast on subscripe".bg(:black).color(:blue).out
     self.broadcast_all_common_data
     self.broadcast_private_data
+    self.broadcast_notifications
   end
 
   def broadcast_on_start_game
+    "broadcast on start game".bg(:black).color(:blue).out
     self.broadcast_all_common_data
     self.broadcast_player_to_everybody
+    self.broadcast_notifications
   end
 
   def broadcast_on_player_ends_turn
+    "broadcast on player ends turn".bg(:black).color(:blue).out
     self.broadcast_player
     self.broadcast_players
   end
 
   def broadcast_on_everybody_ends_turn
+    "broadcast on everybody ends turn".bg(:black).color(:blue).out
     self.broadcast_end_turn
   end
 
   def broadcast_the_rest_of_data
+    "broadcast the rest of data".bg(:black).color(:blue).out
     self.broadcast_all_data_to_player
   end
 
   def broadcast_on_end_game
+    "broadcast on end game".bg(:black).color(:blue).out
     self.broadcast_game
     self.broadcast_players
   end
 
   def broadcast_all_common_data 
+    "broadcast all common".bg(:black).color(:blue).out
     self.broadcast_game
     self.broadcast_players
     self.broadcast_planets
   end
 
   def broadcast_all_data_to_player 
+    "broadcast all data to player".bg(:black).color(:blue).out
     self.broadcast_game_to_player 
     self.broadcast_players_to_player 
     self.broadcast_planets_to_player 
     self.broadcast_player
     self.broadcast_fleets
+    self.broadcast_notifications
   end
 
   def broadcast_private_data
+    "broadcast private data".bg(:black).color(:blue).out
     self.broadcast_player
     self.broadcast_fleets
+    self.broadcast_notifications
   end
 
   def broadcast_player_to_everybody
+    "broadcast player to everybody".bg(:black).color(:blue).out
     Game[@game_id].players.each do |player|
       self.broadcast_player player.id
     end
   end
 
   def broadcast_private_data_to_everybody
+    "broadcast private to everybody".bg(:black).color(:blue).out
     Game[@game_id].players.each do |player|
       self.broadcast_player player.id
       self.broadcast_fleets player.id
@@ -69,10 +84,12 @@ module Broadcastable
   end
 
   def broadcast_end_turn
+    "broadcast end turn".bg(:black).color(:blue).out
     ActionCable.server.broadcast("games:#{@game_id}", { "type" => "turn_ended" })
   end
 
   def transmitted_player
+    "transmitted player".bg(:black).color(:blue).out
     player = Player[@player_id]
     player.is_end_turn
     _hash = {
@@ -107,14 +124,17 @@ module Broadcastable
   end
 
   def broadcast_game
+    "broadcast game".bg(:black).color(:blue).out
     ActionCable.server.broadcast("games:#{@game_id}", self.game)
   end  
 
   def broadcast_game_to_player
+    "broadcast game to player".bg(:black).color(:blue).out
     ActionCable.server.broadcast("players:#{@player_id}", self.game)
   end  
 
   def broadcast_player player_id = @player_id
+    "broadcast player".bg(:black).color(:blue).out
     player = Player[player_id]
     "from broadcast_player player_name = #{player.name}"
     _hash = {
@@ -154,18 +174,22 @@ module Broadcastable
   end
 
   def broadcast_players
+    "broadcast players".bg(:black).color(:blue).out
     ActionCable.server.broadcast("games:#{@game_id}", self.players)
   end
 
   def broadcast_players_to_player
+    "broadcast players to player".bg(:black).color(:blue).out
     ActionCable.server.broadcast("players:#{@player_id}", self.players)
   end
 
   def broadcast_fleets player_id = @player_id 
+    "broadcast fleets".bg(:black).color(:blue).out
     player = Player[player_id]
     fleets = player.fleets
     arr = fleets&.map do |fleet|
       {
+        "id": fleet.id.to_i,
         from: fleet.planet_from_id.to_i, # planetID
         to: fleet.planet_to_id.to_i, # planetID
         count: fleet.ships.to_i,
@@ -192,11 +216,31 @@ module Broadcastable
   end
 
   def broadcast_planets
+    "broadcast planets".bg(:black).color(:blue).out
     ActionCable.server.broadcast("games:#{@game_id}", self.planets )
   end
 
   def broadcast_planets_to_player
+    "broadcast planets to player".bg(:black).color(:blue).out
     ActionCable.server.broadcast("players:#{@player_id}", self.planets )
+  end
+
+  def broadcast_notifications
+    "broadcast notifications".bg(:black).color(:blue).out
+    p @notifications
+    nots = Game[@game_id].get_notifications
+    "nots: #{nots}".out
+    if nots
+      nots.keys.each do |key|
+        _hash = {
+          "type" => "notifications",
+          "data" => {
+            "notifications" => nots[key]
+          }
+        }
+        ActionCable.server.broadcast("players:#{key}", _hash )
+      end
+    end
   end
 
 end
