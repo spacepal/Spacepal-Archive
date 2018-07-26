@@ -64,6 +64,7 @@
     </div>
     <div class="info-panel-bg"
       v-if="panelsVisibility.notifications"
+      @click.self="hideAllPanels"
       @click="onPanelClicked($event, notifications)">
       <Form class="info-panel-body">
         <Notifications @goToCell="goToCell" />
