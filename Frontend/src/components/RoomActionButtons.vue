@@ -63,7 +63,9 @@ export default {
           name: 'GamesList'
         })
       }).catch(err => {
-        this.$refs.loader.hide()
+        this.$router.push({
+          name: 'GamesList'
+        })
         this.$toast(err.message)
       })
     }
