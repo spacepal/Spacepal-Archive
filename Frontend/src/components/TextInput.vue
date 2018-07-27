@@ -4,7 +4,8 @@
     <input ref="inp" :maxlength="maxLength"
       :type="type" :min="min" :max="max"
       :placeholder="placeholder" v-model="text"
-      @keyup="onKey" @click="$event.target.select()">
+      @keydown="onKeyDown" @keyup="onKeyUp"
+      @click="$event.target.select()">
     <div class="counter" v-show="text.length !== 0" v-if="hasCounter">
       {{text.length}}\{{max}}
     </div>
@@ -86,9 +87,14 @@ export default {
     }
   },
   methods: {
-    onKey (e) {
+    onKeyUp (e) {
       if (e.keyCode > LAST_SPECIAL_CODE) {
         e.stopPropagation()
+      }
+    },
+    onKeyDown (e) {
+      if (this.type === TYPE_NUMBER && ['.', ',', '-', '+'].includes(e.key)) {
+        e.preventDefault()
       }
     },
     focus () {
