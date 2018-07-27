@@ -1,6 +1,7 @@
 <template>
   <div class="menu" v-if="menuIsVisible">
-    <span class="mdi mdi-menu mdi-36px"></span>
+    <span v-if="profile.isEndTurn" class="mdi mdi-progress-check mdi-36px"></span>
+    <span v-else class="mdi mdi-menu mdi-36px"></span>
     <div class="items">
       <template v-if="!isLocked">
         <span class="mdi mdi-chess-knight"></span>
@@ -67,7 +68,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['menuIsVisible', 'isLocked']),
+    ...mapGetters(['menuIsVisible', 'isLocked', 'profile']),
     isFullScreen: () => document.fullscreen
   },
   mounted () {
