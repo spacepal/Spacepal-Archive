@@ -3,7 +3,7 @@
 * Latest version of Go: https://golang.org/dl/
 
 ## Description
-* **aiservice** makes a move by AI
+* **aiservice** makes a move by AI. The port **3131** is used by default.
 * **fakeserver** emulates a game between bots
 
 ## Build
