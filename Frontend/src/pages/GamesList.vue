@@ -3,14 +3,14 @@
     <div class="loop_header"></div>
     <GameTitle></GameTitle>
     <div class="buttons-left">
-      <div class="button" @click="goToGithub" title="Star on github">
-        <span class="mdi mdi-github-circle mdi-16px"></span>
+      <div class="button" @click="joinByID" title="Join game by ID">
+        <span>Join</span>
       </div>
       <div class="button" v-if="total != 0" @click="joinRandom" title="Join random game">
         <span class="mdi mdi-auto-fix mdi-16px"></span>
       </div>
-      <div class="button" @click="joinByID" title="Join game by ID">
-        <span>Join</span>
+      <div class="button" @click="goToGithub" title="Star on github">
+        <span class="mdi mdi-github-circle mdi-16px"></span>
       </div>
     </div>
     <div class="buttons-right">
