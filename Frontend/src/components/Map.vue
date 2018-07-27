@@ -465,6 +465,8 @@ export default {
     top: 0 !important;
     width: 100% !important;
     height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .dragged {

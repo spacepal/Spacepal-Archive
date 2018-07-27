@@ -1,5 +1,6 @@
 <template>
   <div id="games-page">
+    <div class="loop_header"></div>
     <GameTitle></GameTitle>
     <div class="buttons-left">
       <div class="button" @click="goToGithub" title="Star on github">

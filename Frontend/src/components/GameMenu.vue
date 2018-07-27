@@ -146,7 +146,7 @@ $menuBtn: $iconSize + $padding * 2;
   display: flex;
   align-items: center;
   position: fixed;
-  top: 4px;
+  top: 0;
   right: 0;
   margin-right: $menuBtn - 3px;
   background: rgba(0, 0, 0, 0.7);

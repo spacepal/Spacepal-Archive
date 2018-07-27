@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="loop_header"></div>
     <Map full :offsetX="280"></Map>
     <div class="info-field">
       <div class="info-panel-body">
