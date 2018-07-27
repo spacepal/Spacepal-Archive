@@ -9,6 +9,9 @@
       <div class="button" v-if="total != 0" @click="joinRandom" title="Join random game">
         <span class="mdi mdi-auto-fix mdi-16px"></span>
       </div>
+      <div class="button" @click="joinByID" title="Join game by ID">
+        <span>Join</span>
+      </div>
     </div>
     <div class="buttons-right">
       <div class="button" @click="createRandom" title="Create random game">
@@ -34,8 +37,11 @@
     <Window ref="confirm" type="confirm" @confirm="joinConfirm"
       title="Confirm action" :enabled="join.isValid">
       <template>
-        Do you want to join game #{{ join.gameID }}?
+        Do you want to join game<span v-if="!join.unknowGameID"> #{{ join.gameID }}</span>?
         <Form ref="joinForm" class="withoutborder">
+          <TextInput label="Game ID" v-model="join.gameID" ref="usernameInput"
+            type="number" v-if="join.unknowGameID" :min="1"
+            @change="checkJoinForm" />
           <TextInput label="Username" v-model="join.username" ref="usernameInput"
             type="text" validate='^[0-9A-Za-z_-]*$' :min="1" :max="32"
             @change="checkJoinForm" :generator="usernameGenerator" />
@@ -68,6 +74,7 @@ import { UsernameGenerator } from '../common/Generators.js'
 import { GITHUB_REPO } from '../common/constants.js'
 
 const REFRESH_TIMEOUT = 5000
+const INVALID_PIN_MESSAGE = 'the pin code is wrong'
 
 export default {
   name: 'GamesList',
@@ -196,6 +203,14 @@ export default {
     setRandom () {
       this.$refs.usernameInput.regenerate(true)
     },
+    joinByID () {
+      this.join.gameID = 1
+      this.join.pinCode = ''
+      this.join.hasPinCode = false
+      this.join.isValid = false
+      this.join.unknowGameID = true
+      this.$refs.confirm.show()
+    },
     joinConfirm () {
       this.$refs.loader.show()
       this.$store.dispatch('game/join', this.join).then(() => {
@@ -205,7 +220,13 @@ export default {
         })
       }).catch(err => {
         this.$refs.loader.hide()
-        this.$toast(err.message)
+        console.log(err.message)
+        if (this.join.hasPinCode === false && err.message === INVALID_PIN_MESSAGE) {
+          this.join.hasPinCode = true
+          this.$refs.confirm.show()
+        } else {
+          this.$toast(err.message)
+        }
       })
     },
     checkJoinForm () {
@@ -241,6 +262,7 @@ export default {
         this.join.pinCode = ''
         this.join.hasPinCode = row.has_pin_code
         this.join.isValid = false
+        this.join.unknowGameID = false
         this.$refs.confirm.show()
       }
     }
