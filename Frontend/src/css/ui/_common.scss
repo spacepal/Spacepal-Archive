@@ -8,12 +8,16 @@
     font-family: 'Audiowide', sans-serif;
     background: map_get($background, $theme);
 
+    a {
+      color: map_get($colorText, $theme)
+    }
+
     a:hover {
       color: map_get($colorHrefText, $theme)
     }
 
     .bg {
-      background: map_get($background, $theme);
+      background: map_get($background, $theme)
     }
 
     .text-highlighted {

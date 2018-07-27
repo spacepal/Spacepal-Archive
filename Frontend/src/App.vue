@@ -29,6 +29,19 @@
       </template>
     </Window>
     <Toast ref="toast" glob />
+    <Window ref="compitableWindow" title="Not supported">
+      <p class="text-fail">Sorry. The game is functional only in desktop browsers.</p>
+      <p><span class="text-success mdi mdi-google-chrome"></span> supported.</p>
+      <p><span class="text-success mdi mdi-firefox"></span> supported.</p>
+      <p><span class="text-success mdi mdi-opera"></span> supported?</p>
+      <p><span class="text-success mdi mdi-apple-safari"></span> supported?</p>
+      <p><span class="text-fail mdi mdi-internet-explorer"></span> not supported.</p>
+      <p>
+        You can contribute to extend browser support
+        <a class="mdi mdi-github-circle"
+          href="https://github.com/spacepal/Spacepal">Github</a>
+      </p>
+    </Window>
   </div>
 </template>
 
@@ -100,6 +113,9 @@ export default {
           name: 'GamesList'
         })
       })
+    }
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+      this.$refs.compitableWindow.show()
     }
   },
   methods: {
