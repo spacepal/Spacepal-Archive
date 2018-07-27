@@ -143,6 +143,9 @@ export default {
 $iconSize: 36px;
 $padding: 4px;
 $menuBtn: $iconSize + $padding * 2;
+.menu a {
+  color: white
+}
 .menu {
   display: flex;
   align-items: center;
