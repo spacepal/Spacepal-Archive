@@ -86,7 +86,7 @@ typings/
 Microservices/bin/*
 Microservices/pkg/*
 Microservices/src/*
-Microservices/production/*
+Microservices/dist/*
 Microservices/src/aiservice/bin/*
 Microservices/src/aiservice/vendor
 !Microservices/src/aiservice
@@ -148,3 +148,5 @@ bower.json
 
 # Ignore node_modules
 node_modules/
+
+__production__/
