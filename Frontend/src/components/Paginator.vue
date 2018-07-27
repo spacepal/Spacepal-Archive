@@ -23,6 +23,13 @@ export default {
       currentPage: 0
     }
   },
+  watch: {
+    lastPage (lastPage) {
+      if (this.currentPage !== 0 && this.currentPage >= lastPage) {
+        this.set(lastPage - 1)
+      }
+    }
+  },
   computed: {
     lastPage () {
       if (this.total === 0) {
@@ -42,6 +49,9 @@ export default {
       let page = this.currentPage + direction
       page = Math.max(0, page)
       page = Math.min(this.lastPage - 1, page)
+      this.set(page)
+    },
+    set (page) {
       if (this.currentPage !== page) {
         this.$emit('pageChanged', {
           page: page,
