@@ -2,37 +2,37 @@
 
 @each $theme in $themes {
   .#{$theme} {
-
-    .norows td {
-      padding: 30px !important;
-    }
-
-    .stable th, .stable td {
-      padding: 10px;
-    }
-
     .stable th {
       color: map_get($colorTextTableHeader, $theme);
     }
-
     .stable td {
-      word-wrap: break-word;
-      max-width: 200px;
       background:  map_get($gradient, $theme);
     }
-
     .stable td:hover {
       background:  map_get($gradientActive, $theme);
-      color: black;
-      transition: color 0.2s ease-out;
     }
-
     .stable {
-      margin: 10px;
-      cursor: default;
       border: 2px solid map_get($colorBorder, $theme);
-      text-align: center;
     }
-
   }
+}
+
+.norows td {
+  padding: 30px !important;
+}
+.stable th, .stable td {
+  padding: 10px;
+}
+.stable td {
+  word-wrap: break-word;
+  max-width: 200px;
+}
+.stable td:hover {
+  color: black;
+  transition: color 0.2s ease-out;
+}
+.stable {
+  margin: 10px;
+  cursor: default;
+  text-align: center;
 }

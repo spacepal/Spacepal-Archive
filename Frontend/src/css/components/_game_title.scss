@@ -1,15 +1,9 @@
 @import '../_colors.scss';
 @import '../animation/_loop_header.scss';
-
-@each $theme in $themes {
-  .#{$theme} {
-    #game-title {
-      font-size: 56pt;
-      margin: 32px 0;
-      text-align: center;
-      cursor: default;
-      user-select: none;
-      @supports (-webkit-background-clip: text) {
+@supports (-webkit-background-clip: text) {
+  @each $theme in $themes {
+    .#{$theme} {
+      .game-title {
         background: map_get($gradientActive, $theme);
         background-size: 10px;
         -webkit-background-clip: text;
@@ -22,9 +16,17 @@
         animation-iteration-count: infinite;
       }
     }
-    #game-title.small {
-      font-size: 32pt;
-      margin: 4px 0;
-    }
   }
+}
+
+.game-title {
+  font-size: 56pt;
+  margin: 32px 0;
+  text-align: center;
+  cursor: default;
+  user-select: none;
+}
+.game-title.small {
+  font-size: 32pt;
+  margin: 4px 0;
 }

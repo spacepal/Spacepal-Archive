@@ -4,42 +4,47 @@
 @each $theme in $themes {
 
   .#{$theme} {
-
     .button.disabled, .button.disabled:hover, .button.disabled:active {
       box-shadow: 4px 4px 1px map_get($colorBorderDisabled, $theme),
                   -4px -4px 1px map_get($colorBorderDisabled, $theme);
-      animation-name: None;
-      cursor: not-allowed
     }
-
     .button {
-      margin: 8px;
-      padding: 13px 20px;
       color: map_get($colorButtonText, $theme);
-      cursor: pointer;
       background: map_get($gradient, $theme);
       box-shadow: 4px 4px 1px map_get($colorBorderLight, $theme),
                   -4px -4px 1px map_get($colorBorderLight, $theme);
-      transition: box-shadow 0.1s ease-in;
-      border-radius: 5px 0;
-      user-select: none;
     }
-
     .button:hover {
       animation-name: loop-anim-#{$theme};
-      animation-duration: 2s;
-      animation-timing-function: linear;
-      animation-direction: normal;
-      animation-play-state: running;
-      animation-iteration-count: infinite;
       box-shadow: 8px -8px 1px map_get($colorBorderLight, $theme),
                   -8px 8px 1px map_get($colorBorderLight, $theme);
-      transition: box-shadow 0.1s ease-in;
     }
-
     .button:active {
       box-shadow: 8px -8px 1px map_get($colorBorderActive, $theme),
                   -8px 8px 1px map_get($colorBorderActive, $theme),
     }
   }
+}
+
+.button.disabled, .button.disabled:hover, .button.disabled:active {
+  animation-name: None;
+  cursor: not-allowed
+}
+
+.button {
+  margin: 8px;
+  padding: 13px 20px;
+  cursor: pointer;
+  transition: box-shadow 0.1s ease-in;
+  border-radius: 5px 0;
+  user-select: none;
+}
+
+.button:hover {
+  animation-duration: 2s;
+  animation-timing-function: linear;
+  animation-direction: normal;
+  animation-play-state: running;
+  animation-iteration-count: infinite;
+  transition: box-shadow 0.1s ease-in;
 }

@@ -5,14 +5,16 @@
     .form {
       border: 2px solid map_get($colorBorderLight, $theme);
       box-shadow: 0 0 8px map_get($colorBorderLight, $theme);
-      padding: 20px 50px;
-      margin: 10px;
-    }
-    .form.withoutborder, .withoutborder .form {
-      border: none;
-      box-shadow: none;
-      margin: 0;
-      padding: 0;
     }
   }
+}
+.form {
+  padding: 20px 50px;
+  margin: 10px;
+}
+.form.withoutborder, .withoutborder .form {
+  border: none;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
 }

@@ -3,10 +3,8 @@
 @each $theme in $themes {
   .#{$theme} {
     transition: all 0.5s linear;
-    color: map_get($colorText, $theme);
-    // font-family: 'Share Tech Mono', monospace;
-    font-family: 'Audiowide', sans-serif;
     background: map_get($background, $theme);
+    color: map_get($colorText, $theme);
 
     a {
       color: map_get($colorText, $theme)
@@ -36,6 +34,10 @@
       color: map_get($colorFailText, $theme)
     }
   }
+}
+
+* {
+  font-family: 'Audiowide', sans-serif;
 }
 
 .bg {

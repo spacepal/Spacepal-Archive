@@ -1,64 +1,68 @@
 @import '../_colors.scss';
 
+$height: 32px;
+$width: 56px;
+$border: 2px;
+$slider: 0.64;
+$sliderMargin: 3px;
+
 @each $theme in $themes {
   .#{$theme} {
 
     .switch {
-      cursor: pointer;
-      $height: 32px;
-      $width: 56px;
-      $border: 2px;
-
-      height: $height;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-
-      input {
-        display: none;
-      }
-
-      .label-text {
-        margin: 0 4px;
-      }
-
       .slider {
-        width: $width;
-        height: $height;
-        display: inline-block;
-        box-sizing: border-box;
-        left: 0;
-        top: 0;
-        border-radius: 30px;
         border: $border solid map_get($colorBorderLight, $theme);
         box-shadow: inset 0 0 10px map_get($colorBorderLight, $theme);
-        transition: background-color 0.1s linear;
       }
-
-      $slider: 0.64;
-      $sliderMargin: 3px;
       .slider::after {
-        content: '';
-        display: block;
-        width: $height * $slider - $border * 0.5;
-        height: $height * $slider - $border * 0.5;
-        margin-top: $height * (1 - $slider) * 0.5 - $border * 1.5;
-        margin-left: $sliderMargin;
         border: $border solid map_get($colorBorderLight, $theme);
-        border-radius: 30px;
-        transition: margin-left 0.2s linear;
         background: map_get($background, $theme);
       }
-
       input:checked + .slider {
         background-color: map_get($colorBorderLight, $theme);
-        transition: background-color 0.1s linear;
-      }
-
-      input:checked + .slider::after {
-        margin-left: $width - $height * $slider - $sliderMargin - $border * 1.5;
-        transition: margin-left 0.2s linear;
       }
     }
+  }
+}
+
+
+.switch {
+  cursor: pointer;
+  height: $height;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  input {
+    display: none;
+  }
+  .label-text {
+    margin: 0 4px;
+  }
+  .slider {
+    width: $width;
+    height: $height;
+    display: inline-block;
+    box-sizing: border-box;
+    left: 0;
+    top: 0;
+    border-radius: 30px;
+    transition: background-color 0.1s linear;
+  }
+  .slider::after {
+    content: '';
+    display: block;
+    width: $height * $slider - $border * 0.5;
+    height: $height * $slider - $border * 0.5;
+    margin-top: $height * (1 - $slider) * 0.5 - $border * 1.5;
+    margin-left: $sliderMargin;
+    border-radius: 30px;
+    transition: margin-left 0.2s linear;
+  }
+  input:checked + .slider {
+    transition: background-color 0.1s linear;
+  }
+  input:checked + .slider::after {
+    margin-left: $width - $height * $slider - $sliderMargin - $border * 1.5;
+    transition: margin-left 0.2s linear;
   }
 }

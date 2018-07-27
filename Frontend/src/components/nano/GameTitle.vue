@@ -1,5 +1,5 @@
 <template>
-  <div :class="mode" id="game-title">Space<sup>Pal</sup></div>
+  <div :class="mode" class="game-title">Space<sup>Pal</sup></div>
 </template>
 
 <script>
