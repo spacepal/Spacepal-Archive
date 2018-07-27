@@ -71,7 +71,6 @@ import FullPreloader from '../components/FullPreloader.vue'
 import Form from '../components/Form.vue'
 import Service from '../common/Service.js'
 import { UsernameGenerator } from '../common/Generators.js'
-import { GITHUB_REPO } from '../common/constants.js'
 
 const REFRESH_TIMEOUT = 5000
 const INVALID_PIN_MESSAGE = 'the pin code is wrong'
@@ -176,7 +175,7 @@ export default {
   },
   methods: {
     goToGithub () {
-      window.open(GITHUB_REPO, '_blank').focus()
+      window.open('https://github.com/spacepal/Spacepal', '_blank').focus()
     },
     createRandom () {
       this.$router.push({

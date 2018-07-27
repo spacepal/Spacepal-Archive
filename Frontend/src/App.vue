@@ -49,14 +49,17 @@ import Window from './components/Window'
 import Form from './components/Form'
 import TextInput from './components/TextInput'
 import Signal from './components/nano/Signal'
+import { DEFAULT_HOST } from './common/constants.js'
 let themes = ['dark', 'light']
+let backend = DEFAULT_HOST.split(':')
+
 export default {
   name: 'App',
   data () {
     return {
       settingsAreValid: false,
-      host: 'localhost',
-      port: 3000,
+      host: backend[0] || 'localhost',
+      port: parseInt(backend[1] || '3000'),
       currentTheme: 0,
       hotKeys: [
         {
