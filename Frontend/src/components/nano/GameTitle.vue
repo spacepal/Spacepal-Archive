@@ -1,10 +1,16 @@
 <template>
-  <div id="game-title">Space<sup>Pal</sup></div>
+  <div :class="mode" id="game-title">Space<sup>Pal</sup></div>
 </template>
 
 <script>
 export default {
-  name: 'GameTitle'
+  name: 'GameTitle',
+  props: {
+    mode: {
+      type: String,
+      default: ''
+    }
+  }
 }
 </script>
 

@@ -1,14 +1,18 @@
 <template>
   <div class="info-panel-bg signal" v-show="isVisible" :class="signalClass">
+    <GameTitle mode="small no-signal-item"></GameTitle>
     <Form class="info-panel-body">
-      <span class="mdi mdi-16px text-highlighted" :class="icon"></span>
+      <span class="signal-icon mdi mdi-16px text-highlighted" :class="icon"></span>
       {{message}}
     </Form>
+    <a class="mdi mdi-github-circle no-signal-item"
+      href="https://github.com/spacepal/Spacepal"> See on Github</a>
   </div>
 </template>
 
 <script>
 import Service from '../../common/Service.js'
+import GameTitle from './GameTitle'
 import Form from '../Form'
 const NO_SIGNAL_ICON = 'mdi-signal-off'
 const SIGNAL_BAD_ICON = 'mdi-signal-cellular-1'
@@ -33,7 +37,7 @@ export default {
     timerFunc()
   },
   components: {
-    Form
+    Form, GameTitle
   },
   data () {
     return {
@@ -100,13 +104,21 @@ export default {
 .signal {
   position: fixed;
   z-index: 10000000000;
-  user-select: none
+  user-select: none;
+  display: flex;
+  flex-direction: column
+}
+.no-signal-item {
+  display: none;
 }
 .no-signal {
-  .mdi {
+  .no-signal-item {
+    display: inline;
+  }
+  .signal-icon {
     animation: animBlink 0.6s linear infinite alternate !important;
   }
-  background: black
+  background: black;
 }
 @keyframes animBlink {
   0% {
