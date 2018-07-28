@@ -1,3 +1,3 @@
 all: install
 install:
-		bundle install
+		bundle install --deployment --without development test
