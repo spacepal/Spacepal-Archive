@@ -1,4 +1,4 @@
-export const DEFAULT_HOST = process.env.BACKEND_HOST
+export const DEFAULT_BACKEND = process.env.BACKEND || 'localhost:3000'
 export const API_POSTFIX = `/api/`
 export const WS_POSTFIX = '/websocket'
 export const GAME_CHANNEL = 'GameChannel'

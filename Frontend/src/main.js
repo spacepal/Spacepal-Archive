@@ -11,6 +11,8 @@ Vue.use(ToastPlugin)
 Vue.use(HotKeysPlugin)
 Vue.config.productionTip = false
 
+console.log(process.env)
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

@@ -27,6 +27,13 @@ if [ "$(which npm)" = "" ]; then
     err=true
 fi
 
+if [ "$(which git)" = "" ]; then
+		printf "\n$RED Git is not detected $CLEAR \n"
+    printf " You can download it: https://git-scm.com/downloads \n"
+    err=true
+fi
+
+
 if $err; then
   echo ""
   exit 1

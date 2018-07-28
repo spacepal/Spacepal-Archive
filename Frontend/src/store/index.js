@@ -1,7 +1,7 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
 import ActionCabel from '../common/ActionCabel'
-import { DEFAULT_HOST, API_POSTFIX, WS_POSTFIX } from '../common/constants.js'
+import { DEFAULT_BACKEND, API_POSTFIX, WS_POSTFIX } from '../common/constants.js'
 /* modules */
 import events from './modules/events'
 import fleets from './modules/fleets'
@@ -16,7 +16,7 @@ Vue.use(Vuex)
 
 const STORAGE_GAME_ID = 'game_id'
 const STORAGE_MENU_IS_SHOWED = 'menu_is_showed'
-const STORAGE_BACKEND_HOST = 'backend'
+const STORAGE_BACKEND = 'backend'
 const STORAGE_QUICKSTART = 'quickstart'
 
 var gID = localStorage.getItem(STORAGE_GAME_ID)
@@ -37,7 +37,7 @@ const state = {
   },
   endTurnLock: true,
   menuIsShowed: localStorage.getItem(STORAGE_MENU_IS_SHOWED) !== 'false',
-  backendServer: localStorage.getItem(STORAGE_BACKEND_HOST) || DEFAULT_HOST,
+  backendServer: localStorage.getItem(STORAGE_BACKEND) || DEFAULT_BACKEND,
   quickStart: localStorage.getItem(STORAGE_QUICKSTART)
 }
 
@@ -46,7 +46,7 @@ const mutations = {
     state.backendServer = host
   },
   RESET_BACKEND_SERVER (state) {
-    state.backendServer = DEFAULT_HOST
+    state.backendServer = DEFAULT_BACKEND
   },
   SET_MENU_IS_SHOWED (state, isShowed) {
     state.menuIsShowed = isShowed
@@ -88,11 +88,11 @@ const mutations = {
 
 const actions = {
   resetBackendServer ({ commit }, host) {
-    localStorage.removeItem(STORAGE_BACKEND_HOST)
+    localStorage.removeItem(STORAGE_BACKEND)
     commit('RESET_BACKEND_SERVER')
   },
   setBackendServer ({ commit }, host) {
-    localStorage.setItem(STORAGE_BACKEND_HOST, host)
+    localStorage.setItem(STORAGE_BACKEND, host)
     commit('SET_BACKEND_SERVER', host)
   },
   toggleMenuVisibility ({ state, commit }) {

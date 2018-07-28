@@ -49,9 +49,9 @@ import Window from './components/Window'
 import Form from './components/Form'
 import TextInput from './components/TextInput'
 import Signal from './components/nano/Signal'
-import { DEFAULT_HOST } from './common/constants.js'
+import { DEFAULT_BACKEND } from './common/constants.js'
 let themes = ['dark', 'light']
-let backend = DEFAULT_HOST.split(':')
+let backend = DEFAULT_BACKEND.split(':')
 
 export default {
   name: 'App',
