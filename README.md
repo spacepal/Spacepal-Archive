@@ -23,5 +23,7 @@ Online version of Konquest game [in development]
 
 # How to build
 - Get sources `git clone https://github.com/spacepal/Spacepal.git`
-- Build `make SPACEPAL_BACKEND="localhost:3000"`
+- Goto project directory `cd Spacepal`
+- Configure environment `./configure.sh`
+- Build `make`
 - See **__production__** folder

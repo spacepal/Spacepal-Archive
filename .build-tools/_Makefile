@@ -5,16 +5,11 @@ BACKEND_DIR=Backend
 MICROSERVICES=Microservices
 MICROSERVICES_DIST=$(MICROSERVICES)/dist
 BUILD_SCRIPTS=./.build-tools
-CHECK_SCRIPT=$(BUILD_SCRIPTS)/check.sh
-PROMT_SCRIPT=$(BUILD_SCRIPTS)/promt.sh
+BACKEND_GEN_START_SCRIPT=$(BUILD_SCRIPTS)/backend-gen-start.sh
+AISERVICE_GEN_START_SCRIPT=$(BUILD_SCRIPTS)/aiservice-gen-start.sh
+include ./Makefile.variable
 
-all: check clean backend frontend microservices done
-check:
-		@if [ -z $(SPACEPAL_BACKEND) ]; then\
-			printf "\n\n \033[31m SPACEPAL_BACKEND is not specified\033[0m \n\n";\
-			exit 1;\
-		fi
-		@bash "$(CHECK_SCRIPT)"
+all: clean backend frontend microservices done
 frontend:
 		@printf "\n\n \033[32m \t--- Frontend --- \033[0m \n\n"
 		mkdir -p ./$(PRODUCTION)/$(FRONTEND)
@@ -24,11 +19,15 @@ backend:
 		mkdir -p ./$(PRODUCTION)/$(BACKEND_DIR)
 		@printf "\n\n \033[32m \t--- Backend --- \033[0m \n\n"
 		+$(MAKE) -C $(BACKEND_DIR)
+		$(BACKEND_GEN_START_SCRIPT) $(SPACEPAL_FRONTEND) $(SPACEPAL_AISERVICE) > ./$(PRODUCTION)/$(BACKEND_DIR)/start.sh
+		chmod +x ./$(PRODUCTION)/$(BACKEND_DIR)/start.sh
 		cp ./$(BACKEND_DIR) ./$(PRODUCTION) -rf
 microservices:
 		@printf "\n\n \033[32m \t--- Microservices --- \033[0m \n\n"
 		mkdir -p ./$(PRODUCTION)/$(MICROSERVICES)
 		+$(MAKE) -C $(MICROSERVICES)
+		$(AISERVICE_GEN_START_SCRIPT) $(SPACEPAL_AISERVICE) > ./$(PRODUCTION)/$(MICROSERVICES)/start.sh
+		chmod +x ./$(PRODUCTION)/$(MICROSERVICES)/start.sh
 		cp ./$(MICROSERVICES_DIST)/* ./$(PRODUCTION)/$(MICROSERVICES)/ -rf
 clean:
 		rm "./$(PRODUCTION)"/* -rf
