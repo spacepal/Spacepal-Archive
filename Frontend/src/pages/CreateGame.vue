@@ -153,7 +153,6 @@ export default {
       this.$router.push({ name: 'GamesList' })
     },
     createGame (force = false) {
-      console.log(this.pref)
       if (this.$refs.form.isValid() || force) {
         this.$refs.loader.show()
         this.$store.dispatch('game/create', this.pref).then(gameID => {

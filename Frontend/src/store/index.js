@@ -101,12 +101,10 @@ const actions = {
     commit('SET_MENU_IS_SHOWED', isShowed)
   },
   lock ({ commit, dispatch }) {
-    console.log('END_TURN_LOCK')
     commit('END_TURN_LOCK')
     dispatch('syncUnset', 'profile')
   },
   unlock ({ commit }) {
-    console.log('TURN_UNLOCK')
     commit('END_TURN_UNLOCK')
   },
   enableCable ({ state, commit, dispatch, getters }) {
@@ -121,7 +119,6 @@ const actions = {
     commit('DISABLE_CABLE')
   },
   reset ({ commit, dispatch }) { // turn_ended from ActionCable
-    console.log('RESET')
     dispatch('lock') // it does not matter
     commit('SYNC_RESET')
   },

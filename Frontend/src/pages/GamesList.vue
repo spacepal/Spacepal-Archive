@@ -219,7 +219,6 @@ export default {
         })
       }).catch(err => {
         this.$refs.loader.hide()
-        console.log(err.message)
         if (this.join.hasPinCode === false && err.message === INVALID_PIN_MESSAGE) {
           this.join.hasPinCode = true
           this.$refs.confirm.show()

@@ -101,7 +101,6 @@ export default {
       this.$emit('goToCell', cellID)
     },
     notification (event) {
-      console.log(event.type)
       return {
         id: this.counter++,
         target: event.target,

@@ -126,7 +126,6 @@ export default {
   },
   watch: {
     quickStartDisabled (val) {
-      console.log('setQuickStart', !val)
       this.$store.dispatch('setQuickStart', !val)
     }
   },
