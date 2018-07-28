@@ -1,35 +1,63 @@
-PRODUCTION=__production__
-FRONTEND=Frontend
-FRONTEND_DIST=$(FRONTEND)/dist
+# SPACEPAL
+PRODUCTION=./__production__
+
+# FRONTEND
+FRONTEND_DIR=Frontend
+PROD_FRONTEND=$(PRODUCTION)/$(FRONTEND_DIR)
+FRONTEND_DIST=./$(FRONTEND_DIR)/dist
+
+# BACKEND
 BACKEND_DIR=Backend
-MICROSERVICES=Microservices
-MICROSERVICES_DIST=$(MICROSERVICES)/dist
+PROD_BACKEND=$(PRODUCTION)/$(BACKEND_DIR)
+BACKEND_START_SCRIPT=$(PRODUCTION)/backend-start.sh
+
+# MICROSERVICES
+MICROSERVICES_DIR=Microservices
+PROD_MICROSERVICES=$(PRODUCTION)/$(MICROSERVICES_DIR)
+MICROSERVICES_DIST=./$(MICROSERVICES_DIR)/dist
+AISERVICE_START_SCRIPT=$(PRODUCTION)/aiservice-start.sh
+
+# ENVIRONMENT CONFIGURATION
 BUILD_SCRIPTS=./.build-tools
 BACKEND_GEN_START_SCRIPT=$(BUILD_SCRIPTS)/backend-gen-start.sh
 AISERVICE_GEN_START_SCRIPT=$(BUILD_SCRIPTS)/aiservice-gen-start.sh
-include ./Makefile.variable
+ENV_FILE=env.sh
+include ./$(ENV_FILE)
 
-all: clean backend frontend microservices done
+GREEN=\033[32m
+CLEAR=\033[0m
+
+all: clean env backend frontend microservices done
+env:
+		@mkdir -p "$(PRODUCTION)"
+		@cp "./$(ENV_FILE)" "$(PRODUCTION)"
 frontend:
-		@printf "\n\n \033[32m \t--- Frontend --- \033[0m \n\n"
-		mkdir -p ./$(PRODUCTION)/$(FRONTEND)
-		+$(MAKE) BACKEND="$(SPACEPAL_BACKEND)" -C $(FRONTEND)
-		cp ./$(FRONTEND_DIST)/* ./$(PRODUCTION)/$(FRONTEND)/ -rf
+		@printf "\n\n$(GREEN)\t--- Frontend --- $(CLEAR) \n\n"
+		@mkdir -p "$(PROD_FRONTEND)"
+		+$(MAKE) BACKEND="$(SPACEPAL_BACKEND_PUBLIC)" -C "$(FRONTEND_DIR)"
+		@cp "$(FRONTEND_DIST)/"* "$(PROD_FRONTEND)/" -rf
 backend:
-		mkdir -p ./$(PRODUCTION)/$(BACKEND_DIR)
-		@printf "\n\n \033[32m \t--- Backend --- \033[0m \n\n"
-		+$(MAKE) -C $(BACKEND_DIR)
-		$(BACKEND_GEN_START_SCRIPT) $(SPACEPAL_FRONTEND) $(SPACEPAL_AISERVICE) > ./$(PRODUCTION)/$(BACKEND_DIR)/start.sh
-		chmod +x ./$(PRODUCTION)/$(BACKEND_DIR)/start.sh
-		cp ./$(BACKEND_DIR) ./$(PRODUCTION) -rf
+		@printf "\n\n$(GREEN)\t--- Backend --- $(CLEAR) \n\n"
+		# install dependencies
+		@mkdir -p "$(PROD_BACKEND)"
+		+$(MAKE) -C "$(BACKEND_DIR)"
+		@cp "./$(BACKEND_DIR)" "$(PRODUCTION)" -rf
+		# generate start-script
+		@bash "$(BACKEND_GEN_START_SCRIPT)" "$(SPACEPAL_FRONTEND_PUBLIC)" \
+			"$(SPACEPAL_AISERVICE_LOCAL)" "$(ENV_FILE)" \
+			> "$(BACKEND_START_SCRIPT)"
+		@chmod +x "$(BACKEND_START_SCRIPT)"
 microservices:
-		@printf "\n\n \033[32m \t--- Microservices --- \033[0m \n\n"
-		mkdir -p ./$(PRODUCTION)/$(MICROSERVICES)
-		+$(MAKE) -C $(MICROSERVICES)
-		$(AISERVICE_GEN_START_SCRIPT) $(SPACEPAL_AISERVICE) > ./$(PRODUCTION)/$(MICROSERVICES)/start.sh
-		chmod +x ./$(PRODUCTION)/$(MICROSERVICES)/start.sh
-		cp ./$(MICROSERVICES_DIST)/* ./$(PRODUCTION)/$(MICROSERVICES)/ -rf
+		@printf "\n\n$(GREEN)\t--- Microservices --- $(CLEAR) \n\n"
+		# install dependencies and build
+		@mkdir -p "$(PROD_MICROSERVICES)"
+		+$(MAKE) -C "$(MICROSERVICES_DIR)"
+		@cp "$(MICROSERVICES_DIST)"/* "$(PROD_MICROSERVICES)/" -rf
+		# generate start-script
+		@bash "$(AISERVICE_GEN_START_SCRIPT)" "$(ENV_FILE)" \
+			> "$(AISERVICE_START_SCRIPT)"
+		@chmod +x "$(AISERVICE_START_SCRIPT)"
 clean:
-		rm "./$(PRODUCTION)"/* -rf
+		@rm "$(PRODUCTION)"/ -rf
 done:
-		@printf "\n\n \033[32m \t--- All Done --- \033[0m \n\n"
+		@printf "\n\n$(GREEN)\t--- All Done --- $(CLEAR) \n\n"

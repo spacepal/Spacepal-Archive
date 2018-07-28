@@ -151,4 +151,4 @@ node_modules/
 
 __production__/
 /Makefile
-/Makefile.variable
+/env.sh
