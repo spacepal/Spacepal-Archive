@@ -79,7 +79,7 @@ export default {
     adoptedFleets () {
       let t = []
       for (let id in this.fleets) {
-        let f = this.fleets[id]
+        let f = Object.assign({}, this.fleets[id])
         f.id = id
         t.push(f)
       }

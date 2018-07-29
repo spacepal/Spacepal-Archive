@@ -4,14 +4,14 @@
       <template v-for="n in notifications">
         <p :key="n.id" v-if="n.type === 'PLANET_LOST'">
           <span class="mdi mdi-security-close mdi-16px text-fail"></span>
-          Planet <Planet @goToCell="goToCell" :id="n.target"></Planet>
-          is lost. Agressor:
+          The planet <Planet @goToCell="goToCell" :id="n.target"></Planet>
+          has lost. Agressor:
           <Member :id="n.member"></Member>
         </p>
         <p :key="n.id" v-if="n.type === 'PLANET_SAVED'">
           <span class="mdi mdi-security mdi-16px text-success"></span>
-          Planet <Planet @goToCell="goToCell" :id="n.target"></Planet>
-          is saved. Agressor:
+          The planet <Planet @goToCell="goToCell" :id="n.target"></Planet>
+          has been saved. Agressor:
           <Member :id="n.member"></Member>
         </p>
         <p :key="n.id" v-if="n.type === 'ATTACK_FAILED'">
@@ -26,26 +26,25 @@
         </p>
         <p :key="n.id" v-if="n.type === 'PIRATES_DAMAGED_PLANET'">
           <span class="mdi mdi-pirate mdi-16px text-fail"></span>
-          Planet
+          The planet
           <Planet @goToCell="goToCell" :id="n.target"></Planet>
-          is damaged by pirates
+          has been damaged by pirates
         </p>
         <p :key="n.id" v-if="n.type === 'PIRATES_DAMAGED_FLEET'">
           <span class="mdi mdi-skull mdi-16px text-fail"></span>
-          Fleet
-          <Fleet @goToCell="goToCell" :id="n.target" />
-          is damaged by pirates
+          Pirates has attacked fleet
+          <Fleet @goToCell="goToCell" :fleet="n.fleet" />
         </p>
         <p :key="n.id" v-if="n.type === 'PLAYER_LOST'">
           <span class="mdi mdi-account-off mdi-16px text-success"></span>
-          Player
+          The player
           <Member :id="n.member"></Member>
-          lost
+          has been lost
         </p>
         <p :key="n.id" v-if="n.type === 'FLEET_LAND'">
           <span class="mdi mdi-airplane-landing mdi-16px text-success"></span>
-          Fleet landed to
-          <Planet :id="n.target" @goToCell="goToCell"></Planet>
+          The fleet <Fleet @goToCell="goToCell" :fleet="n.fleet" />
+          has been landed.
         </p>
       </template>
     </div>
@@ -101,17 +100,25 @@ export default {
       this.$emit('goToCell', cellID)
     },
     notification (event) {
-      return {
+      let obj = {
         id: this.counter++,
         target: event.target,
         priority: EVENTS_PRIORITY[event.type] || 10,
         member: event.member,
         type: event.type
       }
+      if (obj.type === 'FLEET_LAND' ||
+        obj.type === 'PIRATES_DAMAGED_FLEET') {
+        obj.fleet = event.fleet
+      }
+      return obj
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.notifications > p {
+  white-space: nowrap;
+}
 </style>

@@ -254,10 +254,10 @@ export default {
       }
     },
     onTurnEnded () {
-      this.panelsVisibility['main'] = false
       if (this.forceAutoEndTurn) {
         setTimeout(this.endTurn, 300)
       } else if (!this.winIsFocused) {
+        this.showPanel('notifications')
         if (this._notify) {
           this._notify.close()
         }
