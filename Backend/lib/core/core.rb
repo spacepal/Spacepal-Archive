@@ -65,12 +65,9 @@ class Core
     "game_end_turn".bg(:green).color(:black).out
     game = Game[@game_id]
     self.make_step
-    "@notifications: #{@notifications}".out
     if game.over?
-      "@notifications: #{@notifications}".out
       self.broadcast_on_end_game
     else
-      "@notifications: #{@notifications}".out
       self.broadcast_on_everybody_ends_turn
       self.bot_make_step
     end

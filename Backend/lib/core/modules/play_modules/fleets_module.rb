@@ -3,27 +3,16 @@ module FleetModule
   def execute_fleets
     "       fleet: execute_fleets".bg(:magenta).color(:black).out
     Game[@game_id].players.each do |player|
-      p "ef1"
       player.fleets.each do |fleet|
-        p "ef2"
         self.fleet_start fleet
-        p "ef3"
       end
-      p "ef4"
     end
-    p "ef5"
     Game[@game_id].players.each do |player|
-      p "ef6"
       player.fleets.each do |fleet|
-        p "ef7"
         self.fleet_move fleet
-        p "ef8"
         self.fleet_reach fleet
-        p "ef9"
       end
-      p "ef10"
     end
-    p "ef11"
   end
 
   def fleet_start fleet
@@ -43,25 +32,15 @@ module FleetModule
   def fleet_reach fleet
     p "fleet reach"
     if fleet.steps_left == 0
-      p "fr1"
       planet = Planet[fleet.planet_to_id]
-      p "fr2"
-      p "planet: #{planet}, planet.player_id: #{planet.player_id}"
       planet_player_id = planet.player_id.clone
       fleet_player_id = fleet.player_id.clone
-      "planet_player_id: #{planet_player_id}".out
-      "fleet_player_id: #{fleet_player_id}".out
-      p "fr3"
+      fleet_ = fleet.clone
       if fleet.player == planet.player
-        p "fr4"
         planet.took_fleet fleet
-        p "fr5"
-        self.add_notification type: 3, player_id1: fleet_player_id, _object_id: planet.id
-        p "fr6"
+        self.add_notification type: 3, player_id1: fleet_player_id, fleet_data: make_hash_land(fleet_)
       else
-        p "fr7"
         result = planet.defend_against_fleet fleet
-        p "result: #{result} (before nots)"
         case result
         when "planet"
           self.add_notification type: 5, player_id1: fleet_player_id, _object_id: planet.id, player_id2: planet_player_id 
@@ -70,6 +49,15 @@ module FleetModule
         end
       end
     end
+  end
+
+  def make_hash_land fleet
+    {
+      "from" => fleet.planet_from_id,
+      "to" => fleet.planet_to_id,
+      "count" => fleet.ships,
+      "stepsLeft" => fleet.steps_left
+    }
   end
 
 end
