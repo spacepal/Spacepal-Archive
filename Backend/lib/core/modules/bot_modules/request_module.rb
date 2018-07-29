@@ -3,11 +3,10 @@ require "net/http"
 
 module RequestModule
 
-MAX_HOST_NAME = '192.168.31.230'
-MY_HOST_NAME = 'localhost'
+HOST_NAME = ENV["SPACEPAL_AISERVICE"] or 'localhost:3131'
 
   def get_bot_names
-    response_string = Net::HTTP.get(URI.parse('http://' + MY_HOST_NAME + ':3131/ai/names'), nil)
+    response_string = Net::HTTP.get(URI.parse('http://' + HOST_NAME + '/ai/names'), nil)
     response = JSON.parse response_string
     response["all"]
   end
@@ -30,7 +29,7 @@ MY_HOST_NAME = 'localhost'
         "map" => game.map_size,
         "planets" => game.planets_info
       }
-      response_string = Net::HTTP.post(URI.parse('http://' + MY_HOST_NAME + ':3131/ai/do'), data.to_json)
+      response_string = Net::HTTP.post(URI.parse('http://' + HOST_NAME + '/ai/do'), data.to_json)
       response_string.body.bg(:yellow).color(:black).out
     end
   end
