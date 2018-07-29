@@ -3,7 +3,7 @@ require "net/http"
 
 module RequestModule
 
-HOST_NAME = ENV["SPACEPAL_AISERVICE"] or 'localhost:3131'
+HOST_NAME = ENV["SPACEPAL_AISERVICE_LOCAL"] or 'localhost:3131'
 
   def get_bot_names
     response_string = Net::HTTP.get(URI.parse('http://' + HOST_NAME + '/ai/names'), nil)

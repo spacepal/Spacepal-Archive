@@ -33,7 +33,7 @@ module Backend
     config.middleware.use ActionDispatch::Cookies  
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins (ENV["SPACEPAL_FRONTEND"] or 'localhost:8080')
+        origins (ENV["SPACEPAL_FRONTEND_PUBLIC"] or 'localhost:8080')
         resource '*', headers: :any, credentials: true, methods: [:get, :post, :delete, :options, :put]
       end
     end
