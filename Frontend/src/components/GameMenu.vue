@@ -1,6 +1,6 @@
 <template>
   <div class="menu" v-if="menuIsVisible">
-    <span v-if="profile.isEndTurn" class="mdi mdi-progress-check mdi-36px"></span>
+    <span v-if="profile.isEndTurn" class="mdi mdi-progress-check mdi-36px text-success"></span>
     <span v-else class="mdi mdi-menu mdi-36px"></span>
     <div class="items">
       <template v-if="!isLocked">
