@@ -19,6 +19,7 @@
   align-items: center;
   background: rgba(0, 0, 0, 0.92);
   border-radius: 10px;
+  flex-shrink: 0;
 }
 
 .info-panel-body > * {
