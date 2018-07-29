@@ -257,7 +257,6 @@ export default {
       if (this.forceAutoEndTurn) {
         setTimeout(this.endTurn, 300)
       } else if (!this.winIsFocused) {
-        this.showPanel('notifications')
         if (this._notify) {
           this._notify.close()
         }
@@ -265,6 +264,8 @@ export default {
           body: `Turn: ${this.game.turnNumber}`,
           icon: NOTIFICATION_ICON
         })
+      } else {
+        this.showPanel('notifications')
       }
     },
     showPanel (panelName) {
