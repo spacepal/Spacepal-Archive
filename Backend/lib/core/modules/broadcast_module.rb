@@ -152,8 +152,6 @@ module Broadcastable
   def players
     players = Game[@game_id].players
     arr = players&.map do |player| 
-      planets = player.planets.to_a
-      fleets = (player.fleets.to_a.map { |fleet| fleet if fleet.started == true }).compact
       {
         id: player.id.to_i,
         color: player.color_id.to_i,
@@ -163,11 +161,9 @@ module Broadcastable
         artificialIntelligenceType:  player.ai_name,
         isEndTurn: (player.is_end_turn or false),
         isGameOver: (player.is_game_over or false),
-        currentProduction: planets.to_a.pluck_arr(:production).sum +
-                            planets.to_a.pluck_arr(:experience).sum,
-        currentFleetSize: fleets.to_a.pluck_arr(:ships).sum + 
-                            planets.to_a.pluck_arr(:ships).sum,
-        currentPlanetsCount: planets.count
+        currentProduction: player.current_production,
+        currentFleetSize: player.current_fleet_size,
+        currentPlanetsCount: player.planets.count
       }
     end
     return { type: PLAYERS_TYPE, data: { PLAYERS_TYPE => arr }}
@@ -227,9 +223,7 @@ module Broadcastable
 
   def broadcast_notifications
     "broadcast notifications".bg(:black).color(:blue).out
-    p @notifications
     nots = Game[@game_id].get_notifications
-    "nots: #{nots}".out
     if nots
       nots.keys.each do |key|
         _hash = {

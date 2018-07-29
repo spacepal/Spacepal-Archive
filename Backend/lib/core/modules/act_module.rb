@@ -16,7 +16,6 @@ module Actable
 
   def player_ends_turn array_fleets_hash = []
     "   act: player_ends_turn".bg(:yellow).color(:black)
-    player = Player[@player_id]
     save_fleets(array_fleets_hash) unless array_fleets_hash.empty? 
     set_player_ends_turn
   end

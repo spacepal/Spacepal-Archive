@@ -79,6 +79,18 @@ class Player < Ohm::Model
     self.save
   end
 
+  def current_production
+    if self.game.accumulative?
+      self.planets.to_a.pluck_arr(:production).sum + self.planets.to_a.pluck_arr(:experience).sum
+    else
+      self.planets.to_a.pluck_arr(:production).sum
+    end
+  end
+
+  def current_fleet_size
+    self.fleets.to_a.pluck_arr(:ships).sum + self.planets.to_a.pluck_arr(:ships).sum
+  end
+
   def update hash
     obj = Player.new hash
     if obj.valid?

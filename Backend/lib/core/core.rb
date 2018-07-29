@@ -17,7 +17,7 @@ class Core
     @game_id = game_id
     @player_id = player_id
     @notifications = Hash.new
-    Game[@game_id].players.each do |player|
+    Game[@game_id]&.players&.each do |player|
       @notifications[player.id] = Array.new
     end
   end

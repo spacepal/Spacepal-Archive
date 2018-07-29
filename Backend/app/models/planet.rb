@@ -201,6 +201,11 @@ class Planet < Ohm::Model
     end
   end
 
+  def set_experience_to_zero
+    self.experience = 0
+    self.save
+  end
+
   def update hash
     obj = Planet.new hash
     if obj.valid?
