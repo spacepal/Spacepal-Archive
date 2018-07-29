@@ -39,7 +39,7 @@ class Fleet < Ohm::Model
   attribute :steps_left, lambda { |x| x.to_i }
   attribute :planet_from_id, lambda { |x| x.to_i }
   attribute :planet_to_id, lambda { |x| x.to_i }
-  attribute :started #for other players not to see changing in planets
+  attribute :started, lambda { |x| x.class == String ? x.to_bool : x }
 
   validates_with FleetValidator
   validates :kill_perc, presence: true, numericality: { less_than: 1, greater_than: 0 }
@@ -64,7 +64,7 @@ class Fleet < Ohm::Model
   end
 
   def started?
-    self.started == "true" || self.started == true 
+    self.started == true 
   end
 
   def start
