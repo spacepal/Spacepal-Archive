@@ -69,40 +69,25 @@ class Game < Ohm::Model
   end
 
   def set_notifications _hash
-    "set_notifications".color(:cyan).out
-    p _hash.to_json
     self.notifications = _hash.to_json
-    p self.notifications
     self.save
   end
 
   def get_notifications
-    "get_notifications".color(:cyan).out
     if self.notifications
-      p "gn1"
-      "notifications: #{self.notifications}: #{self.notifications.class}".out
-      p JSON.parse self.notifications
       JSON.parse self.notifications
     else
-      p "gn3"
       nil
     end 
   end
 
   def clear_notifications
-    "clear_notifications".color(:cyan).out
     self.notifications = {}
-    p "cn1"
     self.players.each do |player|
-      p "cn2"
       notifications[player.id] = []
-      p "cn3"
     end
-    p "cn4"
     self.notifications = self.notifications.to_json 
-    p "cn5"
     self.save
-    p "cn6"
   end
 
   def production_after_capture?

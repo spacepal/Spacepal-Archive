@@ -117,8 +117,10 @@ class Planet < Ohm::Model
   end  
 
   def took_fleet fleet
+    "LAND: planet:#{self.id}(#{self.cell.x};#{self.cell.y}) ships: #{self.ships} | Fleet:#{fleet.id} ships: #{fleet.ships} ".color(:orange).out
     self.ships += fleet.ships
     self.save
+    "AFTER_LAND: planet:#{self.id}(#{self.cell.x};#{self.cell.y}) ships: #{self.ships}".color(:yellow).out
     fleet.player_id = nil
     fleet.delete
     fleet = nil
@@ -199,6 +201,11 @@ class Planet < Ohm::Model
       self.experience += exp
       self.save
     end
+  end
+
+  def set_experience_to_zero
+    self.experience = 0
+    self.save
   end
 
   def update hash

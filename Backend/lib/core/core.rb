@@ -17,7 +17,7 @@ class Core
     @game_id = game_id
     @player_id = player_id
     @notifications = Hash.new
-    Game[@game_id].players.each do |player|
+    Game[@game_id]&.players&.each do |player|
       @notifications[player.id] = Array.new
     end
   end
@@ -65,12 +65,9 @@ class Core
     "game_end_turn".bg(:green).color(:black).out
     game = Game[@game_id]
     self.make_step
-    "@notifications: #{@notifications}".out
     if game.over?
-      "@notifications: #{@notifications}".out
       self.broadcast_on_end_game
     else
-      "@notifications: #{@notifications}".out
       self.broadcast_on_everybody_ends_turn
       self.bot_make_step
     end

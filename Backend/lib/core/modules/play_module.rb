@@ -23,7 +23,6 @@ module Playable
     self.execute_game
     self.execute_notifications
     "   play: make_step: end".bg(:cyan).color(:black).out
-    "@notifications: #{@notifications}".out
   end
 
 end
