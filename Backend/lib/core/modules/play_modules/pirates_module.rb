@@ -1,7 +1,7 @@
 module PirateModule
 
 # 1 - 100
-  @@PIRATES_ATTACK_PLANET_POSSIBILITY = 10
+  @@PIRATES_ATTACK_PLANET_POSSIBILITY = 5
   @@PIRATES_ATTACK_PLANET_MAX_DAMAGE = 40
   @@PIRATES_ATTACK_FLEET_POSSIBILITY = 10
   @@PIRATES_ATTACK_FLEET_MAX_DAMAGE = 5
@@ -13,6 +13,7 @@ module PirateModule
       game.players.each do |player|
         player.planets.each do |planet| 
           if pirates_attack_planet?
+            "PIRATE PLANET planet:#{planet.id} (#{planet.cell.relative_id}".bg(:red).color(:black).out
             planet.ships = (planet.ships * (1 - pirates_attack_planet_damage)).to_i
             planet.save
             self.add_notification type: 1, player_id1: player.id, _object_id: planet.id
