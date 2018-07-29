@@ -45,6 +45,6 @@ if [ -z $aiservice ]; then
 fi
 
 echo "export SPACEPAL_FRONTEND_PUBLIC=$frontend
-export SPACEPAL_BACKEND_PUBLIC=$backend_public # requires rebuild after changing
+export SPACEPAL_BACKEND_PUBLIC=$backend_public
 export SPACEPAL_BACKEND_LOCAL=$backend_local
 export SPACEPAL_AISERVICE_LOCAL=$aiservice" > "$1"
