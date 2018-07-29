@@ -4,7 +4,7 @@ class Planet < Ohm::Model
 
   DEFAULT_PRODUCTION = 10
   NEUTRAL_PLAYER = -1
-  ERROR_OF_LUCK = 0.05
+  ERROR_OF_LUCK = 0.02
   PLAYERS_PRODUCTION = 10
   PLAYERS_KILL_PERC = 0.5
 
@@ -117,10 +117,10 @@ class Planet < Ohm::Model
   end  
 
   def took_fleet fleet
-    "LAND: planet:#{self.id}(#{self.cell.x};#{self.cell.y}) ships: #{self.ships} | Fleet:#{fleet.id} ships: #{fleet.ships} ".color(:orange).out
+    "LAND: planet:#{self.id}(#{self.cell.relative_id}) ships: #{self.ships} | Fleet:#{fleet.id} ships: #{fleet.ships} ".color(:orange).out
     self.ships += fleet.ships
     self.save
-    "AFTER_LAND: planet:#{self.id}(#{self.cell.x};#{self.cell.y}) ships: #{self.ships}".color(:yellow).out
+    "AFTER_LAND: planet:#{self.id}(#{self.cell.relative_id}) ships: #{self.ships}".color(:yellow).out
     fleet.player_id = nil
     fleet.delete
     fleet = nil
@@ -137,7 +137,7 @@ class Planet < Ohm::Model
             rand((1 - Planet::ERROR_OF_LUCK)..(1 + Planet::ERROR_OF_LUCK))
     winner_force = (planet_force - fleet_force) *
             rand((1 - Planet::ERROR_OF_LUCK)..(1 + Planet::ERROR_OF_LUCK))
-    "ATTACK: planet:(#{self.cell.x};#{self.cell.y}) -> (#{planet_ships} * #{self.kill_perc} = #{planet_force} | fleet:#{fleet.id} -> (#{fleet_ships} * #{fleet.kill_perc} = #{fleet_force}) | winner_force:#{winner_force} ".color(:orange).print_
+    "ATTACK: planet:(#{self.cell.relative_id}) -> (#{planet_ships} * #{self.kill_perc}) = #{planet_force} | fleet:#{fleet.id} -> (#{fleet_ships} * #{fleet.kill_perc} = #{fleet_force}) | winner_force:#{winner_force} ".color(:orange).print_
     if winner_force > 0
       winner_ships = (winner_force / self.kill_perc).to_i
       self.ships = winner_ships == 0 ? rand(1..3) : winner_ships
@@ -147,7 +147,7 @@ class Planet < Ohm::Model
     elsif winner_force == 0
       self.ships = 0
       self.save
-      "ships = #{self.ships} NOBODY NOT LOSE".color(:orange).out
+      "ships = #{self.ships} NOBODY LOSE".color(:orange).out
       result = "planet"
     elsif winner_force < 0
       winner_ships = (winner_force / fleet.kill_perc).to_i.abs

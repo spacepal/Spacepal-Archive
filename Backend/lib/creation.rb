@@ -116,7 +116,7 @@ class Creation
         return nil
       end
       if fleet.save
-        "created_fleet:#{fleet.id} (#{fleet.player.name}) from:(#{Planet[fleet.planet_from_id].cell.x};#{Planet[fleet.planet_from_id].cell.y}) to:(#{Planet[fleet.planet_to_id].cell.x};#{Planet[fleet.planet_to_id].cell.y}) steps: #{fleet.steps_left}, kill_perc:#{fleet.kill_perc}, ships:#{fleet.ships}".color(:yellow).out
+        "created_fleet:#{fleet.id} (#{fleet.player.name}) from:(#{Planet[fleet.planet_from_id].cell.relative_id}) to:(#{Planet[fleet.planet_to_id].cell.relative_id}) steps: #{fleet.steps_left}, kill_perc:#{fleet.kill_perc}, ships:#{fleet.ships}".color(:yellow).out
         fleet = nil
         return true
       else
