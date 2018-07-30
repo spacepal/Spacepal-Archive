@@ -66,6 +66,11 @@ export default {
     this.placeholder = this.value + ''
     if (this.force) {
       this.text = this.value
+      this.$nextTick().then(() => {
+        setTimeout(() => {
+          this.$refs.inp.select()
+        }, 20)
+      })
     }
   },
   data () {
