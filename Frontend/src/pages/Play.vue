@@ -1,16 +1,14 @@
 <template>
   <div class="game-page" ref="page">
     <Map ref="map" full @addBookmark="setBookmark" />
-    <transition name="scale" mode="out-in">
-      <div class="info-panel-bg"
-        v-if="panelsVisibility.main"
-        @click="hideAllPanels">
-        <Form class="info-panel-body">
-          <Members class="withoutborder" />
-          <GameInfo class="withoutborder" />
-        </Form>
-      </div>
-    </transition>
+    <div class="info-panel-bg"
+      v-if="panelsVisibility.main"
+      @click="hideAllPanels">
+      <Form class="info-panel-body">
+        <Members class="withoutborder" />
+        <GameInfo class="withoutborder" />
+      </Form>
+    </div>
     <div class="info-panel-bg"
       v-if="panelsVisibility.tasks"
       @click.self="hideAllPanels"
@@ -78,7 +76,8 @@
       </Form>
     </div>
     <GameMenu @showPanel="showPanel" @goHome="goHome" />
-    <EndTurnMsg @onTurnEnded="onTurnEnded" />
+    <EndTurnMsg @onTurnEnded="onTurnEnded"
+      @onTurnAnimationEnded="onTurnAnimationEnded" />
     <Window ref="quickStart" type="alert" title="Quick start">
       <template>
         <span class="quick-start-p">At the start of the game you have only one planet — your capital (press <span class="mdi mdi-keyboard mdi-24px splitter"></span>Home for quick goto).</span>
@@ -235,7 +234,8 @@ export default {
       autoTasks: 'tasks/autoTasks',
       notifications: 'events/all',
       game: 'game/info',
-      quickStart: 'quickStart'
+      quickStart: 'quickStart',
+      isPlayerlost: 'isPlayerlost'
     })
   },
   methods: {
@@ -264,7 +264,11 @@ export default {
           body: `Turn: ${this.game.turnNumber}`,
           icon: NOTIFICATION_ICON
         })
-      } else {
+      }
+      this.panelsVisibility['main'] = false
+    },
+    onTurnAnimationEnded () {
+      if (!this.isPlayerlost) {
         this.showPanel('notifications')
       }
     },

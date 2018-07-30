@@ -34,6 +34,7 @@ export default class ActionCabel {
   onDisconnected () {
     console.info('Action cable: disconnected')
     if (typeof this._okResolvePromise === 'function') {
+      console.log('rejected')
       this._okRejectPromise(false)
     }
   }
@@ -52,6 +53,7 @@ export default class ActionCabel {
       this._okRejectPromise(false)
       this._okRejectPromise = undefined
     } else if (typeof this._okResolvePromise === 'function') {
+      console.log('resolver')
       this._okResolvePromise(true)
       this._okResolvePromise = undefined
     }
