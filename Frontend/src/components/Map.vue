@@ -200,6 +200,14 @@ export default {
           method: () => {
             this.isBookmarkMode = false
           }
+        },
+        {
+          code: 'KeyR',
+          method: () => {
+            this.arrowsMode ^= true
+            this.tick()
+          },
+          description: 'Show directions'
         }
       ]
     }

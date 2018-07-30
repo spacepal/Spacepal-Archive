@@ -8,6 +8,7 @@ const DEFAULT_SCALE = 2.0
 export default {
   data () {
     return {
+      arrowsMode: false,
       tickFlag: false,
       offsetDX: 0,
       degree: 2.0 / 3.0 * Math.PI,
@@ -36,7 +37,10 @@ export default {
   computed: {
     ...mapGetters({
       planetByCellID: 'planet',
-      theBestPlanet: 'theBestPlanet'
+      planetByID: 'planetByID',
+      theBestPlanet: 'theBestPlanet',
+      fleets: 'fleets/all',
+      tasks: 'tasks/all'
     }),
     renderedCount () {
       return this._active.length
@@ -72,6 +76,40 @@ export default {
     clearTimeout(this._fpsTimeout)
   },
   methods: {
+    _drawArrows (arr) {
+      this.context.save()
+      Object.values(arr).forEach(fleet => {
+        let from = this.planetByID(fleet.from)
+        let to = this.planetByID(fleet.to)
+        if (from !== undefined && to !== undefined) {
+          let fromCell = this._all[from.cellID - 1]
+          let toCell = this._all[to.cellID - 1]
+          if (fromCell !== undefined && toCell !== undefined) {
+            this._drawArrow(fromCell, toCell, fleet.count, fleet.stepsLeft)
+          }
+        }
+      })
+      this.context.restore()
+    },
+    _drawArrow (from, to, count, stepsLeft) {
+      let opacity = Math.min(Math.max(0.1, count / 100.0))
+      let width = Math.min(Math.max(1, stepsLeft), 5)
+      let fromPoint = from.center
+      let toPoint = to.center
+      let ctx = this.context
+      ctx.beginPath()
+      ctx.strokeStyle = 'rgba(255, 255, 255, ' + opacity + ')'
+      ctx.lineWidth = width
+      ctx.fillStlte = 'transparent'
+      ctx.moveTo(fromPoint.x, fromPoint.y)
+      ctx.lineTo(toPoint.x, toPoint.y)
+      ctx.stroke()
+      ctx.beginPath()
+      ctx.strokeStlte = 'rgba(255, 255, 255, 1.0)'
+      ctx.lineWidth = 1
+      ctx.arc(toPoint.x, toPoint.y, 5, 0, Math.PI * 2, true)
+      ctx.fill()
+    },
     _genSurface (a) {
       this._all = []
       for (let y = 0, count = 1; y < this.mapSize.height; ++y) {
@@ -170,7 +208,7 @@ export default {
       this._genSurface(a)
       if (!this._tick) {
         this._tick = () => {
-          if (!this.paused || this.tickFlag) {
+          if (!this.paused || this.tickFlag || this.arrowsMode) {
             this.tickFlag = false
             this.redraw(this.context)
           }
@@ -296,6 +334,12 @@ export default {
         }
       })
 
+      if (this.arrowsMode) {
+        requestAnimationFrame(() => {
+          this._drawArrows(this.fleets)
+          this._drawArrows(this.tasks)
+        })
+      }
       this.frames++
     }
   }

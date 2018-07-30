@@ -42,6 +42,13 @@ class Cell {
     }
   }
 
+  get center () {
+    return {
+      x: this.firstPoint.x + this._dx,
+      y: this.firstPoint.y + this._dy
+    }
+  }
+
   get id () {
     return this._id
   }

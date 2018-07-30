@@ -32,7 +32,7 @@ export default {
   },
   mounted () {
     this._unwatch = this.$store.watch((_, getters) => [getters.sync.game, getters.sync.profile], () => {
-      if (!this.sync['endTurn'] || !this.sync['game'] || !this.sync['profile'] ) {
+      if (!this.sync['endTurn'] || !this.sync['game'] || !this.sync['profile']) {
         return
       }
       this.$store.dispatch('syncUnset', 'endTurn')
