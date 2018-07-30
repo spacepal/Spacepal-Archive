@@ -14,7 +14,7 @@
       @confirm="taskConfirm" @reject="taskReject" :enabled="task.isValid">
       <Form ref="taskForm" class="withoutborder">
         <TextInput type="number"
-          :label="taskLabel"
+          :label="taskLabel" :force="true"
           :min="(task.isHoldAutoTask ? 0 : 1)"
           :max="(isAutoTask ? Number.MAX_VALUE : task.maxCount)"
           v-model="task.count"
@@ -403,7 +403,7 @@ export default {
         this.selectCell(planet.cellID - 1)
         this.task.from = planet.id
         this.task.maxCount = this.availableShips(planet.id)
-        this.task.count = 0
+        this.task.count = this.task.maxCount
         this.task.isHoldAutoTask = this.availableShips(planet.id) === 0
         this.task.isDispatchAutoTask = false
       }

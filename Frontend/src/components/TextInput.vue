@@ -50,6 +50,10 @@ export default {
     generator: {
       type: Function,
       default: undefined
+    },
+    force: {
+      type: Boolean,
+      default: undefined
     }
   },
   mounted () {
@@ -60,6 +64,9 @@ export default {
     }
     this.revalidate()
     this.placeholder = this.value + ''
+    if (this.force) {
+      this.text = this.value
+    }
   },
   data () {
     return {
