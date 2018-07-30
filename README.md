@@ -19,6 +19,7 @@ Online version of Konquest game [in development]
 - Golang (https://golang.org/)
 - Ruby (https://www.ruby-lang.org/en/downloads/)
 - Bundler (https://bundler.io/)
+- Redis (https://redis.io/download)
 - Git client (https://git-scm.com/downloads)
 
 # How to build
