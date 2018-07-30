@@ -8,6 +8,11 @@
         <a @click="endTurn">End turn</a>
         <span>[Space]</span>
       </template>
+
+      <span class="mdi mdi-arrow-decision"></span>
+      <a @click="toggleArrows">Directions</a>
+      <span>[R]</span>
+
       <span class="mdi mdi-comment-alert-outline"></span>
       <a @click="showPanel('notifications')">Notifications</a>
       <span>[N]</span>
@@ -93,6 +98,9 @@ export default {
         name: 'GamesList'
       })
     },
+    toggleArrows () {
+      this.$emit('toggleArrows')
+    },
     showPanel (panelName) {
       this.$emit('showPanel', panelName)
     },
@@ -173,7 +181,7 @@ $menuBtn: $iconSize + $padding * 2;
 }
 .menu:hover {
   transform: translateX($menuBtn);
-  height: 240px;
+  height: 280px;
   transition: transform 0.1s ease-out,
     height 0.1s ease-out;
 }

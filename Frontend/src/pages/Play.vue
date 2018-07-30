@@ -75,7 +75,7 @@
         <Bookmarks ref="bookmarks" @goToCell="goToCell" />
       </Form>
     </div>
-    <GameMenu @showPanel="showPanel" @goHome="goHome" />
+    <GameMenu @showPanel="showPanel" @goHome="goHome" @toggleArrows="toggleArrows" />
     <EndTurnMsg @onTurnEnded="onTurnEnded"
       @onTurnAnimationEnded="onTurnAnimationEnded" />
     <Window ref="quickStart" type="alert" title="Quick start">
@@ -302,6 +302,9 @@ export default {
         }
         this.panelsVisibility[k] = false
       }
+    },
+    toggleArrows () {
+      this.$refs.map.toggleArrows()
     }
   },
   mounted () {

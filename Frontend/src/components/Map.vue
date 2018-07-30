@@ -203,10 +203,7 @@ export default {
         },
         {
           code: 'KeyR',
-          method: () => {
-            this.arrowsMode ^= true
-            this.tick()
-          },
+          method: this.toggleArrows,
           description: 'Show directions'
         }
       ]
@@ -317,6 +314,10 @@ export default {
     })
   },
   methods: {
+    toggleArrows () {
+      this.arrowsMode ^= true
+      this.tick()
+    },
     safePause () {
       if (this.drag) {
         this.pause()

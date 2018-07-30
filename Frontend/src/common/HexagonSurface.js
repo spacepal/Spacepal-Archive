@@ -109,6 +109,12 @@ export default {
       ctx.lineWidth = 1
       ctx.arc(toPoint.x, toPoint.y, 5, 0, Math.PI * 2, true)
       ctx.fill()
+
+      ctx.beginPath()
+      ctx.strokeStlte = 'rgba(255, 255, 255, 1.0)'
+      ctx.lineWidth = 1
+      ctx.arc(fromPoint.x, fromPoint.y, 2, 0, Math.PI * 2, true)
+      ctx.stroke()
     },
     _genSurface (a) {
       this._all = []
