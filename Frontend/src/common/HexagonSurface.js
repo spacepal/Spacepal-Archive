@@ -4,6 +4,8 @@ import { calcDistance } from './DistanceHelper.js'
 
 const TRANSLATE_SCALE_FACTOR = 1.5
 const DEFAULT_SCALE = 2.0
+const SHIPS_COUNT_OPAQUE = 100
+const STEPS_LEFT_MAX_WEIGHT = 5
 
 export default {
   data () {
@@ -92,8 +94,8 @@ export default {
       this.context.restore()
     },
     _drawArrow (from, to, count, stepsLeft) {
-      let opacity = Math.min(Math.max(0.1, count / 100.0))
-      let width = Math.min(Math.max(1, stepsLeft), 5)
+      let opacity = Math.min(Math.max(0.1, count / SHIPS_COUNT_OPAQUE), 1.0)
+      let width = Math.min(Math.max(1, stepsLeft), STEPS_LEFT_MAX_WEIGHT)
       let fromPoint = from.center
       let toPoint = to.center
       let ctx = this.context
