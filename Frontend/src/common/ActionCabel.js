@@ -23,7 +23,10 @@ export default class ActionCabel {
         room: `games:${gameID}`
       },
       {
-        connected: this.onConnected.bind(self),
+        connected: () => {
+          self.requestData()
+          self.onConnected()
+        },
         received: this.onReceived.bind(self),
         disconnected: this.onDisconnected.bind(self)
       })
@@ -35,7 +38,6 @@ export default class ActionCabel {
   onDisconnected () {
     debug.info('Action cable: disconnected')
     if (typeof this._okResolvePromise === 'function') {
-      debug.log('rejected')
       this._okRejectPromise(false)
     }
   }
@@ -54,7 +56,6 @@ export default class ActionCabel {
       this._okRejectPromise(false)
       this._okRejectPromise = undefined
     } else if (typeof this._okResolvePromise === 'function') {
-      debug.log('resolver')
       this._okResolvePromise(true)
       this._okResolvePromise = undefined
     }
