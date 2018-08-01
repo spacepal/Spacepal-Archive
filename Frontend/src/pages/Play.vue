@@ -236,11 +236,17 @@ export default {
           icon: NOTIFICATION_ICON
         })
       }
-      this.hidePanel(0, 'main')
+      this.hidePanel({
+        group: 0,
+        panel: 'main'
+      })
     },
     onTurnAnimationEnded () {
       if (!this.isPlayerlost) {
-        this.showPanel(0, 'notifications')
+        this.showPanel({
+          group: 0,
+          panel: 'notifications'
+        })
       }
     },
     goHome () {
@@ -255,7 +261,7 @@ export default {
       } else if (this.$store.getters.isLocked) {
         this.$toast('The turn is already ended')
       } else {
-        this.showPanel('main')
+        this.showPanel({ group: 0, panel: 'main' })
         this.$store.dispatch('game/endTurn')
       }
     },
