@@ -2,6 +2,7 @@
 
 import Vue from 'vue'
 import { calcDistance } from '../../common/DistanceHelper.js'
+import debug from '../../common/Debug.js'
 
 const STORAGE_AUTOTASKS = 'autotasks'
 const STORAGE_TASKS = 'tasks'
@@ -55,7 +56,7 @@ const mutations = {
 const actions = {
   doAutoTasks ({ state, rootGetters, dispatch }) {
     if (rootGetters.isLocked) {
-      console.warn('tasks.doAutoTasks: isLocked')
+      debug.warn('tasks.doAutoTasks: isLocked')
       return
     }
     for (let taskID in state.autoTasks) {
@@ -66,7 +67,7 @@ const actions = {
   doAutoTask ({ state, rootGetters, dispatch, getters }, taskID) {
     let task = state.autoTasks[taskID]
     if (!task) {
-      console.warn('tasks.doAutoTask: task$' + taskID + ' is undefined')
+      debug.warn('tasks.doAutoTask: task$' + taskID + ' is undefined')
       return
     }
     let planet = rootGetters.planetByID(task.from)
@@ -98,22 +99,22 @@ const actions = {
       commit('INCREASE_SHIPS', { planetID: task.from, count: task.count })
       sessionStorage.setItem(STORAGE_TASKS, JSON.stringify(state.tasks))
     } else {
-      console.warn('tasks.del: invalid taskID')
+      debug.warn('tasks.del: invalid taskID')
     }
   },
   add ({ state, getters, rootGetters, commit, dispatch },
     { from, to, count, isDispatchAutoTask, isHoldAutoTask }) {
     let planet = rootGetters.planetByID(from)
     if (!planet) {
-      console.warn('tasks.add: the planet is not found')
+      debug.warn('tasks.add: the planet is not found')
       return
     }
     if (!rootGetters.planetByID(to)) {
-      console.warn('tasks.add: target planet is not found')
+      debug.warn('tasks.add: target planet is not found')
       return
     }
     if (!rootGetters.isMemberPlanetOwner(from)) {
-      console.warn('tasks.add: the member is not owner of the planet')
+      debug.warn('tasks.add: the member is not owner of the planet')
       return
     }
     let stepsLeft = calcDistance(
@@ -122,7 +123,7 @@ const actions = {
       rootGetters['game/info'].mapWidth
     )
     if (isHoldAutoTask && isDispatchAutoTask) {
-      console.warn('tasks.add: hold and dispatch are set at the same time')
+      debug.warn('tasks.add: hold and dispatch are set at the same time')
       return
     }
     if (isHoldAutoTask || isDispatchAutoTask) {
@@ -147,11 +148,11 @@ const actions = {
       return
     }
     if (rootGetters.isLocked) {
-      console.warn('tasks.add: isLocked')
+      debug.warn('tasks.add: isLocked')
       return
     }
     if (getters.availableShips(from) < count) {
-      console.warn('tasks.add: lack of ships')
+      debug.warn('tasks.add: lack of ships')
       return
     }
     commit('DECREASE_SHIPS', { planetID: from, count })

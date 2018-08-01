@@ -60,7 +60,6 @@ export default {
       } else if (field.value && typeof field.value === 'function') {
         return field.value(row)
       }
-      console.warn('STable: No "key" or fucntion "value" in field')
       return ''
     },
     rowClicked (row, i) {

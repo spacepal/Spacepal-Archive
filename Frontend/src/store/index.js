@@ -11,6 +11,7 @@ import planets from './modules/planets'
 import profile from './modules/profile'
 import tasks from './modules/tasks'
 import bookmarks from './modules/bookmarks'
+import panels from './modules/panels'
 
 Vue.use(Vuex)
 
@@ -211,7 +212,8 @@ export default new Vuex.Store({
     planets,
     profile,
     tasks,
-    bookmarks
+    bookmarks,
+    panels
   },
   strict: true
 })

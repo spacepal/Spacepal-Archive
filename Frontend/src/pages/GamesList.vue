@@ -247,7 +247,6 @@ export default {
         if (!silent) {
           this.$toast('Connection error')
         }
-        console.error(resp)
       })
     },
     pageChanged (pageInfo) {

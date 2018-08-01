@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Service from '../../common/Service.js'
+import debug from '../../common/Debug.js'
 
 const STATE_UNKNOWN = 0
 const STATE_ROOM = 1
@@ -93,7 +94,7 @@ const actions = {
   },
   endTurn ({ dispatch, rootState, rootGetters }) {
     if (rootGetters.isLocked) {
-      console.warn('game.endTurn is locked')
+      debug.warn('game.endTurn is locked')
       return
     }
     let fleets = rootGetters['tasks/all']

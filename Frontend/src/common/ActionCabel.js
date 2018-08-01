@@ -1,4 +1,5 @@
 import { GAME_CHANNEL, PLAYER_CHANNEL } from './constants.js'
+import debug from './Debug.js'
 import ActionCable from 'actioncable'
 import store from '@/store'
 
@@ -29,12 +30,12 @@ export default class ActionCabel {
     })
   }
   onConnected () {
-    console.info('Action cable: connnected')
+    debug.info('Action cable: connnected')
   }
   onDisconnected () {
-    console.info('Action cable: disconnected')
+    debug.info('Action cable: disconnected')
     if (typeof this._okResolvePromise === 'function') {
-      console.log('rejected')
+      debug.log('rejected')
       this._okRejectPromise(false)
     }
   }
@@ -47,13 +48,13 @@ export default class ActionCabel {
     }
   }
   onReceived (data) {
-    console.info(`Action cable: data recieved`)
-    console.info(data)
+    debug.info(`Action cable: data recieved`)
+    debug.info(data)
     if (data.type === 'error' && typeof this._okRejectPromise === 'function') {
       this._okRejectPromise(false)
       this._okRejectPromise = undefined
     } else if (typeof this._okResolvePromise === 'function') {
-      console.log('resolver')
+      debug.log('resolver')
       this._okResolvePromise(true)
       this._okResolvePromise = undefined
     }
@@ -85,7 +86,7 @@ export default class ActionCabel {
     } else if (data.type === 'notifications') {
       store.dispatch('events/set', data.data.notifications)
     } else {
-      console.warn(`ActionCable.js: Unknown type`)
+      debug.warn(`ActionCable.js: Unknown type`)
     }
   }
   get isOk () {
