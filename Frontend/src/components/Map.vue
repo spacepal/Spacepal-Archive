@@ -8,8 +8,9 @@
       @mouseup="mouseup"
       @wheel="mousewheel"
       :class="canvasClass"
-      :style="bgPosStyle"
       ref="canvas"></canvas>
+      <!-- :style="bgPosStyle"
+      ref="canvas"></canvas> -->
     <Window type="confirm" ref="taskWindow" title="Create task"
       @confirm="taskConfirm" @reject="taskReject" :enabled="task.isValid">
       <Form ref="taskForm" class="withoutborder">
@@ -285,6 +286,7 @@ export default {
       this.mapSizeHeight, this.offsetX)
     this._mouseUpListener = () => {
       this.drag = false
+      this.tick()
     }
     this._unwatch = []
     this._unwatch.push(
@@ -316,7 +318,7 @@ export default {
   methods: {
     toggleArrows () {
       this.arrowsMode ^= true
-      this.tick()
+      this.$nextTick(this.tick)
     },
     safePause () {
       if (this.drag) {
@@ -390,6 +392,10 @@ export default {
         return
       }
       if (this.task.from !== null) {
+        if (this.simplyRender) {
+          this.$toast(`Zoom in for action`)
+          return
+        }
         this.unselectLastCell()
         if (this.task.from !== planet.id) {
           this.task.to = planet.id
@@ -400,6 +406,10 @@ export default {
       } else if (!this.isOwner(planet.id)) {
         this.$toast(`This is foreign planet`)
       } else {
+        if (this.simplyRender) {
+          this.$toast(`Zoom in for action`)
+          return
+        }
         this.selectCell(planet.cellID - 1)
         this.task.from = planet.id
         this.task.maxCount = this.availableShips(planet.id)

@@ -95,7 +95,11 @@ class Cell {
       C.x * (A.y - B.y)) * 0.5
   }
 
-  render (ctx, stepsTo = 0) {
+  render (ctx, stepsTo = 0, simply = false, simplyNoBorder = false) {
+    let planet = this._planet(this._id)
+    if (!planet && simplyNoBorder) {
+      return
+    }
     ctx.save()
 
     ctx.beginPath()
@@ -105,7 +109,6 @@ class Cell {
     ctx.closePath()
     let text = this.id + ''
     let memberColor = Colors['neutral']
-    let planet = this._planet(this._id)
     if (planet) {
       let member = this._member(planet.ownerID)
       if (member) {
@@ -123,6 +126,15 @@ class Cell {
       ctx.fillStyle = 'rgba(255, 255, 255, 0)'
     }
     ctx.fill()
+
+    if (simply) {
+      if (!simplyNoBorder) {
+        ctx.stroke()
+      }
+      ctx.restore()
+      return
+    }
+
     if (planet) {
       if (this._isHovered) {
         ctx.fillStyle = 'rgba(255, 255, 255, 0.1)'
@@ -141,8 +153,6 @@ class Cell {
     }
     ctx.stroke()
 
-    ctx.restore()
-    ctx.save()
     ctx.font = '32px Audiowide'
     if (this._isHovered) {
       text = this.id + ''
@@ -163,8 +173,6 @@ class Cell {
       y += fontHeight
     })
     if (planet) {
-      ctx.restore()
-      ctx.save()
       ctx.font = '18px Audiowide'
       ctx.fillStyle = memberColor.text
       ctx.textAlign = 'center'
@@ -185,6 +193,7 @@ class Cell {
           this.firstPoint.y + 100)
       }
     }
+    ctx.restore()
   }
 
   isPointOver ({ x, y }) {

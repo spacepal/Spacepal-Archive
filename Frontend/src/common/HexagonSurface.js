@@ -5,7 +5,9 @@ import { calcDistance } from './DistanceHelper.js'
 const TRANSLATE_SCALE_FACTOR = 1.5
 const DEFAULT_SCALE = 2.0
 const SHIPS_COUNT_OPAQUE = 100
-const STEPS_LEFT_MAX_WEIGHT = 5
+const STEPS_LEFT_MAX_WEIGHT = 4
+const MAX_RENDER_ZOOM = 2.0
+const BIG_ZOOM = 4.0
 
 export default {
   data () {
@@ -44,6 +46,12 @@ export default {
       fleets: 'fleets/all',
       tasks: 'tasks/all'
     }),
+    simplyRender () {
+      return this.drag || this.scale < 1 / MAX_RENDER_ZOOM
+    },
+    bigZoom () {
+      return this.scale < 1 / BIG_ZOOM
+    },
     renderedCount () {
       return this._active.length
     }
@@ -64,7 +72,7 @@ export default {
       let cell = this._all[this.centeredIndex]
       if (cell) {
         cell.isCentered = !cell.isCentered
-        cell.render(this.context)
+        cell.render(this.context, -1, this.simplyRender, this.bigZoom)
       }
       this._centeredAnimTimeout = setTimeout(this._centeredAnimTimerFunc, 350)
     }
@@ -101,21 +109,21 @@ export default {
       let ctx = this.context
       ctx.beginPath()
       ctx.strokeStyle = 'rgba(255, 255, 255, ' + opacity + ')'
-      ctx.lineWidth = width
+      ctx.lineWidth = width / this.scale
       ctx.fillStlte = 'transparent'
       ctx.moveTo(fromPoint.x, fromPoint.y)
       ctx.lineTo(toPoint.x, toPoint.y)
       ctx.stroke()
       ctx.beginPath()
-      ctx.strokeStlte = 'rgba(255, 255, 255, 1.0)'
+      ctx.fillStyle = 'rgba(255, 255, 255, 1.0)'
       ctx.lineWidth = 1
-      ctx.arc(toPoint.x, toPoint.y, 5, 0, Math.PI * 2, true)
+      ctx.arc(toPoint.x, toPoint.y, 5 / this.scale, 0, Math.PI * 2, true)
       ctx.fill()
 
       ctx.beginPath()
       ctx.strokeStlte = 'rgba(255, 255, 255, 1.0)'
       ctx.lineWidth = 1
-      ctx.arc(fromPoint.x, fromPoint.y, 2, 0, Math.PI * 2, true)
+      ctx.arc(fromPoint.x, fromPoint.y, 2 / this.scale, 0, Math.PI * 2, true)
       ctx.stroke()
     },
     _genSurface (a) {
@@ -162,7 +170,7 @@ export default {
     _switchCell (cellID, selected) {
       let cell = this._all[cellID]
       cell.isSelected = selected
-      cell.render(this.context)
+      cell.render(this.context, -1, this.simplyRender, this.bigZoom)
     },
     resolvePlanet ({ mx, my }) {
       let cell = this._resolveCell(this.context, { mx, my })
@@ -184,7 +192,7 @@ export default {
 
       if (this.hoveredIndex !== undefined) {
         this._all[this.hoveredIndex].isHovered = false
-        this._all[this.hoveredIndex].render(this.context)
+        this._all[this.hoveredIndex].render(this.context, -1, this.simplyRender, this.bigZoom)
       }
 
       let cell = this._resolveCell(this.context, {mx, my})
@@ -194,9 +202,9 @@ export default {
         if (this.selectedIndex !== -1) {
           let distance = calcDistance(this.selectedIndex + 1,
             cell.id, this.$store.getters['game/info'].mapWidth)
-          cell.render(this.context, distance)
+          cell.render(this.context, distance, this.simplyRender, this.bigZoom)
         } else {
-          cell.render(this.context)
+          cell.render(this.context, -1, this.simplyRender, this.bigZoom)
         }
       }
       this._moveLock = false
@@ -265,7 +273,7 @@ export default {
         let cell = this._all[cI]
         if (cell) {
           cell.isCentered = centered
-          cell.render(this.context)
+          cell.render(this.context, -1, this.simplyRender, this.bigZoom)
         }
       }
       _highlightCenterize(this.centeredIndex, false)
@@ -336,7 +344,7 @@ export default {
           cell.firstPoint.y > startPoint.y &&
           cell.firstPoint.y < endPoint.y) {
           requestAnimationFrame(() => {
-            cell.render(ctx)
+            cell.render(ctx, -1, this.simplyRender, this.bigZoom)
           })
           return true
         }
