@@ -8,6 +8,8 @@ const SHIPS_COUNT_OPAQUE = 100
 const STEPS_LEFT_MAX_WEIGHT = 4
 const MAX_RENDER_ZOOM = 2.0
 const BIG_ZOOM = 4.0
+const TO_POINT_SIZE = 5
+const FROM_POINT_SIZE = 2
 
 export default {
   data () {
@@ -107,9 +109,10 @@ export default {
       let fromPoint = from.center
       let toPoint = to.center
       let ctx = this.context
+      let zoom = this.scale * 1.25
       ctx.beginPath()
       ctx.strokeStyle = 'rgba(255, 255, 255, ' + opacity + ')'
-      ctx.lineWidth = width / this.scale
+      ctx.lineWidth = width / zoom
       ctx.fillStlte = 'transparent'
       ctx.moveTo(fromPoint.x, fromPoint.y)
       ctx.lineTo(toPoint.x, toPoint.y)
@@ -117,13 +120,13 @@ export default {
       ctx.beginPath()
       ctx.fillStyle = 'rgba(255, 255, 255, 1.0)'
       ctx.lineWidth = 1
-      ctx.arc(toPoint.x, toPoint.y, 5 / this.scale, 0, Math.PI * 2, true)
+      ctx.arc(toPoint.x, toPoint.y, TO_POINT_SIZE / zoom, 0, Math.PI * 2, true)
       ctx.fill()
 
       ctx.beginPath()
       ctx.strokeStlte = 'rgba(255, 255, 255, 1.0)'
       ctx.lineWidth = 1
-      ctx.arc(fromPoint.x, fromPoint.y, 2 / this.scale, 0, Math.PI * 2, true)
+      ctx.arc(fromPoint.x, fromPoint.y, FROM_POINT_SIZE / zoom, 0, Math.PI * 2, true)
       ctx.stroke()
     },
     _genSurface (a) {
