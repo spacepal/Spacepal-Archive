@@ -48,7 +48,7 @@
       :empty="notifications.length == 0"> <!-- NOTIFICATIONS -->
       <Notifications @goToCell="goToCell" />
     </GamePanel>
-    <GamePanel :group="0" panel="bookmarks" :empty="false"> <!-- BOOKMARKS -->
+    <GamePanel :group="0" panel="bookmarks" :empty="bookmarksCount === 0"> <!-- BOOKMARKS -->
       <Bookmarks ref="bookmarks" @goToCell="goToCell" />
     </GamePanel>
 
@@ -202,7 +202,8 @@ export default {
       notifications: 'events/all',
       game: 'game/info',
       quickStart: 'quickStart',
-      isPlayerlost: 'isPlayerlost'
+      isPlayerlost: 'isPlayerlost',
+      bookmarksCount: 'bookmarks/count'
     })
   },
   methods: {
