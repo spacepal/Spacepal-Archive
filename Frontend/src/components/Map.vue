@@ -278,6 +278,31 @@ export default {
     }
   },
   mounted () {
+    this._touchStartListener = event => {
+      this.play()
+      this.mouse = { x: event.touches[0].clientX, y: event.touches[0].clientY }
+      this.drag = true
+      event.preventDefault()
+    }
+    this._touchEndListener = event => {
+      this.drag = false
+      this.$nextTick(this.pause)
+      this.tick()
+    }
+    this._touchMoveListener = event => {
+      if (this.drag) {
+        this.mousemove({
+          layerX: event.touches[0].clientX,
+          layerY: event.touches[0].clientY
+        })
+        event.preventDefault()
+      }
+    }
+    window.addEventListener('touchstart', this._touchStartListener)
+    window.addEventListener('touchend', this._touchEndListener)
+    window.addEventListener('touchcancel', this._touchEndListener)
+    window.addEventListener('touchmove', event => this._touchMoveListener)
+
     window.addEventListener('resize', this._onResizeFunc)
     this._onResizeFunc()
 
@@ -286,6 +311,7 @@ export default {
       this.mapSizeHeight, this.offsetX)
     this._mouseUpListener = () => {
       this.drag = false
+      this.pause()
       this.tick()
     }
     this._unwatch = []
@@ -311,6 +337,10 @@ export default {
   beforeDestroy () {
     window.removeEventListener('mouseup', this._mouseUpListener)
     window.removeEventListener('resize', this._onResizeFunc)
+    window.removeEventListener('touchstart', this._touchStartListener)
+    window.removeEventListener('touchend', this._touchEndListener)
+    window.removeEventListener('touchcancel', this._touchEndListener)
+    window.removeEventListener('touchmove', event => this._touchMoveListener)
     this._unwatch.forEach(unwatch => {
       unwatch()
     })
