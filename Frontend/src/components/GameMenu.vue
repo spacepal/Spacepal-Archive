@@ -88,7 +88,8 @@ export default {
   methods: {
     ...mapActions({
       endTurn: 'game/endTurn',
-      logout: 'logout'
+      logout: 'logout',
+      showGamePanel: 'panels/show'
     }),
     exit () {
       this.logout().catch(err => {
@@ -102,7 +103,10 @@ export default {
       this.$emit('toggleArrows')
     },
     showPanel (panelName) {
-      this.$emit('showPanel', panelName)
+      this.showGamePanel({
+        group: 0,
+        panel: panelName
+      })
     },
     goHome () {
       this.$emit('goHome')

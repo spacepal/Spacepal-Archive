@@ -1,20 +1,13 @@
 <template>
   <div class="game-page" ref="page">
     <Map ref="map" full @addBookmark="setBookmark" />
-    <div class="info-panel-bg"
-      v-if="panelsVisibility.main"
-      @click="hideAllPanels">
-      <Form class="info-panel-body">
-        <Members class="withoutborder" />
-        <GameInfo class="withoutborder" />
-      </Form>
-    </div>
-    <div class="info-panel-bg"
-      v-if="panelsVisibility.tasks"
-      @click.self="hideAllPanels"
-      @click="onPanelClicked($event, tasks)">
-      <Form class="info-panel-body" @click="false">
-        <Fleets
+    <GamePanel :group="0" panel="main" :empty="true"> <!-- PLAYERS + GAME INFO -->
+      <Members class="withoutborder" />
+      <GameInfo class="withoutborder" />
+    </GamePanel>
+    <GamePanel :group="0" panel="tasks"
+      :empty="Object.values(tasks).length == 0"> <!-- TASKS -->
+      <Fleets
           :canDelete="true"
           :syncs="['planets', 'profile']"
           :fleets="tasks"
@@ -24,58 +17,42 @@
             No tasks
           </template>
         </Fleets>
-      </Form>
-    </div>
-    <div class="info-panel-bg"
-      v-if="panelsVisibility.fleets"
-      @click.self="hideAllPanels"
-      @click="onPanelClicked($event, fleets)">
-      <Form class="info-panel-body">
-        <Fleets
-          :canDelete="false"
-          :syncs="['fleets', 'planets']"
-          :fleets="fleets"
-          @goToCell="goToCell">
-          <template slot="noFleets">
-            No fleets
-          </template>
-        </Fleets>
-      </Form>
-    </div>
-    <div class="info-panel-bg"
-      v-if="panelsVisibility.autoTasks"
-      @click.self="hideAllPanels"
-      @click="onPanelClicked($event, autoTasks)">
-      <Form class="info-panel-body" @click="false">
-        <Fleets
-          :canDelete="true"
-          :syncs="['planets']"
-          :fleets="autoTasks"
-          @goToCell="goToCell"
-          @delete="delTask"
-          :lockAction="false">
-          <template slot="noFleets">
-            No auto tasks
-          </template>
-        </Fleets>
-      </Form>
-    </div>
-    <div class="info-panel-bg"
-      v-if="panelsVisibility.notifications"
-      @click.self="hideAllPanels"
-      @click="onPanelClicked($event, notifications)">
-      <Form class="info-panel-body">
-        <Notifications @goToCell="goToCell" />
-      </Form>
-    </div>
-    <div class="info-panel-bg"
-      v-show="panelsVisibility.bookmarks"
-      @click.self="hideAllPanels">
-      <Form class="info-panel-body">
-        <Bookmarks ref="bookmarks" @goToCell="goToCell" />
-      </Form>
-    </div>
-    <GameMenu @showPanel="showPanel" @goHome="goHome" @toggleArrows="toggleArrows" />
+    </GamePanel>
+    <GamePanel :group="0" panel="fleets"
+      :empty="Object.values(fleets).length == 0"> <!-- FLEETS -->
+      <Fleets
+        :canDelete="false"
+        :syncs="['fleets', 'planets']"
+        :fleets="fleets"
+        @goToCell="goToCell">
+        <template slot="noFleets">
+          No fleets
+        </template>
+      </Fleets>
+    </GamePanel>
+    <GamePanel :group="0" panel="autoTasks"
+      :empty="Object.values(autoTasks).length == 0"> <!-- AUTOTASKS -->
+      <Fleets
+        :canDelete="true"
+        :syncs="['planets']"
+        :fleets="autoTasks"
+        @goToCell="goToCell"
+        @delete="delTask"
+        :lockAction="false">
+        <template slot="noFleets">
+          No auto tasks
+        </template>
+      </Fleets>
+    </GamePanel>
+    <GamePanel :group="0" panel="notifications"
+      :empty="notifications.length == 0"> <!-- NOTIFICATIONS -->
+      <Notifications @goToCell="goToCell" />
+    </GamePanel>
+    <GamePanel :group="0" panel="bookmarks" :empty="false"> <!-- BOOKMARKS -->
+      <Bookmarks ref="bookmarks" @goToCell="goToCell" />
+    </GamePanel>
+
+    <GameMenu @goHome="goHome" @toggleArrows="toggleArrows" />
     <EndTurnMsg @onTurnEnded="onTurnEnded"
       @onTurnAnimationEnded="onTurnAnimationEnded" />
     <Window ref="quickStart" type="alert" title="Quick start">
@@ -105,6 +82,7 @@ import SwitchBox from '../components/SwitchBox'
 import GameMenu from '../components/GameMenu'
 import EndTurnMsg from '../components/nano/EndTurnMsg'
 import Bookmarks from '../components/Bookmarks'
+import GamePanel from '../components/GamePanel'
 
 const NOTIFICATION_ICON = 'https://avatars2.githubusercontent.com/u/41302202?s=400&v=4'
 
@@ -121,7 +99,8 @@ export default {
     Window,
     SwitchBox,
     EndTurnMsg,
-    Bookmarks
+    Bookmarks,
+    GamePanel
   },
   watch: {
     quickStartDisabled (val) {
@@ -152,51 +131,45 @@ export default {
       {
         code: 'KeyB',
         method: () => {
-          this.hideAllPanels('bookmarks')
-          this.panelsVisibility.bookmarks ^= true
+          this.togglePanel({ group: 0, panel: 'bookmarks' })
         },
         description: 'Bookmarks'
       },
       {
         code: 'KeyQ',
         method: () => {
-          this.panelsVisibility.main = false
+          this.hidePanel({ group: 0, panel: 'main' })
         },
         methodDown: () => {
-          this.hideAllPanels('info')
-          this.panelsVisibility.main = true
+          this.showPanel({ group: 0, panel: 'main' })
         },
         description: 'Game info'
       },
       {
         code: 'KeyF',
         method: () => {
-          this.hideAllPanels('fleets')
-          this.panelsVisibility.fleets ^= true
+          this.togglePanel({ group: 0, panel: 'fleets' })
         },
         description: 'Fleets in space'
       },
       {
         code: 'KeyA',
         method: () => {
-          this.hideAllPanels('autoTasks')
-          this.panelsVisibility.autoTasks ^= true
+          this.togglePanel({ group: 0, panel: 'autoTasks' })
         },
         description: 'Automatic tasks'
       },
       {
         code: 'KeyT',
         method: () => {
-          this.hideAllPanels('tasks')
-          this.panelsVisibility.tasks ^= true
+          this.togglePanel({ group: 0, panel: 'tasks' })
         },
         description: 'Current tasks'
       },
       {
         code: 'KeyN',
         method: () => {
-          this.hideAllPanels('notifications')
-          this.panelsVisibility.notifications ^= true
+          this.togglePanel({ group: 0, panel: 'notifications' })
         },
         description: 'Notifications'
       },
@@ -208,7 +181,9 @@ export default {
       },
       {
         code: 'Escape',
-        method: this.hideAllPanels
+        method: () => {
+          this.hidePanels(0)
+        }
       }
     ]
     return {
@@ -216,15 +191,7 @@ export default {
       winIsFocused: true,
       hotKeys,
       areNotificationsSupported: false,
-      forceAutoEndTurn: false,
-      panelsVisibility: {
-        main: false,
-        tasks: false,
-        autoTasks: false,
-        notifications: false,
-        fleets: false,
-        bookmarks: false
-      }
+      forceAutoEndTurn: false
     }
   },
   computed: {
@@ -240,7 +207,11 @@ export default {
   },
   methods: {
     ...mapActions({
-      delTask: 'tasks/del'
+      delTask: 'tasks/del',
+      togglePanel: 'panels/toggle',
+      showPanel: 'panels/show',
+      hidePanel: 'panels/hide',
+      hidePanels: 'panels/hideAll'
     }),
     setBookmark (planetID) {
       this.$refs.bookmarks.setBookmark(planetID)
@@ -248,7 +219,7 @@ export default {
     onPanelClicked (event, data) {
       if ((data.length !== undefined && data.length === 0) ||
         Object.values(data).length === 0) {
-        this.hideAllPanels()
+
       } else {
         event.preventDefault()
       }
@@ -265,16 +236,12 @@ export default {
           icon: NOTIFICATION_ICON
         })
       }
-      this.panelsVisibility['main'] = false
+      this.hidePanel(0, 'main')
     },
     onTurnAnimationEnded () {
       if (!this.isPlayerlost) {
-        this.showPanel('notifications')
+        this.showPanel(0, 'notifications')
       }
-    },
-    showPanel (panelName) {
-      this.hideAllPanels()
-      this.panelsVisibility[panelName] = true
     },
     goHome () {
       this.$refs.map.goHome()
@@ -292,17 +259,6 @@ export default {
         this.$store.dispatch('game/endTurn')
       }
     },
-    hideAllPanels (except = '') {
-      if (this.panelsVisibility.bookmarks) {
-        this.$refs.bookmarks.resetSelection()
-      }
-      for (let k in this.panelsVisibility) {
-        if (k === except) {
-          continue
-        }
-        this.panelsVisibility[k] = false
-      }
-    },
     toggleArrows () {
       this.$refs.map.toggleArrows()
     }
@@ -313,7 +269,6 @@ export default {
         this.areNotificationsSupported = permission === 'granted'
       })
     }
-
     this._blurFunc = () => { this.winIsFocused = false }
     this._focusFunc = () => { this.winIsFocused = true }
     window.addEventListener('focus', this._focusFunc)
