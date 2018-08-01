@@ -4,12 +4,11 @@ import { calcDistance } from './DistanceHelper.js'
 
 const TRANSLATE_SCALE_FACTOR = 1.5
 const DEFAULT_SCALE = 2.0
-const SHIPS_COUNT_OPAQUE = 100
-const STEPS_LEFT_MAX_WEIGHT = 4
 const MAX_RENDER_ZOOM = 2.0
 const BIG_ZOOM = 4.0
 const TO_POINT_SIZE = 5
 const FROM_POINT_SIZE = 2
+const ARROW_LINE_WIDTH = 1.25
 
 export default {
   data () {
@@ -46,7 +45,8 @@ export default {
       planetByID: 'planetByID',
       theBestPlanet: 'theBestPlanet',
       fleets: 'fleets/all',
-      tasks: 'tasks/all'
+      tasks: 'tasks/all',
+      fleetsMaxShips: 'fleets/maxShipsCount'
     }),
     simplyRender () {
       return this.drag || this.scale < 1 / MAX_RENDER_ZOOM
@@ -97,22 +97,21 @@ export default {
           let fromCell = this._all[from.cellID - 1]
           let toCell = this._all[to.cellID - 1]
           if (fromCell !== undefined && toCell !== undefined) {
-            this._drawArrow(fromCell, toCell, fleet.count, fleet.stepsLeft)
+            this._drawArrow(fromCell, toCell, fleet.count)
           }
         }
       })
       this.context.restore()
     },
-    _drawArrow (from, to, count, stepsLeft) {
-      let opacity = Math.min(Math.max(0.1, count / SHIPS_COUNT_OPAQUE), 1.0)
-      let width = Math.min(Math.max(1, stepsLeft), STEPS_LEFT_MAX_WEIGHT)
+    _drawArrow (from, to, count) {
+      let opacity = Math.min(Math.max(0.1, count / this.fleetsMaxShips), 1.0)
       let fromPoint = from.center
       let toPoint = to.center
       let ctx = this.context
       let zoom = this.scale * 1.25
       ctx.beginPath()
       ctx.strokeStyle = 'rgba(255, 255, 255, ' + opacity + ')'
-      ctx.lineWidth = width / zoom
+      ctx.lineWidth = ARROW_LINE_WIDTH / zoom
       ctx.fillStlte = 'transparent'
       ctx.moveTo(fromPoint.x, fromPoint.y)
       ctx.lineTo(toPoint.x, toPoint.y)

@@ -1,15 +1,19 @@
 /* fleets in space */
 
 import Vue from 'vue'
+import { START_MAX_SHIPS_COUNT } from '../../common/constants.js'
 
 const state = {
-  fleets: {}
+  fleets: {},
+  maxShipsCount: START_MAX_SHIPS_COUNT
 }
 
 const mutations = {
   SET_FLEETS (state, fleets) {
+    state.maxShipsCount = START_MAX_SHIPS_COUNT
     fleets.forEach(f => {
       Vue.set(state.fleets, f.id, f)
+      state.maxShipsCount = Math.max(state.maxShipsCount, f.count)
     })
   },
   CLEAR_FLEETS (state) {
@@ -33,7 +37,8 @@ const actions = {
 const getters = {
   all (state) {
     return state.fleets
-  }
+  },
+  maxShipsCount: (state) => state.maxShipsCount
 }
 
 export default {
