@@ -3,7 +3,6 @@ import Router from 'vue-router'
 import GamesList from '@/pages/GamesList.vue'
 import CreateGame from '@/pages/CreateGame.vue'
 import Game from '@/pages/Game.vue'
-import Test from '@/components/Test.vue'
 import store from '@/store'
 
 Vue.use(Router)
@@ -44,11 +43,6 @@ export default new Router({
       name: 'Game',
       component: Game,
       beforeEnter: genBeforeEnter(true, 'GamesList')
-    },
-    {
-      path: '/test',
-      name: 'Test',
-      component: Test
     }
   ]
 })
