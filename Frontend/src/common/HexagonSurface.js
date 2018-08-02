@@ -46,13 +46,14 @@ export default {
       theBestPlanet: 'theBestPlanet',
       fleets: 'fleets/all',
       tasks: 'tasks/all',
-      fleetsMaxShips: 'fleets/maxShipsCount'
+      fleetsMaxShips: 'fleets/maxShipsCount',
+      fullRender: 'settings/fullRender'
     }),
     simplyRender () {
-      return this.drag || this.scale < 1 / MAX_RENDER_ZOOM
+      return (this.drag || this.scale < 1 / MAX_RENDER_ZOOM) && !this.fullRender
     },
     bigZoom () {
-      return this.scale < 1 / BIG_ZOOM
+      return this.scale < 1 / BIG_ZOOM && !this.fullRender
     },
     renderedCount () {
       return this._active.length

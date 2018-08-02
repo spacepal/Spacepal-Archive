@@ -95,11 +95,6 @@ export default {
     Bookmarks,
     GamePanel
   },
-  watch: {
-    quickStartDisabled (val) {
-      this.$store.dispatch('setQuickStart', !val)
-    }
-  },
   data () {
     let hotKeys = [
       {
@@ -180,7 +175,6 @@ export default {
       }
     ]
     return {
-      quickStartDisabled: true,
       winIsFocused: true,
       hotKeys,
       areNotificationsSupported: false,
@@ -197,7 +191,15 @@ export default {
       quickStart: 'quickStart',
       isPlayerlost: 'isPlayerlost',
       bookmarksCount: 'bookmarks/count'
-    })
+    }),
+    quickStartDisabled: {
+      get () {
+        return !this.quickStart
+      },
+      set (value) {
+        this.setQuickStart(!value)
+      }
+    }
   },
   methods: {
     ...mapActions({
@@ -205,7 +207,8 @@ export default {
       togglePanel: 'panels/toggle',
       showPanel: 'panels/show',
       hidePanel: 'panels/hide',
-      hidePanels: 'panels/hideAll'
+      hidePanels: 'panels/hideAll',
+      setQuickStart: 'setQuickStart'
     }),
     setBookmark (planetID) {
       this.$refs.bookmarks.setBookmark(planetID)
@@ -273,8 +276,7 @@ export default {
     this._focusFunc = () => { this.winIsFocused = true }
     window.addEventListener('focus', this._focusFunc)
     window.addEventListener('blur', this._blurFunc)
-    this.quickStartDisabled = !this.quickStart
-    if (this.quickStart) {
+    if (!this.quickStartDisabled) {
       this.$refs.quickStart.show()
     }
   },

@@ -8,9 +8,8 @@
       @mouseup="mouseup"
       @wheel="mousewheel"
       :class="canvasClass"
+      :style="bgPosStyle"
       ref="canvas"></canvas>
-      <!-- :style="bgPosStyle"
-      ref="canvas"></canvas> -->
     <Window type="confirm" ref="taskWindow" title="Create task"
       @confirm="taskConfirm" @reject="taskReject" :enabled="task.isValid">
       <Form ref="taskForm" class="withoutborder">
@@ -214,7 +213,8 @@ export default {
     ...mapGetters({
       isOwner: 'isMemberPlanetOwner',
       availableShips: 'tasks/availableShips',
-      isLocked: 'isLocked'
+      isLocked: 'isLocked',
+      fullRender: 'settings/fullRender'
     }),
     taskLabel () {
       let count = this.task.maxCount
@@ -225,9 +225,12 @@ export default {
       return `Ships: ${count}`
     },
     bgPosStyle () {
-      return {
-        backgroundPosition: `${-this.dx / PARALLAX}px ${-this.dy / PARALLAX}px`
+      if (this.fullRender) {
+        return {
+          backgroundPosition: `${-this.dx / PARALLAX}px ${-this.dy / PARALLAX}px`
+        }
       }
+      return { }
     },
     isAutoTask () {
       return this.task.isHoldAutoTask || this.task.isDispatchAutoTask

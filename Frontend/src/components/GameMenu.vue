@@ -73,7 +73,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['menuIsVisible', 'isLocked', 'profile']),
+    ...mapGetters({
+      menuIsVisible: 'settings/menuIsVisible',
+      isLocked: 'isLocked',
+      profile: 'profile'
+    }),
     isFullScreen: () => document.fullscreen
   },
   mounted () {
@@ -89,7 +93,8 @@ export default {
     ...mapActions({
       endTurn: 'game/endTurn',
       logout: 'logout',
-      showGamePanel: 'panels/show'
+      showGamePanel: 'panels/show',
+      toggleVisibility: 'settings/toggleMenuVisibility'
     }),
     exit () {
       this.logout().catch(err => {
@@ -110,9 +115,6 @@ export default {
     },
     goHome () {
       this.$emit('goHome')
-    },
-    toggleVisibility () {
-      this.$store.dispatch('toggleMenuVisibility')
     },
     fullScreen () {
       let isFullScreen = document.fullscreen ||

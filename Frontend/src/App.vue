@@ -13,12 +13,14 @@
     </Window>
     <Signal ref="signal" />
     <Window ref="settings" type="confirm" @confirm="setCustom"
-      title="Backend settings" :enabled="settingsAreValid" class="settings">
+      title="Settings" :enabled="settingsAreValid" class="settings">
       <template>
         <Form ref="settingsForm" class="withoutborder">
           <TextInput label="Host" v-model="host" :min="1" @change="checkForm" />
           <TextInput type="number" label="Port" v-model="port"
             :min="1" :max="65535" @change="checkForm" />
+          <p><SwitchBox label="Full render" v-model="slowRender" /></p>
+          <p><SwitchBox label="Show menu" v-model="menuIsVisible" /></p>
         </Form>
       </template>
       <template slot="footer">
@@ -48,8 +50,10 @@
 import Window from './components/Window'
 import Form from './components/Form'
 import TextInput from './components/TextInput'
+import SwitchBox from './components/SwitchBox'
 import Signal from './components/nano/Signal'
 import { DEFAULT_BACKEND } from './common/constants.js'
+import { mapActions } from 'vuex'
 let themes = ['dark', 'light']
 let backend = DEFAULT_BACKEND.split(':')
 
@@ -59,7 +63,7 @@ export default {
     return {
       settingsAreValid: false,
       host: backend[0] || 'localhost',
-      port: parseInt(backend[1] || '3000'),
+      port: parseInt(backend[1] || '80'),
       currentTheme: 0,
       hotKeys: [
         {
@@ -100,11 +104,27 @@ export default {
     }
   },
   computed: {
+    slowRender: {
+      get () {
+        return this.$store.getters['settings/fullRender']
+      },
+      set (value) {
+        this.setSetting({ key: 'fullRender', value })
+      }
+    },
+    menuIsVisible: {
+      get () {
+        return this.$store.getters['settings/menuIsVisible']
+      },
+      set (value) {
+        this.setSetting({ key: 'menuIsVisible', value })
+      }
+    },
     theme () {
       return themes[this.currentTheme]
     }
   },
-  components: { Window, Signal, Form, TextInput },
+  components: { Window, Signal, Form, TextInput, SwitchBox },
   mounted () {
     if (this.$store.getters['isPlayer']) {
       this.$store.dispatch('enableCable').catch(() => {
@@ -121,6 +141,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      setSetting: 'settings/set'
+    }),
     checkForm () {
       this.settingsAreValid = this.$refs.settingsForm.isValid()
     },
