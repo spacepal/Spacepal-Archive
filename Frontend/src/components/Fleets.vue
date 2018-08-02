@@ -34,7 +34,7 @@
       </template>
     </div>
     <p v-else>
-      <slot name="noFleets">No fleets</slot>
+      <slot name="noFleets">Empty</slot>
     </p>
   </div>
 </template>
@@ -99,7 +99,7 @@ export default {
 <style lang="scss" scoped>
 .tasks {
   display: grid;
-  min-height: 100%;
+  justify-content: space-around;
   grid-template-columns: auto auto auto auto auto auto
 }
 .tasks > * {

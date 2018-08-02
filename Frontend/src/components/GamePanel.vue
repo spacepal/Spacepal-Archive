@@ -3,7 +3,12 @@
     v-show="isVisible"
     @click.self="hide" @click="onClick($event)">
     <Form class="info-panel-body">
-      <slot></slot>
+      <div class="flex-vertical form-block">
+        <h2 v-if="title !== ''">{{title}}</h2>
+        <div class="flex-horizontal">
+          <slot></slot>
+        </div>
+      </div>
     </Form>
   </div>
 </template>
@@ -16,7 +21,11 @@ export default {
   props: {
     group: Number,
     panel: String,
-    empty: Boolean
+    empty: Boolean,
+    title: {
+      type: String,
+      default: ''
+    }
   },
   components: { Form },
   computed: {
@@ -64,3 +73,14 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.info-panel-body .form-block {
+  justify-content: center;
+  align-items: center;
+}
+.form-block > h2 {
+  font-weight: normal;
+  font-size: 18pt;
+}
+</style>

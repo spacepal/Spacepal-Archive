@@ -2,10 +2,12 @@
   <div class="game-page" ref="page">
     <Map ref="map" full @addBookmark="setBookmark" />
     <GamePanel :group="0" panel="main" :empty="true"> <!-- PLAYERS + GAME INFO -->
-      <Members class="withoutborder" />
-      <GameInfo class="withoutborder" />
+      <div class="main-panel">
+        <Members class="withoutborder" />
+        <GameInfo class="withoutborder" />
+      </div>
     </GamePanel>
-    <GamePanel :group="0" panel="tasks"
+    <GamePanel :group="0" panel="tasks" title="Tasks"
       :empty="Object.values(tasks).length == 0"> <!-- TASKS -->
       <Fleets
           :canDelete="true"
@@ -13,24 +15,18 @@
           :fleets="tasks"
           @goToCell="goToCell"
           @delete="delTask">
-          <template slot="noFleets">
-            No tasks
-          </template>
         </Fleets>
     </GamePanel>
-    <GamePanel :group="0" panel="fleets"
+    <GamePanel :group="0" panel="fleets" title="Fleets in space"
       :empty="Object.values(fleets).length == 0"> <!-- FLEETS -->
       <Fleets
         :canDelete="false"
         :syncs="['fleets', 'planets']"
         :fleets="fleets"
         @goToCell="goToCell">
-        <template slot="noFleets">
-          No fleets
-        </template>
       </Fleets>
     </GamePanel>
-    <GamePanel :group="0" panel="autoTasks"
+    <GamePanel :group="0" panel="autoTasks" title="Autotasks"
       :empty="Object.values(autoTasks).length == 0"> <!-- AUTOTASKS -->
       <Fleets
         :canDelete="true"
@@ -39,16 +35,13 @@
         @goToCell="goToCell"
         @delete="delTask"
         :lockAction="false">
-        <template slot="noFleets">
-          No auto tasks
-        </template>
       </Fleets>
     </GamePanel>
-    <GamePanel :group="0" panel="notifications"
+    <GamePanel :group="0" panel="notifications" title="Events"
       :empty="notifications.length == 0"> <!-- NOTIFICATIONS -->
       <Notifications @goToCell="goToCell" />
     </GamePanel>
-    <GamePanel :group="0" panel="bookmarks" :empty="bookmarksCount === 0"> <!-- BOOKMARKS -->
+    <GamePanel title="Bookmarks" :group="0" panel="bookmarks" :empty="bookmarksCount === 0"> <!-- BOOKMARKS -->
       <Bookmarks ref="bookmarks" @goToCell="goToCell" />
     </GamePanel>
 
@@ -317,5 +310,19 @@ export default {
 .quick-start-btn {
   display: flex;
   justify-content: center;
+}
+.main-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  > * {
+    margin: 0 10px;
+  }
+  @media screen and (max-width: 600px) {
+    flex-direction: column;
+    > * {
+      margin: 10px 0;
+    }
+  }
 }
 </style>

@@ -48,7 +48,7 @@
         </p>
       </template>
     </div>
-    <p v-else>No notifications</p>
+    <p v-else>Empty</p>
   </div>
 </template>
 
