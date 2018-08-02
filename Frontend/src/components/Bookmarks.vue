@@ -113,6 +113,7 @@ export default {
   display: grid;
   grid-template-columns: auto auto auto auto auto auto auto;
   text-align: center;
+  user-select: none;
 }
 .bookmarkInfo * {
   padding: 2px 4px
