@@ -7,11 +7,20 @@ import debug from '../../common/Debug.js'
 const STORAGE_AUTOTASKS = 'autotasks'
 const STORAGE_TASKS = 'tasks'
 
+let savedTasks = JSON.parse(sessionStorage.getItem(STORAGE_TASKS)) || {}
+
 const state = {
-  tasks: JSON.parse(sessionStorage.getItem(STORAGE_TASKS)) || {},
-  shipsDecreasing: {},
+  tasks: savedTasks,
+  shipsDecreasing: Object.values(savedTasks).reduce((decr, task) => {
+    if (decr[task.from] === undefined) {
+      decr[task.from] = task.count
+    } else {
+      decr[task.from] += task.count
+    }
+    return decr
+  }, {}),
   autoTasks: JSON.parse(sessionStorage.getItem(STORAGE_AUTOTASKS)) || {},
-  lastTaskID: 0
+  lastTaskID: Object.keys(savedTasks).reduce((last, cur) => Math.max(last, cur), 0)
 }
 
 const mutations = {

@@ -2,32 +2,32 @@
   <div class="has-spinner" :class="loadingClass">
     <div v-if="this.adoptedFleets.length > 0" class="tasks">
       <template>
-        <a @click="changeSort('fromCell')" class="header-th">From
+        <a @click="changeSort('fromCell')">From
           <span class="mdi mdi-sort-ascending"
             v-if="sortKey === 'fromCell' && sortType === +1"></span>
           <span class="mdi mdi-sort-descending"
             v-if="sortKey === 'fromCell' && sortType === -1"></span>
         </a>
-        <a @click="changeSort('toCell')" class="header-th">To
+        <a @click="changeSort('toCell')">To
           <span class="mdi mdi-sort-ascending"
             v-if="sortKey === 'toCell' && sortType === +1"></span>
           <span class="mdi mdi-sort-descending"
             v-if="sortKey === 'toCell' && sortType === -1"></span>
         </a>
-        <span class="header-th">Player</span>
-        <a @click="changeSort('count')" class="header-th">Count
+        <span>Player</span>
+        <a @click="changeSort('count')">Count
           <span class="mdi mdi-sort-ascending"
             v-if="sortKey === 'count' && sortType === +1"></span>
           <span class="mdi mdi-sort-descending"
             v-if="sortKey === 'count' && sortType === -1"></span>
         </a>
-        <a @click="changeSort('stepsLeft')" class="header-th">Steps
+        <a @click="changeSort('stepsLeft')">Steps
           <span class="mdi mdi-sort-ascending"
             v-if="sortKey === 'stepsLeft' && sortType === +1"></span>
           <span class="mdi mdi-sort-descending"
             v-if="sortKey === 'stepsLeft' && sortType === -1"></span>
         </a>
-        <span class="header-th">
+        <span>
           <template v-if="canDelete">
             Action
           </template>
@@ -54,7 +54,7 @@
       </template>
     </div>
     <p v-else>
-      <slot name="noFleets">Empty</slot>
+      <slot name="noFleets"><span class="text-additional">Empty</span></slot>
     </p>
   </div>
 </template>
@@ -140,13 +140,11 @@ export default {
 .tasks {
   display: grid;
   justify-content: space-around;
-  grid-template-columns: auto auto auto auto auto auto
+  grid-template-columns: auto auto auto auto auto auto;
+  user-select: none;
 }
 .tasks > * {
   margin: 5px 20px;
   text-align: center
-}
-.header-th {
-  user-select: none;
 }
 </style>
