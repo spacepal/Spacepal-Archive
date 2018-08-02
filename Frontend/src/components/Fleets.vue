@@ -2,12 +2,32 @@
   <div class="has-spinner" :class="loadingClass">
     <div v-if="this.adoptedFleets.length > 0" class="tasks">
       <template>
-        <span>From</span>
-        <span>To</span>
-        <span>Player</span>
-        <span>Count</span>
-        <span>Steps</span>
-        <span>
+        <a @click="changeSort('fromCell')" class="header-th">From
+          <span class="mdi mdi-sort-ascending"
+            v-if="sortKey === 'fromCell' && sortType === +1"></span>
+          <span class="mdi mdi-sort-descending"
+            v-if="sortKey === 'fromCell' && sortType === -1"></span>
+        </a>
+        <a @click="changeSort('toCell')" class="header-th">To
+          <span class="mdi mdi-sort-ascending"
+            v-if="sortKey === 'toCell' && sortType === +1"></span>
+          <span class="mdi mdi-sort-descending"
+            v-if="sortKey === 'toCell' && sortType === -1"></span>
+        </a>
+        <span class="header-th">Player</span>
+        <a @click="changeSort('count')" class="header-th">Count
+          <span class="mdi mdi-sort-ascending"
+            v-if="sortKey === 'count' && sortType === +1"></span>
+          <span class="mdi mdi-sort-descending"
+            v-if="sortKey === 'count' && sortType === -1"></span>
+        </a>
+        <a @click="changeSort('stepsLeft')" class="header-th">Steps
+          <span class="mdi mdi-sort-ascending"
+            v-if="sortKey === 'stepsLeft' && sortType === +1"></span>
+          <span class="mdi mdi-sort-descending"
+            v-if="sortKey === 'stepsLeft' && sortType === -1"></span>
+        </a>
+        <span class="header-th">
           <template v-if="canDelete">
             Action
           </template>
@@ -57,6 +77,8 @@ export default {
   },
   data () {
     return {
+      sortKey: 'from',
+      sortType: +1 // +1 (asc)/-1 (desc)
     }
   },
   components: { Member, Planet },
@@ -66,13 +88,18 @@ export default {
     },
     del (id) {
       this.$emit('delete', id)
+    },
+    changeSort (key) {
+      if (this.sortKey === key) {
+        this.sortType *= -1
+      } else {
+        this.sortType = +1
+        this.sortKey = key
+      }
     }
   },
   computed: {
-    ...mapGetters({
-      sync: 'sync',
-      isLocked: 'isLocked'
-    }),
+    ...mapGetters(['sync', 'isLocked', 'planetByID']),
     actionEnabled () {
       return !this.isLocked || this.lockAction === false
     },
@@ -81,8 +108,21 @@ export default {
       for (let id in this.fleets) {
         let f = Object.assign({}, this.fleets[id])
         f.id = id
+        let from = this.planetByID(f.from)
+        if (from !== undefined) {
+          f.fromCell = this.planetByID(f.from).cellID
+        } else {
+          f.fromCell = 0
+        }
+        let to = this.planetByID(f.to)
+        if (to !== undefined) {
+          f.toCell = this.planetByID(f.to).cellID
+        } else {
+          f.toCell = 0
+        }
         t.push(f)
       }
+      t.sort((a, b) => (a[this.sortKey] - b[this.sortKey]) * this.sortType)
       return t
     },
     loadingClass () {
@@ -105,5 +145,8 @@ export default {
 .tasks > * {
   margin: 5px 20px;
   text-align: center
+}
+.header-th {
+  user-select: none;
 }
 </style>
