@@ -2,7 +2,9 @@ class GameChannel < ApplicationCable::Channel
 
   def subscribed
     game_id = Player[current_player_id].game_id
+    core = Core.new game_id, current_player_id
     stream_from ("games:" + game_id.to_s)
+    transmit core.transmitted_room
     # stream_from "some_channel"
   end
 
