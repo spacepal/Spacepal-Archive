@@ -42,10 +42,10 @@
         {{ $t('Do you want to join game') }}<span v-if="!join.unknowGameID"> #{{ join.gameID }}</span>?
         <Form ref="joinForm" class="withoutborder">
           <TextInput :label="$t('Game ID')" v-model="join.gameID" ref="usernameInput"
-            type="number" v-if="join.unknowGameID" :min="1"
+            type="number" v-if="join.unknowGameID" :min="1" force
             @change="checkJoinForm" />
           <TextInput :label="$t('Username')" v-model="join.username" ref="usernameInput"
-            type="text" validate='^[0-9A-Za-z_-]*$' :min="1" :max="32"
+            type="text" validate='^[0-9A-Za-z_-]*$' :min="1" :max="32" force
             @change="checkJoinForm" :generator="usernameGenerator" />
           <TextInput :label="$t('Pincode')" v-if="join.hasPinCode" v-model="join.pinCode"
             type="text" :min="4" :max="4" validate='^[0-9]+$'
@@ -205,11 +205,12 @@ export default {
       this.$refs.usernameInput.regenerate(true)
     },
     joinByID () {
-      this.join.gameID = 1
+      this.join.gameID = ''
       this.join.pinCode = ''
       this.join.hasPinCode = false
       this.join.isValid = false
       this.join.unknowGameID = true
+      this.join.username = ''
       this.$refs.confirm.show()
     },
     joinConfirm () {
@@ -259,6 +260,7 @@ export default {
       } else {
         this.join.gameID = row.id
         this.join.pinCode = ''
+        this.join.username = ''
         this.join.hasPinCode = row.has_pin_code
         this.join.isValid = false
         this.join.unknowGameID = false
