@@ -93,7 +93,7 @@ module Broadcastable
     _hash = {
       "type" => "room",
       "data" => {
-        "roomName" => '#todo'
+        "roomName" => "players:" + @player_id.to_s
       }
     }
     return _hash
