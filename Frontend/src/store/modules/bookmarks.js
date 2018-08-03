@@ -17,7 +17,7 @@ const mutations = {
     Vue.delete(state.bookmarks, slot)
   },
   DELETE_ALL (state) {
-    state.bookmarks = {}
+    Vue.set(state, 'bookmarks', {})
   }
 }
 
@@ -39,6 +39,7 @@ const actions = {
       JSON.stringify(state.bookmarks))
   },
   clear ({commit}) {
+    sessionStorage.deleteItem(STORAGE_BOOKMARKS)
     commit('DELETE_ALL')
   }
 }
@@ -48,6 +49,7 @@ const getters = {
     let count = 0
     Object.values(state.bookmarks).forEach(planetID => {
       if (planetID) {
+        console.log(planetID)
         count++
       }
     })
