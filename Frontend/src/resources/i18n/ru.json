@@ -128,7 +128,7 @@
   "Create task": "Создание задачи",
   "Map isn't regenerated": "Ошибка перегенерации",
   "Connection error": "Ошибка подключения",
-  "There's no space in the room.": "Нет свободного места",
+  "There's no space in the room": "Нет свободного места",
   "The turn is already ended": "Ход уже завершен",
   "Add bot": "Добавить бота",
   "Goto bookmark": "Перейти к закладке",
@@ -150,5 +150,10 @@
   "Game ID": "ИД игры",
   "Do you want to join game": "Вы хотите присоединиться к игре",
   "capital": "столица",
-  "You can contribute to extend browser support": "Вы можете внести свой вклад для увеличения поддержки"
+  "You can contribute to extend browser support": "Вы можете внести свой вклад для увеличения поддержки",
+  "the pin code is wrong": "Неверный ПИН-код",
+  "the game was started": "Игра уже начата",
+  "players_limit": "Игра переполнена",
+  "can't find the game": "Игра не найдена",
+  "player_name": "Имя пользователя уже используется"
 }

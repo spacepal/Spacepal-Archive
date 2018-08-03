@@ -150,5 +150,10 @@
   "Game ID": "Game ID",
   "Do you want to join game": "Do you want to join game",
   "capital": "capital",
-  "You can contribute to extend browser support": "Вы можете внести свой вклад для увеличения поддержки"
+  "You can contribute to extend browser support": "Вы можете внести свой вклад для увеличения поддержки",
+  "the pin code is wrong": "The pin code is wrong",
+  "the game was started": "The game was started",
+  "players_limit": "There's no space in the room",
+  "can't find the game": "The game not found",
+  "player_name": "The username is already used"
 }

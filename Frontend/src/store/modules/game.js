@@ -47,7 +47,7 @@ const actions = {
   joinRandom ({ dispatch }, { username }) {
     return Service.game.joinRandom(username).then((resp) => {
       if (resp.data.errors) {
-        throw new Error(resp.data.errors.join('; '))
+        throw new Error(resp.data.errors[0])
       }
       let gameID = resp.data.gameID
       dispatch('login', gameID, { root: true })
@@ -57,7 +57,7 @@ const actions = {
   join ({ dispatch }, { gameID, pinCode, username }) {
     return Service.game.join(gameID, pinCode, username).then((resp) => {
       if (resp.data.errors) {
-        throw new Error(resp.data.errors.join('; '))
+        throw new Error(resp.data.errors[0])
       }
       dispatch('login', gameID, { root: true })
       return gameID
@@ -66,7 +66,7 @@ const actions = {
   create ({ dispatch }, data) {
     return Service.game.create(data).then((resp) => {
       if (resp.data.errors) {
-        throw new Error(resp.data.errors.join('; '))
+        throw new Error(resp.data.errors[0])
       }
       dispatch('login', resp.data.gameID, { root: true })
       return resp.data.gameID
