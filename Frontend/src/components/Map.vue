@@ -10,7 +10,7 @@
       :class="canvasClass"
       :style="bgPosStyle"
       ref="canvas"></canvas>
-    <Window type="confirm" ref="taskWindow" title="Create task"
+    <Window type="confirm" ref="taskWindow" :title="$t('Create task')"
       @confirm="taskConfirm" @reject="taskReject" :enabled="task.isValid">
       <Form ref="taskForm" class="withoutborder">
         <TextInput type="number"
@@ -20,12 +20,12 @@
           v-model="task.count"
           @change="checkTaskForm"></TextInput>
         <div class="flex-horizontal">
-          <SwitchBox :label="'Hold' + autoTaskLabel({hold: true, dispatch: false})"
-            title="Create autotask that hold ships on the planet"
+          <SwitchBox :label="$t('Hold') + autoTaskLabel({hold: true, dispatch: false})"
+            :title="$t('Create autotask that hold ships on the planet')"
             v-model="task.isHoldAutoTask"
             @change="onHold(); checkTaskForm()" />
-          <SwitchBox :label="'Dispatch' + autoTaskLabel({hold: false, dispatch: true})"
-            title="Create autotask that dispatch ships from the planet"
+          <SwitchBox :label="$t('Dispatch') + autoTaskLabel({hold: false, dispatch: true})"
+            :title="$t('Create autotask that dispatch ships from the planet')"
             v-model="task.isDispatchAutoTask"
             @change="onDispatch(); checkTaskForm()" />
         </div>
@@ -121,7 +121,7 @@ export default {
         {
           code: 'PageUp',
           isKey: true,
-          description: 'Zoom+',
+          description: this.$t('Zoom+'),
           method: () => {
             this.scaleSurface(1.0 + KEY_LARGE_SCALE_FACTOR)
             this.tick()
@@ -130,7 +130,7 @@ export default {
         {
           code: 'PageDown',
           isKey: true,
-          description: 'Zoom-',
+          description: this.$t('Zoom-'),
           method: () => {
             this.scaleSurface(1.0 - KEY_LARGE_SCALE_FACTOR)
             this.tick()
@@ -141,7 +141,7 @@ export default {
           isKey: true,
           methodDown: this.play,
           methodPress: this.zoomUp,
-          description: 'Zoom+',
+          description: this.$t('Zoom+'),
           method: this.safePause
         },
         {
@@ -156,20 +156,20 @@ export default {
           isKey: true,
           methodDown: this.play,
           methodPress: this.zoomDown,
-          description: 'Zoom-',
+          description: this.$t('Zoom-'),
           method: this.safePause
         },
         {
           code: '*',
           isKey: true,
           method: this.zoomReset,
-          description: 'Default zoom'
+          description: this.$t('Default zoom')
         },
         {
           code: '0',
           isKey: true,
           method: this.zoomReset,
-          description: 'Default zoom',
+          description: this.$t('Default zoom'),
           modalLock: true
         },
         {
@@ -179,13 +179,13 @@ export default {
         {
           code: 'KeyH',
           method: this.goHome,
-          description: 'Your best planet'
+          description: this.$t('Your best planet')
         },
         {
           code: 'Home',
           isKey: true,
           method: this.goHome,
-          description: 'Your best planet'
+          description: this.$t('Your best planet')
         },
         {
           code: 'Escape',
@@ -204,7 +204,7 @@ export default {
         {
           code: 'KeyR',
           method: this.toggleArrows,
-          description: 'Show directions'
+          description: this.$t('Show directions')
         }
       ]
     }
@@ -222,7 +222,7 @@ export default {
         count -= this.task.count
       }
       count = Math.max(count || 0, 0)
-      return `Ships: ${count}`
+      return `${this.$t('Ships')}: ${count}`
     },
     bgPosStyle () {
       if (this.fullRender) {
@@ -371,7 +371,7 @@ export default {
     autoTaskLabel ({ hold, dispatch }) {
       if ((dispatch && this.task.isHoldAutoTask) ||
         (hold && !this.task.isHoldAutoTask && !this.task.isDispatchAutoTask)) {
-        return ' [space]'
+        return this.$t('keySpace')
       }
       return ''
     },
@@ -426,7 +426,7 @@ export default {
       }
       if (this.task.from !== null) {
         if (this.simplyRender) {
-          this.$toast(`Zoom in for action`)
+          this.$toast(this.$t('Zoom in for action'))
           return
         }
         this.unselectLastCell()
@@ -437,10 +437,14 @@ export default {
           this.taskReject()
         }
       } else if (!this.isOwner(planet.id)) {
-        this.$toast(`This is foreign planet`)
+        if (planet.ownerID === -1) {
+          this.$toast(this.$t('This is neutral planet'))
+        } else {
+          this.$toast(this.$t('This is foreign planet'))
+        }
       } else {
         if (this.simplyRender) {
-          this.$toast(`Zoom in for action`)
+          this.$toast(this.$t('Zoom in for action'))
           return
         }
         this.selectCell(planet.cellID - 1)

@@ -3,7 +3,7 @@
     <transition name="fade">
       <div class="background" v-if="isVisible">
         <div class="star" v-for="i in 300" :key="i" :style="rocketStyle(i, true)"></div>
-        <div id="loading"></div>
+        <div id="loading">{{ $t('Loading') }}</div>
       </div>
     </transition>
   </div>

@@ -7,7 +7,7 @@
         <GameInfo class="withoutborder" />
       </div>
     </GamePanel>
-    <GamePanel :group="0" panel="tasks" title="Tasks"
+    <GamePanel :group="0" panel="tasks" :title="$t('Tasks')"
       :empty="Object.values(tasks).length == 0"> <!-- TASKS -->
       <Fleets
           :canDelete="true"
@@ -17,7 +17,7 @@
           @delete="delTask">
         </Fleets>
     </GamePanel>
-    <GamePanel :group="0" panel="fleets" title="Fleets in space"
+    <GamePanel :group="0" panel="fleets" :title="$t('Fleets in space')"
       :empty="Object.values(fleets).length == 0"> <!-- FLEETS -->
       <Fleets
         :canDelete="false"
@@ -26,7 +26,7 @@
         @goToCell="goToCell">
       </Fleets>
     </GamePanel>
-    <GamePanel :group="0" panel="autoTasks" title="Autotasks"
+    <GamePanel :group="0" panel="autoTasks" :title="$t('Autotasks')"
       :empty="Object.values(autoTasks).length == 0"> <!-- AUTOTASKS -->
       <Fleets
         :canDelete="true"
@@ -37,18 +37,18 @@
         :lockAction="false">
       </Fleets>
     </GamePanel>
-    <GamePanel :group="0" panel="notifications" title="Events"
+    <GamePanel :group="0" panel="notifications" :title="$t('Events')"
       :empty="notifications.length == 0"> <!-- NOTIFICATIONS -->
       <Notifications @goToCell="goToCell" />
     </GamePanel>
-    <GamePanel title="Bookmarks" :group="0" panel="bookmarks" :empty="bookmarksCount === 0"> <!-- BOOKMARKS -->
+    <GamePanel :title="$t('Bookmarks')" :group="0" panel="bookmarks" :empty="bookmarksCount === 0"> <!-- BOOKMARKS -->
       <Bookmarks ref="bookmarks" @goToCell="goToCell" />
     </GamePanel>
 
     <GameMenu @goHome="goHome" @toggleArrows="toggleArrows" />
     <EndTurnMsg @onTurnEnded="onTurnEnded"
       @onTurnAnimationEnded="onTurnAnimationEnded" />
-    <Window ref="quickStart" type="alert" title="Quick start">
+    <Window ref="quickStart" type="alert" :title="$t('Quick start')">
       <template>
         <span class="quick-start-p">At the start of the game you have only one planet — your capital (press <span class="mdi mdi-keyboard mdi-24px splitter"></span>Home for quick goto).</span>
         <span class="quick-start-p">Besides it on the map are located neutral planets (peaceful) and planets of your opponents.</span>
@@ -56,7 +56,7 @@
         <span class="quick-start-p">Every turn, count of ships on the planet is increased by production value (prod).</span>
         <span class="quick-start-p">If you conquer planets of other players — you will win.</span>
         <span class="quick-start-p">Press <span class="mdi mdi-keyboard mdi-24px splitter"></span>K for show all hotkeys</span>
-        <span class="quick-start-btn"><SwitchBox v-model="quickStartDisabled" label="Don't show again" title="You can press KeyL for show quick start again" /></span>
+        <span class="quick-start-btn"><SwitchBox v-model="quickStartDisabled" label="Don't show again" :title="$t('You can press KeyL for show quick start again')" /></span>
       </template>
     </Window>
   </div>
@@ -113,15 +113,15 @@ export default {
         code: 'KeyL',
         method: () => {
           this.$refs.quickStart.show()
-        },
-        description: 'Quick start'
+        }
+        // description: this.$t('Quick start')
       },
       {
         code: 'KeyB',
         method: () => {
           this.togglePanel({ group: 0, panel: 'bookmarks' })
         },
-        description: 'Bookmarks'
+        description: this.$t('Bookmarks')
       },
       {
         code: 'KeyQ',
@@ -131,41 +131,41 @@ export default {
         methodDown: () => {
           this.showPanel({ group: 0, panel: 'main' })
         },
-        description: 'Game info'
+        description: this.$t('Game info')
       },
       {
         code: 'KeyF',
         method: () => {
           this.togglePanel({ group: 0, panel: 'fleets' })
         },
-        description: 'Fleets in space'
+        description: this.$t('Fleets in space')
       },
       {
         code: 'KeyA',
         method: () => {
           this.togglePanel({ group: 0, panel: 'autoTasks' })
         },
-        description: 'Automatic tasks'
+        description: this.$t('Autotasks')
       },
       {
         code: 'KeyT',
         method: () => {
           this.togglePanel({ group: 0, panel: 'tasks' })
         },
-        description: 'Current tasks'
+        description: this.$t('Current tasks')
       },
       {
         code: 'KeyN',
         method: () => {
           this.togglePanel({ group: 0, panel: 'notifications' })
         },
-        description: 'Notifications'
+        description: this.$t('Notifications')
       },
       {
         code: 'Space',
         method: this.endTurn,
         modalLock: true,
-        description: 'End turn'
+        description: this.$t('End turn')
       },
       {
         code: 'Escape',
@@ -256,7 +256,7 @@ export default {
       if (this.forceAutoEndTurn) {
         this.$store.dispatch('game/endTurn')
       } else if (this.$store.getters.isLocked) {
-        this.$toast('The turn is already ended')
+        this.$toast(this.$t('The turn is already ended'))
       } else {
         this.showPanel({ group: 0, panel: 'main' })
         this.$store.dispatch('game/endTurn')
@@ -276,9 +276,9 @@ export default {
     this._focusFunc = () => { this.winIsFocused = true }
     window.addEventListener('focus', this._focusFunc)
     window.addEventListener('blur', this._blurFunc)
-    if (!this.quickStartDisabled) {
-      this.$refs.quickStart.show()
-    }
+    // if (!this.quickStartDisabled) {
+    //   this.$refs.quickStart.show()
+    // }
   },
   beforeDestroy () {
     window.removeEventListener('focus', this._focusFunc)

@@ -2,26 +2,26 @@
   <div class="has-spinner" :class="loadingClass">
     <div v-if="this.adoptedFleets.length > 0" class="tasks">
       <template>
-        <a @click="changeSort('fromCell')">From
+        <a @click="changeSort('fromCell')">{{ $t('From') }}
           <span class="mdi mdi-sort-ascending"
             v-if="sortKey === 'fromCell' && sortType === +1"></span>
           <span class="mdi mdi-sort-descending"
             v-if="sortKey === 'fromCell' && sortType === -1"></span>
         </a>
-        <a @click="changeSort('toCell')">To
+        <a @click="changeSort('toCell')">{{ $t('To') }}
           <span class="mdi mdi-sort-ascending"
             v-if="sortKey === 'toCell' && sortType === +1"></span>
           <span class="mdi mdi-sort-descending"
             v-if="sortKey === 'toCell' && sortType === -1"></span>
         </a>
-        <span>Player</span>
-        <a @click="changeSort('count')">Count
+        <span>{{ $t('Player') }}</span>
+        <a @click="changeSort('count')">{{ $t('Count') }}
           <span class="mdi mdi-sort-ascending"
             v-if="sortKey === 'count' && sortType === +1"></span>
           <span class="mdi mdi-sort-descending"
             v-if="sortKey === 'count' && sortType === -1"></span>
         </a>
-        <a @click="changeSort('stepsLeft')">Steps
+        <a @click="changeSort('stepsLeft')">{{ $t('Steps') }}
           <span class="mdi mdi-sort-ascending"
             v-if="sortKey === 'stepsLeft' && sortType === +1"></span>
           <span class="mdi mdi-sort-descending"
@@ -29,7 +29,7 @@
         </a>
         <span>
           <template v-if="canDelete">
-            Action
+            {{ $t('Action') }}
           </template>
         </span>
       </template>
@@ -47,14 +47,14 @@
         </span>
         <span :key="fleet.id + '_6'">
           <template v-if="canDelete">
-            <a v-if="actionEnabled" @click="del(fleet.id)">delete</a>
-            <span v-else>no</span>
+            <a v-if="actionEnabled" @click="del(fleet.id)">{{ $t('delete') }}</a>
+            <span v-else>{{ $t('no') }}</span>
           </template>
         </span>
       </template>
     </div>
     <p v-else>
-      <slot name="noFleets"><span class="text-additional">Empty</span></slot>
+      <slot name="noFleets"><span class="text-additional">{{ $t('Empty') }}</span></slot>
     </p>
   </div>
 </template>

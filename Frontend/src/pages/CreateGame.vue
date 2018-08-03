@@ -2,39 +2,40 @@
   <div id="create-page" class="flex-vertical">
     <GameTitle></GameTitle>
     <Form ref="form">
-      <TextInput v-model="pref.username" label="Username" ref="username"
+      <TextInput v-model="pref.username" :label="$t('Username')" ref="username"
         validate='^[0-9A-Za-z_-]*$' :min="1" :generator="usernameGen"
         :max="32" @change="checkForm" />
       <TextInput v-model="pref.gamename" :generator="gamenameGen" ref="gamename"
-        label="Game name" :max="32" @change="checkForm" />
+        :label="$t('Game name')" :max="32" @change="checkForm" />
       <div class="flex-horizontal">
-        <TextInput v-model="pref.map.width" label="Map width"
+        <TextInput v-model="pref.map.width" :label="$t('Map width')"
           type="number" :min="2" :max="64" @change="checkForm" />
-        <TextInput v-model="pref.map.height" label="Map height"
+        <TextInput v-model="pref.map.height" :label="$t('Map height')"
           type="number" :min="2" :max="64" @change="checkForm" />
       </div>
       <div class="flex-horizontal">
-        <TextInput v-model="pref.playersLimit" label="Players limit"
+        <TextInput v-model="pref.playersLimit" :label="$t('Players limit')"
           type="number" :min="2" :max="8" @change="checkForm" />
-        <TextInput v-model="pref.planetsCount" label="Planets count"
+        <TextInput v-model="pref.planetsCount" :label="$t('Planets count')"
           type="number" :min="pref.playersLimit"
           @change="checkForm" :max="pref.map.height * pref.map.width"/>
       </div>
       <div class="switches">
-        <SwitchBox label="Buffs" v-model="pref.flags.buffs" />
-        <SwitchBox label="PAC" v-model="pref.flags.productionAfterCapture"
-          title="Production after capture" />
-        <SwitchBox label="Pirates" v-model="pref.flags.pirates" />
-        <SwitchBox label="Accumulative" v-model="pref.flags.accumulative" />
+        <SwitchBox :label="$t('Buffs')" v-model="pref.flags.buffs" />
+        <SwitchBox :label="$t('PAC')" v-model="pref.flags.productionAfterCapture"
+          :title="$t('Production after capture')" />
+        <SwitchBox :label="$t('Pirates')" v-model="pref.flags.pirates" />
+        <SwitchBox :label="$t('Accum')"
+          :title="$t('Accumulative')" v-model="pref.flags.accumulative" />
       </div>
       <div class="flex-horizontal pincode-field">
         <label class="flex-horizontal pincode-switch">
           <span v-if="pref.flags.hasPinCode" class="mdi mdi-lock mdi-24px"></span>
           <span v-else class="mdi mdi-lock-open mdi-24px"></span>
-          <SwitchBox title="Has pincode" v-model="pref.flags.hasPinCode" />
+          <SwitchBox :title="$t('Has pincode')" v-model="pref.flags.hasPinCode" />
         </label>
         <transition name="fade">
-          <TextInput v-model="pref.pinCode" label="Pincode"
+          <TextInput v-model="pref.pinCode" :label="$t('Pincode')"
               type="text" :min="4" :max="4" @change="checkForm"
               :enableValidation="pref.flags.hasPinCode"
               v-show="pref.flags.hasPinCode"
@@ -43,12 +44,12 @@
       </div>
       <div class="flex-horizontal">
         <div class="button" @click="goHome">
-          <span class="mdi mdi-arrow-left"></span> Back
+          <span class="mdi mdi-arrow-left"></span> {{ $t('Back') }}
         </div>
         <div class="button" :class="createButtonClass" @click="createGame">
-          <span class="mdi mdi-earth"> </span> Create game
+          <span class="mdi mdi-earth"> </span> {{ $t('Create game') }}
         </div>
-        <div class="button" @click="setRandom">
+        <div class="button" @click="setRandom" :title="$t('Set random parameters')">
           <span class="mdi mdi-dice-multiple mdi-24px"> </span>
         </div>
       </div>
@@ -100,8 +101,8 @@ export default {
         }
       },
       hotKeys: [
-        { code: 'Enter', method: this.createGame, description: 'Submit', isKey: true },
-        { code: 'Escape', method: this.goHome, description: 'Close', isKey: true }
+        { code: 'Enter', method: this.createGame, description: this.$t('Submit'), isKey: true },
+        { code: 'Escape', method: this.goHome, description: this.$t('Close'), isKey: true }
       ]
     }
   },
@@ -162,7 +163,7 @@ export default {
           })
         }).catch(err => {
           this.$refs.loader.hide()
-          this.$toast(err.message)
+          this.$toast(this.$t(err.message))
         })
       }
     },

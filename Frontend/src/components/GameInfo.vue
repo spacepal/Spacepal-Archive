@@ -34,19 +34,19 @@ export default {
   data () {
     return {
       keys: [
-        { field: 'id', adapted: 'ID' },
-        { field: 'name', adapted: 'Name' },
-        { field: 'turnNumber', adapted: 'Turn', onlyGame: true },
-        { field: 'creator', adapted: 'Creator' },
-        { field: 'pinCode', adapted: 'Pin', hideEmpty: true },
-        { field: 'mapWidth', adapted: 'Width' },
-        { field: 'mapHeight', adapted: 'Height' },
-        { field: 'planets', adapted: 'Planets' },
-        { field: 'playersLimit', adapted: 'Players' },
-        { field: 'buffs', adapted: 'Buffs' },
-        { field: 'pirates', adapted: 'Pirates' },
-        { field: 'accumulative', adapted: 'Accum', title: 'Accumulative' },
-        { field: 'productionAfterCapture', adapted: 'PAC', title: 'Production after capture' }
+        { field: 'id', adapted: this.$t('ID') },
+        { field: 'name', adapted: this.$t('Name') },
+        { field: 'turnNumber', adapted: this.$t('Turn'), onlyGame: true },
+        { field: 'creator', adapted: this.$t('Creator') },
+        { field: 'pinCode', adapted: this.$t('Pin'), hideEmpty: true },
+        { field: 'mapWidth', adapted: this.$t('Width') },
+        { field: 'mapHeight', adapted: this.$t('Height') },
+        { field: 'planets', adapted: this.$t('Planets') },
+        { field: 'playersLimit', adapted: this.$t('Players') },
+        { field: 'buffs', adapted: this.$t('Buffs') },
+        { field: 'pirates', adapted: this.$t('Pirates') },
+        { field: 'accumulative', adapted: this.$t('Accum'), title: this.$t('Accumulative') },
+        { field: 'productionAfterCapture', adapted: this.$t('PAC'), title: this.$t('Production after capture') }
       ]
     }
   },

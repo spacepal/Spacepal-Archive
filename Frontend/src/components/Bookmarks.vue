@@ -2,24 +2,24 @@
   <div class="bookmarkInfo">
     <!-- NODATA -->
     <span v-if="count === 0 && isSelectMode == false" class="text-additional emptySlot">
-      You don't have bookmarks.<br>
-      Hold KeyB and select planet for create ones.
+      {{ $t('You don\'t have bookmarks.') }} <br>
+      {{ $t('Hold KeyB and select planet for create ones.') }}
     </span>
     <!-- HEADER -->
     <template v-else>
-      <span>slot</span>
-      <span>planet</span>
-      <span>owner</span>
-      <span>prod</span>
-      <span>kill</span>
-      <span>ships</span>
-      <span class="action">action</span>
+      <span>{{ $t('Slot') }}</span>
+      <span>{{ $t('Planet') }}</span>
+      <span>{{ $t('Owner') }}</span>
+      <span>{{ $t('Prod') }}</span>
+      <span>{{ $t('Kill') }}</span>
+      <span>{{ $t('Ships') }}</span>
+      <span class="action">{{ $t('Action') }}</span>
     </template>
     <!-- BODY -->
     <template v-for="(planet, slot) in slots">
       <template v-if="(!planet && isSelectMode)">
         <span :key="slot + '1'">{{ slot }}</span>
-        <span :key="slot + '2'" class="emptySlot text-additional">Empty slot</span>
+        <span :key="slot + '2'" class="emptySlot text-additional">{{ $t('Empty slot') }}</span>
       </template>
       <template v-if="planet">
         <span :key="slot + '1'">{{ slot }}</span>
@@ -31,7 +31,7 @@
         <a :key="slot + '7'" v-if="!isSelectMode" class="mdi mdi-delete-forever"
           @click="resetSlot(slot)"></a>
       </template>
-      <a :key="slot + '7'" v-if="isSelectMode" @click="select(slot)">[select]</a>
+      <a :key="slot + '7'" v-if="isSelectMode" @click="select(slot)">[{{ $t('select') }}]</a>
     </template>
   </div>
 </template>
@@ -59,7 +59,7 @@ export default {
             }
           }
         },
-        description: 'Goto bookmark',
+        description: this.$t('Goto bookmark'),
         isKey: true,
         modalLock: true
       })

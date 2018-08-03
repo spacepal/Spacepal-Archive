@@ -67,13 +67,13 @@ export default {
     },
     message () {
       if (this.signalStrength === 0) {
-        return 'The server is unavailable'
+        return this.$t('The server is unavailable')
       } else if (this.signalStrength === 1) {
-        return 'Bad signal'
+        return this.$t('Bad signal')
       } else if (this.signalStrength === 2) {
-        return 'Normal signal'
+        return this.$t('Normal signal')
       } else if (this.signalStrength === 3) {
-        return 'Good signal'
+        return this.$t('Good signal')
       }
       return 'Loading...'
     }

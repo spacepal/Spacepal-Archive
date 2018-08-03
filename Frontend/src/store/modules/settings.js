@@ -46,6 +46,11 @@ const actions = {
       key: 'menuIsVisible',
       value: !state.settings.menuIsVisible
     })
+  },
+  reset ({ state, dispatch }) {
+    Object.keys(DEFAULT_VALUES).forEach(key => {
+      dispatch('set', { key, value: DEFAULT_VALUES[key] })
+    })
   }
 }
 

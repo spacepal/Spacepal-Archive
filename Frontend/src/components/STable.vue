@@ -11,7 +11,7 @@
         <tbody>
           <tr v-if="rows.length === 0" class="norows">
             <td :colspan="fields.length"  @click="notFoundCliked">
-              <slot name="notfound">There's no rows</slot>
+              <slot name="notfound">{{ $t('There\'s no rows') }}</slot>
             </td>
           </tr>
           <tr v-for="(row, i) in rows" :key="i" @click="rowClicked(row, i)">

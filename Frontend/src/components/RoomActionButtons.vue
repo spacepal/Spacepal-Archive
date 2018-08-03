@@ -1,11 +1,13 @@
 <template>
   <div class="active-buttons flex-horizontal">
     <template v-if="isCreator">
-      <span class="button" @click="start" :class="startBtnClass">Start</span>
-      <span class="button" @click="regenerateMap" :class="regenBtnClass">Regen</span>
+      <span class="button" @click="start"
+        :class="startBtnClass">{{ $t('Start') }}</span>
+      <span class="button" @click="regenerateMap" :class="regenBtnClass"
+        :title="$t('Regenerate map')">{{ $t('Regen') }}</span>
     </template>
     <span class="button" @click="logout">
-      Exit
+      {{ $t('Exit') }}
     </span>
     <FullPreloader ref="loader" />
   </div>
@@ -53,7 +55,7 @@ export default {
         return false
       }
       if (!this.$store.dispatch('shuffleMap')) {
-        this.$toast('Map isn\'t regenerated')
+        this.$toast(this.$t('Map isn\'t regenerated'))
       }
     },
     logout () {
@@ -66,7 +68,7 @@ export default {
         this.$router.push({
           name: 'GamesList'
         })
-        this.$toast(err.message)
+        this.$toast(this.$t(err.message))
       })
     }
   }

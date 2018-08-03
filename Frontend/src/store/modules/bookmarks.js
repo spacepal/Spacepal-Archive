@@ -39,7 +39,7 @@ const actions = {
       JSON.stringify(state.bookmarks))
   },
   clear ({commit}) {
-    sessionStorage.deleteItem(STORAGE_BOOKMARKS)
+    sessionStorage.removeItem(STORAGE_BOOKMARKS)
     commit('DELETE_ALL')
   }
 }
@@ -49,7 +49,6 @@ const getters = {
     let count = 0
     Object.values(state.bookmarks).forEach(planetID => {
       if (planetID) {
-        console.log(planetID)
         count++
       }
     })

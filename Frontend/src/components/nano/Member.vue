@@ -44,9 +44,9 @@ export default {
           color = Colors[color].bg
         }
       } else if (this.memberID === -1) {
-        username = 'neutral'
+        username = this.$t('neutral')
       } else {
-        username = 'loading...'
+        username = this.$t('Loading') + '...'
       }
       let icon = ICO_PLAYER
       if (isArtificialIntelligence) {

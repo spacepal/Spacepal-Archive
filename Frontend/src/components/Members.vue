@@ -21,13 +21,13 @@
               </span>
             </template>
             <template>
-              <span :key="m.username + '_3'" title="Total ships" class="mdi mdi-rocket mdi-16px">
+              <span :key="m.username + '_3'" :title="$t('Total ships')" class="mdi mdi-rocket mdi-16px">
                 {{ m.currentFleetSize || 0 }}
               </span>
-              <span :key="m.username + '_4'" title="Total production" class="mdi mdi-plus-box-outline mdi-16px">
+              <span :key="m.username + '_4'" :title="$t('Total production')" class="mdi mdi-plus-box-outline mdi-16px">
                 {{ m.currentProduction || 0 }}
               </span>
-              <span :key="m.username + '_5'" title="Total planets count" class="mdi mdi-earth mdi-16px">
+              <span :key="m.username + '_5'" :title="$t('Total planets count')" class="mdi mdi-earth mdi-16px">
                 {{ m.currentPlanetsCount || 0 }}
               </span>
             </template>
@@ -45,7 +45,7 @@
         </template>
         <template v-if="isRoom && isCreator && hasFreePlace">
           <a class="action" @click="addBot">
-            Add bot
+            {{ $t('Add bot') }}
           </a>
           <span class="mdi mdi-desktop-classic"></span>
         </template>

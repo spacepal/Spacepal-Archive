@@ -4,51 +4,51 @@
       <template v-for="n in notifications">
         <p :key="n.id" v-if="n.type === 'PLANET_LOST'">
           <span class="mdi mdi-security-close mdi-16px text-fail"></span>
-          The planet <Planet @goToCell="goToCell" :id="n.target"></Planet>
-          has lost. Agressor:
+          {{ $t('The planet') }} <Planet @goToCell="goToCell" :id="n.target"></Planet>
+          {{ $t('has lost. Agressor:') }}
           <Member :id="n.member"></Member>
         </p>
         <p :key="n.id" v-if="n.type === 'PLANET_SAVED'">
           <span class="mdi mdi-security mdi-16px text-success"></span>
-          The planet <Planet @goToCell="goToCell" :id="n.target"></Planet>
-          has been saved. Agressor:
+          {{ $t('The planet') }} <Planet @goToCell="goToCell" :id="n.target"></Planet>
+          {{ $t('has been saved. Agressor:') }}
           <Member :id="n.member"></Member>
         </p>
         <p :key="n.id" v-if="n.type === 'ATTACK_FAILED'">
           <span class="mdi mdi-target mdi-16px text-fail"></span>
-          Attack to <Planet @goToCell="goToCell" :id="n.target"></Planet>
-          <Member :id="n.member"></Member> was failed
+          {{ $t('Attack to') }} <Planet @goToCell="goToCell" :id="n.target"></Planet>
+          <Member :id="n.member"></Member> {{ $t('was failed') }}
         </p>
         <p :key="n.id" v-if="n.type === 'ATTACK_SUCCESS'">
           <span class="mdi mdi-target mdi-16px text-success"></span>
-          Attack on the planet <Planet @goToCell="goToCell" :id="n.target"></Planet>
-          <Member :id="n.member"></Member> was successful
+          {{ $t('Attack on the planet') }} <Planet @goToCell="goToCell" :id="n.target"></Planet>
+          <Member :id="n.member"></Member> {{ $t('was successful') }}
         </p>
         <p :key="n.id" v-if="n.type === 'PIRATES_DAMAGED_PLANET'">
           <span class="mdi mdi-pirate mdi-16px text-fail"></span>
-          The planet
+          {{ $t('The planet') }}
           <Planet @goToCell="goToCell" :id="n.target"></Planet>
-          has been damaged by pirates
+          {{ $t('has been damaged by pirates') }}
         </p>
         <p :key="n.id" v-if="n.type === 'PIRATES_DAMAGED_FLEET'">
           <span class="mdi mdi-skull mdi-16px text-fail"></span>
-          Pirates has attacked fleet
+          {{ $t('Pirates has attacked fleet') }}
           <Fleet @goToCell="goToCell" :fleet="n.fleet" />
         </p>
         <p :key="n.id" v-if="n.type === 'PLAYER_LOST'">
           <span class="mdi mdi-account-off mdi-16px text-success"></span>
-          The player
+          {{ $t('The player') }}
           <Member :id="n.member"></Member>
-          has been lost
+          {{ $t('has been lost') }}
         </p>
         <p :key="n.id" v-if="n.type === 'FLEET_LAND'">
           <span class="mdi mdi-airplane-landing mdi-16px text-success"></span>
-          The fleet <Fleet @goToCell="goToCell" :fleet="n.fleet" />
-          has been landed.
+          {{ $t('The fleet') }} <Fleet @goToCell="goToCell" :fleet="n.fleet" />
+          {{ $t('has been landed') }}
         </p>
       </template>
     </div>
-    <p v-else>Empty</p>
+    <p v-else>{{ $t('Empty') }}</p>
   </div>
 </template>
 

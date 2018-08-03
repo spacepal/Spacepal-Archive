@@ -19,6 +19,7 @@ Vue.use(Vuex)
 const STORAGE_GAME_ID = 'game_id'
 const STORAGE_BACKEND = 'backend'
 const STORAGE_QUICKSTART = 'quickstart'
+const STORAGE_LOCALE = 'locale'
 
 var gID = localStorage.getItem(STORAGE_GAME_ID)
 
@@ -37,8 +38,9 @@ const state = {
     autotasks: false // complete
   },
   endTurnLock: true,
-  backendServer: localStorage.getItem(STORAGE_BACKEND) || DEFAULT_BACKEND,
-  quickStart: localStorage.getItem(STORAGE_QUICKSTART)
+  backendServer: localStorage.getItem(STORAGE_BACKEND) || DEFAULT_BACKEND, // @todo Move to settings
+  quickStart: localStorage.getItem(STORAGE_QUICKSTART),
+  savedLocale: localStorage.getItem(STORAGE_LOCALE)
 }
 
 const mutations = {
@@ -80,10 +82,17 @@ const mutations = {
   },
   SET_QUICK_START (state, quickStart) {
     state.quickStart = quickStart
+  },
+  SAVE_LOCALE (state, locale) {
+    state.savedLocale = locale
   }
 }
 
 const actions = {
+  saveLocale ({ commit }, locale) {
+    localStorage.setItem(STORAGE_LOCALE, locale)
+    commit('SAVE_LOCALE', locale)
+  },
   resetBackendServer ({ commit }, host) {
     localStorage.removeItem(STORAGE_BACKEND)
     commit('RESET_BACKEND_SERVER')
@@ -186,7 +195,8 @@ const getters = {
   backendWS: (state) => 'ws://' + state.backendServer + WS_POSTFIX,
   isPlayer: (state) => !!state.gameID,
   sync: (state) => state.sync,
-  isLocked: (state) => state.endTurnLock
+  isLocked: (state) => state.endTurnLock,
+  savedLocale: (state) => state.savedLocale
 }
 
 export default new Vuex.Store({

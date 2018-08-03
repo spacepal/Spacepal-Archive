@@ -4,9 +4,10 @@ import Colors from './Colors'
 const CAPITAL_COLOR_ID = 4
 
 class Cell {
-  constructor ({ x, y }, a, i, degree = 2.0 / 3.0 * Math.PI) {
+  constructor ({ x, y }, $t, a, i, degree = 2.0 / 3.0 * Math.PI) {
     this._id = i
     this._a = a
+    this.$t = $t
     this._isHovered = false
     this._isSelected = false
     this.__isCentered = false
@@ -115,7 +116,7 @@ class Cell {
         text = member.username
         memberColor = Colors[member.color]
       } else if (planet.isCapital) {
-        text = 'capital'
+        text = this.$t('capital')
         memberColor = Colors[CAPITAL_COLOR_ID]
       }
       if (memberColor === undefined) {
@@ -173,22 +174,24 @@ class Cell {
       y += fontHeight
     })
     if (planet) {
-      ctx.font = '18px Audiowide'
+      ctx.font = '18px Audiowide, Oswald'
       ctx.fillStyle = memberColor.text
       ctx.textAlign = 'center'
       if (stepsTo > 0) {
-        ctx.fillText('Steps: ' + stepsTo,
+        ctx.fillText(this.$t('Steps') + ': ' + stepsTo,
           this.firstPoint.x + this._a / 2,
           this.firstPoint.y + 80)
       }
-      ctx.fillText('Ships: ' + (planet.ships - this._shipsDec(planet.id)),
+      let shipsText = planet.ships > 9999 ? this.$t('S.') : this.$t('Ships')
+      ctx.fillText(shipsText + ': ' + (planet.ships - this._shipsDec(planet.id)),
         this.firstPoint.x + this._a / 2,
         this.firstPoint.y + 140)
       if (this._isHovered) {
-        ctx.fillText('Kill: ' + Math.round(planet.killPerc * 100) / 100.0,
+        ctx.fillText(this.$t('Kill') + ': ' + Math.round(planet.killPerc * 100) / 100.0,
           this.firstPoint.x + this._a / 2,
           this.firstPoint.y + 120)
-        ctx.fillText('Prod: ' + planet.production,
+        let prodText = planet.production > 9999 ? this.$t('Prod') : this.$t('Production')
+        ctx.fillText(prodText + ': ' + planet.production,
           this.firstPoint.x + this._a / 2,
           this.firstPoint.y + 100)
       }

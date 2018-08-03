@@ -1,8 +1,8 @@
 <template>
   <div class="paginator">
-    <div class="button" :class="previousClass" @click="go(-1)">Prev</div>
-    <div class="page">{{currentPage + 1}} of {{lastPage}}</div>
-    <div class="button" :class="nextClass" @click="go(+1)">Next</div>
+    <div class="button" :class="previousClass" @click="go(-1)">{{ $t('Prev') }}</div>
+    <div class="page">{{currentPage + 1}} {{ $t('of') }} {{lastPage}}</div>
+    <div class="button" :class="nextClass" @click="go(+1)">{{ $t('Next') }}</div>
   </div>
 </template>
 

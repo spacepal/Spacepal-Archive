@@ -2,16 +2,16 @@
   <div id="end_page">
     <div>
       <template v-if="sync.members">
-        <h1 v-if="isWinner">Congrulations!</h1>
-        <h1 v-else>You lose...</h1>
+        <h1 v-if="isWinner">{{ $t('Congrulations!') }}</h1>
+        <h1 v-else>{{ $t('You lose...') }}</h1>
       </template>
       <template v-else>
         <h1>
-          Loading...
+          {{ $t('Loading') }}...
         </h1>
       </template>
       <Members class="members"></Members>
-      <div class="button" @click="exit">Exit</div>
+      <div class="button" @click="exit">{{ $t('Exit') }}</div>
     </div>
   </div>
 </template>

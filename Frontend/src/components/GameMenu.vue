@@ -5,52 +5,52 @@
     <div class="items">
       <template v-if="!isLocked">
         <span class="mdi mdi-chess-knight"></span>
-        <a @click="endTurn">End turn</a>
-        <span>[Space]</span>
+        <a @click="endTurn">{{ $t('End turn') }}</a>
+        <span>[{{ $t('KeySpace') }}]</span>
       </template>
 
       <span class="mdi mdi-arrow-decision"></span>
-      <a @click="toggleArrows">Directions</a>
+      <a @click="toggleArrows">{{ $t('Directions') }}</a>
       <span>[R]</span>
 
       <span class="mdi mdi-comment-alert-outline"></span>
-      <a @click="showPanel('notifications')">Notifications</a>
+      <a @click="showPanel('notifications')">{{ $t('Notifications') }}</a>
       <span>[N]</span>
 
       <span class="mdi mdi-information-outline"></span>
-      <a @click="showPanel('main')">Game info</a>
+      <a @click="showPanel('main')">{{ $t('Game info') }}</a>
       <span>[Q]</span>
 
       <span class="mdi mdi-earth"></span>
-      <a @click="goHome">Best planet</a>
+      <a @click="goHome">{{ $t('Best planet') }}</a>
       <span>[H]</span>
 
       <span class="mdi mdi-calendar-check"></span>
-      <a @click="showPanel('tasks')">Tasks</a>
+      <a @click="showPanel('tasks')">{{ $t('Tasks') }}</a>
       <span>[T]</span>
 
       <span class="mdi mdi-developer-board"></span>
-      <a @click="showPanel('autoTasks')">Auto tasks</a>
+      <a @click="showPanel('autoTasks')">{{ $t('Auto tasks') }}</a>
       <span>[A]</span>
 
       <span class="mdi mdi-rocket"></span>
-      <a @click="showPanel('fleets')">Fleets</a>
+      <a @click="showPanel('fleets')">{{ $t('Fleets') }}</a>
       <span>[F]</span>
 
       <span class="mdi mdi-bookmark-outline"></span>
-      <a @click="showPanel('bookmarks')">Bookmarks</a>
+      <a @click="showPanel('bookmarks')">{{ $t('Bookmarks') }}</a>
       <span>[B]</span>
 
       <span class="mdi mdi-cancel"></span>
-      <a @click="exit">Surrender</a>
+      <a @click="exit">{{ $t('Surrender') }}</a>
       <span>[<span class="mdi mdi-cancel"></span>]</span>
 
       <span class="mdi mdi-fullscreen"></span>
-      <a @click="fullScreen">Fullscreen</a>
+      <a @click="fullScreen">{{ $t('Fullscreen') }}</a>
       <span>[F11]</span>
 
       <span class="mdi mdi-eye-off-outline"></span>
-      <a @click="toggleVisibility">Hide menu</a>
+      <a @click="toggleVisibility">{{ $t('Hide menu') }}</a>
       <span>[M]</span>
     </div>
     </div>
@@ -67,7 +67,7 @@ export default {
         {
           code: 'KeyM',
           method: this.toggleVisibility,
-          description: 'Show/hide menu'
+          description: this.$t('Show/hide menu')
         }
       ]
     }
@@ -82,7 +82,7 @@ export default {
   },
   mounted () {
     let onFullscreenError = () => {
-      this.$toast('Press F11 for fullscreen mode')
+      this.$toast(this.$t('Press F11 for fullscreen mode'))
     }
     document.addEventListener('fullscreenerror', onFullscreenError)
     document.addEventListener('webkitfullscreenerror', onFullscreenError)
@@ -98,7 +98,7 @@ export default {
     }),
     exit () {
       this.logout().catch(err => {
-        this.$toast(err.message)
+        this.$toast(this.$t(err.message))
       })
       this.$router.push({
         name: 'GamesList'
@@ -130,7 +130,7 @@ export default {
         } else if (document.msExitFullscreen) {
           document.msExitFullscreen()
         } else {
-          this.$toast('Press F11')
+          this.$toast(this.$t('Press F11'))
         }
       } else {
         let app = document.getElementById('app')
@@ -141,7 +141,7 @@ export default {
         } else if (app.mozRequestFullScreen) {
           app.mozRequestFullScreen()
         } else {
-          this.$toast('Press F11')
+          this.$toast(this.$t('Press F11'))
         }
       }
     }
@@ -187,7 +187,7 @@ $menuBtn: $iconSize + $padding * 2;
 }
 .menu:hover {
   transform: translateX($menuBtn);
-  height: 280px;
+  height: 300px;
   transition: transform 0.1s ease-out,
     height 0.1s ease-out;
 }

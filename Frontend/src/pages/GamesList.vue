@@ -4,22 +4,22 @@
     <GameTitle></GameTitle>
     <div class="buttons-left">
       <template v-if="total != 0">
-        <div class="button" @click="joinByID" title="Join game by ID">
-          <span>Join</span>
+        <div class="button" @click="joinByID" :title="$t('Join game by ID')">
+          <span>{{ $t('Join')}}</span>
         </div>
-        <div class="button" @click="joinRandom" title="Join random game">
+        <div class="button" @click="joinRandom" :title="$t('Join random game')">
           <span class="mdi mdi-auto-fix mdi-16px"></span>
         </div>
       </template>
-      <div class="button" @click="goToGithub" title="Star on github">
+      <div class="button" @click="goToGithub" :title="$t('Star on github')">
         <span class="mdi mdi-github-circle mdi-16px"></span>
       </div>
     </div>
     <div class="buttons-right">
-      <div class="button" @click="createRandom" title="Create random game">
+      <div class="button" @click="createRandom" :title="$t('Create random game')">
         <span class="mdi mdi-dice-multiple mdi-16px"></span>
       </div>
-      <div class="button" @click="goToCreate" title="Create game">New</div>
+      <div class="button" @click="goToCreate" :title="$t('Create game')">{{ $t('New')}}</div>
     </div>
     <div class="flex-horizontal">
       <div class="flex-space"></div>
@@ -28,7 +28,7 @@
           @notFoundCliked="createRandom" :loading="isLoading">
           <template slot="notfound">
             <p>
-              Click for create first random game
+              {{ $t('Click for create first random game') }}
             </p>
           </template>
         </STable>
@@ -37,17 +37,17 @@
       <div class="flex-space"></div>
     </div>
     <Window ref="confirm" type="confirm" @confirm="joinConfirm"
-      title="Confirm action" :enabled="join.isValid">
+      :title="$t('Confirm action')" :enabled="join.isValid">
       <template>
-        Do you want to join game<span v-if="!join.unknowGameID"> #{{ join.gameID }}</span>?
+        {{ $t('Do you want to join game') }}<span v-if="!join.unknowGameID"> #{{ join.gameID }}</span>?
         <Form ref="joinForm" class="withoutborder">
-          <TextInput label="Game ID" v-model="join.gameID" ref="usernameInput"
+          <TextInput :label="$t('Game ID')" v-model="join.gameID" ref="usernameInput"
             type="number" v-if="join.unknowGameID" :min="1"
             @change="checkJoinForm" />
-          <TextInput label="Username" v-model="join.username" ref="usernameInput"
+          <TextInput :label="$t('Username')" v-model="join.username" ref="usernameInput"
             type="text" validate='^[0-9A-Za-z_-]*$' :min="1" :max="32"
             @change="checkJoinForm" :generator="usernameGenerator" />
-          <TextInput label="Pincode" v-if="join.hasPinCode" v-model="join.pinCode"
+          <TextInput :label="$t('Pincode')" v-if="join.hasPinCode" v-model="join.pinCode"
             type="text" :min="4" :max="4" validate='^[0-9]+$'
             :enableValidation="join.hasPinCode" @change="checkJoinForm" />
         </Form>
@@ -92,54 +92,54 @@ export default {
     return {
       fields: [
         {
-          'name': 'ID',
+          'name': this.$t('ID'),
           'key': 'id'
         },
         {
-          'name': 'Name',
+          'name': this.$t('Name'),
           'key': 'name'
         },
         {
-          'name': 'Creator',
+          'name': this.$t('Creator'),
           'key': 'creator'
         },
         {
-          'name': 'Planets',
+          'name': this.$t('Planets'),
           'key': 'planets_count'
         },
         {
-          'name': 'Players',
+          'name': this.$t('Players'),
           'value': (row) => `${row['players_count']}/${row['players_limit']}`
         },
         {
-          'name': 'Map',
+          'name': this.$t('Map'),
           'value': (row) => `${row['width']}w*${row['height']}h`
         },
         {
-          'name': 'Buffs',
+          'name': this.$t('Buffs'),
           'key': 'buffs',
           'isBoolean': true
         },
         {
-          'name': 'Pirates',
+          'name': this.$t('Pirates'),
           'key': 'pirates',
           'isBoolean': true
         },
         {
-          'name': 'Accum',
-          'title': 'Accumulative',
+          'name': this.$t('Accum'),
+          'title': this.$t('Accumulative'),
           'key': 'accumulative',
           'isBoolean': true
         },
         {
-          'name': 'PAC',
-          'title': 'Production after capture',
+          'name': this.$t('PAC'),
+          'title': this.$t('Production after capture'),
           'key': 'production_after_capture',
           'isBoolean': true
         },
         {
           'name': '<span class="mdi mdi-lock mdi-24px"></span>',
-          'title': 'Is private room',
+          'title': this.$t('Is private room'),
           'key': 'has_pin_code',
           'isBoolean': true
         }
@@ -156,8 +156,8 @@ export default {
         isValid: false
       },
       hotKeys: [
-        { code: 'KeyN', method: this.goToCreate, description: 'Create game' },
-        { code: 'KeyC', method: this.goToCreate, description: 'Create game' }
+        { code: 'KeyN', method: this.goToCreate, description: this.$t('Create game') },
+        { code: 'KeyC', method: this.goToCreate, description: this.$t('Create game') }
       ],
       usernameGenerator: () => UsernameGenerator,
       offset: 0
@@ -198,7 +198,7 @@ export default {
         })
       }).catch(err => {
         this.$refs.loader.hide()
-        this.$toast(err.message)
+        this.$toast(this.$t(err.message))
       })
     },
     setRandom () {
@@ -225,7 +225,7 @@ export default {
           this.join.hasPinCode = true
           this.$refs.confirm.show()
         } else {
-          this.$toast(err.message)
+          this.$toast(this.$t(err.message))
         }
       })
     },
@@ -245,7 +245,7 @@ export default {
         this.rows = resp.data.games
       }).catch((resp) => {
         if (!silent) {
-          this.$toast('Connection error')
+          this.$toast(this.$t('Connection error'))
         }
       })
     },
@@ -255,7 +255,7 @@ export default {
     },
     rowClicked ({row, i}) {
       if (row.players_count === row.players_limit) {
-        this.$toast(`There's no space in the room.`)
+        this.$toast(this.$t('There\'s no space in the room.'))
       } else {
         this.join.gameID = row.id
         this.join.pinCode = ''

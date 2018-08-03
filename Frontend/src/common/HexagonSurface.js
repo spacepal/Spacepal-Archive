@@ -133,7 +133,7 @@ export default {
       this._all = []
       for (let y = 0, count = 1; y < this.mapSize.height; ++y) {
         for (let x = 0; x < this.mapSize.width; ++x) {
-          this._all.push(new Cell({ x, y }, a, count++, this.degree))
+          this._all.push(new Cell({ x, y }, this.$t, a, count++, this.degree))
         }
       }
     },

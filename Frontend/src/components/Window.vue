@@ -16,13 +16,17 @@
           </div>
           <div id="control">
             <template v-if="isConfirm">
-              <div class="button" @click="close">Cancel</div>
+              <div class="button" @click="close">
+                 {{ $t('Cancel') }}
+              </div>
               <div class="button" @click="confirm" :class="confirmClass">
-                Confirm
+                {{ $t('Confirm') }}
               </div>
             </template>
             <template v-if="isAlert">
-              <div class="button" @click="confirm">Ok</div>
+              <div class="button" @click="confirm">
+                {{ $t('Ok') }}
+              </div>
             </template>
             <slot name="footer"></slot>
           </div>

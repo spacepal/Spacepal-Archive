@@ -34,10 +34,6 @@
   animation-iteration-count: infinite;
 }
 
-#loading::after {
-  content: 'Loading'
-}
-
 .star {
   position: fixed;
   width: 2px;

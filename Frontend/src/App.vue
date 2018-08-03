@@ -2,7 +2,7 @@
   <div id="app" :class="theme">
     <div class="bg"></div>
     <router-view/>
-    <Window ref="hotKeysWin" type="alert" title="Hotkeys">
+    <Window ref="hotKeysWin" type="alert" :title="$t('Hotkeys')">
       <div class="hotKeysGrid">
         <template v-for="list in Array.from(allHotKeys)">
           <span :key="list[0] + '-description'">{{list[0]}}</span>
@@ -13,32 +13,38 @@
     </Window>
     <Signal ref="signal" />
     <Window ref="settings" type="confirm" @confirm="setCustom"
-      title="Settings" :enabled="settingsAreValid" class="settings">
+      :title="$t('Settings')" :enabled="settingsAreValid" class="settings">
       <template>
         <Form ref="settingsForm" class="withoutborder">
-          <TextInput label="Host" v-model="host" :min="1" @change="checkForm" />
-          <TextInput type="number" label="Port" v-model="port"
+          <TextInput :label="$t('Host')" v-model="host" :min="1" @change="checkForm" />
+          <TextInput type="number" :label="$t('Port')" v-model="port"
             :min="1" :max="65535" @change="checkForm" />
-          <p><SwitchBox label="Full render" v-model="slowRender" /></p>
-          <p><SwitchBox label="Show menu" v-model="menuIsVisible" /></p>
+          <p class="flex-horizontal"><SwitchBox :label="$t('Full render')" v-model="slowRender" /></p>
+          <p class="flex-horizontal"><SwitchBox :label="$t('Show menu')" v-model="menuIsVisible" /></p>
+          <p class="flex-horizontal">
+            <a @click="setLocale('en')"
+              v-if="$i18n.locale() !== 'en'">English</a>
+            <a @click="setLocale('ru')"
+              v-if="$i18n.locale() !== 'ru'">Русский</a>
+          </p>
         </Form>
       </template>
       <template slot="footer">
         <div class="button" @click="setDefault">
-          Default
+          {{ $t('Default') }}
         </div>
       </template>
     </Window>
     <Toast ref="toast" glob />
-    <Window ref="compitableWindow" title="Not supported">
-      <p class="text-fail">Sorry. The game is functional only in desktop browsers.</p>
-      <p><span class="text-success mdi mdi-google-chrome"></span> supported.</p>
-      <p><span class="text-success mdi mdi-firefox"></span> supported.</p>
-      <p><span class="text-success mdi mdi-opera"></span> supported?</p>
-      <p><span class="text-success mdi mdi-apple-safari"></span> supported?</p>
-      <p><span class="text-fail mdi mdi-internet-explorer"></span> not supported.</p>
+    <Window ref="compitableWindow" :title="$t('Not supported')">
+      <p class="text-fail">{{ $t('Sorry. The game is functional only in desktop browsers.') }}</p>
+      <p><span class="text-success mdi mdi-google-chrome"></span> {{ $t('supported') }}.</p>
+      <p><span class="text-success mdi mdi-firefox"></span> {{ $t('supported') }}.</p>
+      <p><span class="text-success mdi mdi-opera"></span> {{ $t('supported') }}?</p>
+      <p><span class="text-success mdi mdi-apple-safari"></span> {{ $t('supported') }}?</p>
+      <p><span class="text-fail mdi mdi-internet-explorer"></span> {{ $t('not supported') }}.</p>
       <p>
-        You can contribute to extend browser support
+        {{ $t('You can contribute to extend browser support') }}
         <a class="mdi mdi-github-circle"
           href="https://github.com/spacepal/Spacepal">Github</a>
       </p>
@@ -71,7 +77,7 @@ export default {
           method: () => {
             this.$refs.settings.show()
           },
-          description: 'Advanced settings'
+          description: this.$t('Advanced settings')
         },
         {
           code: 'KeyS',
@@ -81,7 +87,7 @@ export default {
           methodDown: () => {
             this.$refs.signal.show()
           },
-          description: 'Connection status'
+          description: this.$t('Connection status')
         },
         {
           code: 'Space',
@@ -97,7 +103,7 @@ export default {
             this.allHotKeys = this.$allHotKeys()
             this.$refs.hotKeysWin.show()
           },
-          description: 'Show hotkeys'
+          description: this.$t('Show hotkeys')
         }
       ],
       allHotKeys: new Map()
@@ -129,7 +135,7 @@ export default {
     if (this.$store.getters['isPlayer']) {
       this.$store.dispatch('enableCable').catch(() => {
         this.$store.dispatch('logout').catch(err => {
-          this.$refs.toast.show(err.message)
+          this.$refs.toast.show(this.$t(err.message))
         })
         this.$router.push({
           name: 'GamesList'
@@ -142,7 +148,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      setSetting: 'settings/set'
+      setSetting: 'settings/set',
+      saveLocale: 'saveLocale'
     }),
     checkForm () {
       this.settingsAreValid = this.$refs.settingsForm.isValid()
@@ -151,7 +158,13 @@ export default {
       this.$store.dispatch('setBackendServer', this.host + ':' + this.port)
       location.reload()
     },
+    setLocale (locale) {
+      this.$i18n.set(locale)
+      this.saveLocale(locale)
+      location.reload()
+    },
     setDefault () {
+      this.$store.dispatch('settings/reset')
       this.$store.dispatch('resetBackendServer')
       this.$refs.settings.close()
       location.reload()
@@ -162,7 +175,7 @@ export default {
 
 <style lang="scss">
 // @import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono');
-@import url('https://fonts.googleapis.com/css?family=Audiowide');
+@import url('https://fonts.googleapis.com/css?family=Audiowide|Oswald&amp;subset=cyrillic');
 @import '@mdi/font/css/materialdesignicons.min.css';
 @import './css/_ui.scss';
 #app {
