@@ -13,7 +13,7 @@
     <Window type="confirm" ref="taskWindow" :title="$t('Create task')"
       @confirm="taskConfirm" @reject="taskReject" :enabled="task.isValid">
       <Form ref="taskForm" class="withoutborder">
-        <TextInput type="number"
+        <TextInput type="number" :autoSelect="true"
           :label="taskLabel" :force="true"
           :min="(task.isHoldAutoTask ? 0 : 1)"
           :max="(isAutoTask ? Number.MAX_VALUE : task.maxCount)"

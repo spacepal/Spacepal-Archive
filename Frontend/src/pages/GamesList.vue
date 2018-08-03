@@ -47,7 +47,7 @@
           <TextInput :label="$t('Username')" v-model="join.username" ref="usernameInput"
             type="text" validate='^[0-9A-Za-z_-]*$' :min="1" :max="32" force
             @change="checkJoinForm" :generator="usernameGenerator" />
-          <TextInput :label="$t('Pincode')" v-if="join.hasPinCode" v-model="join.pinCode"
+          <TextInput ref="pin" :label="$t('Pincode')" v-if="join.hasPinCode" v-model="join.pinCode"
             type="text" :min="4" :max="4" validate='^[0-9]+$'
             :enableValidation="join.hasPinCode" @change="checkJoinForm" />
         </Form>
@@ -151,7 +151,7 @@ export default {
       join: {
         gameID: 0,
         hasPinCode: false,
-        pinCode: '',
+        pinCode: undefined,
         username: '',
         isValid: false
       },
@@ -174,6 +174,13 @@ export default {
   },
   beforeDestroy () {
     clearTimeout(this._refreshTimer)
+  },
+  watch: {
+    'join.gameID': function () {
+      if (this.join.unknowGameID) {
+        this.join.hasPinCode = false
+      }
+    }
   },
   methods: {
     goToGithub () {
@@ -205,8 +212,8 @@ export default {
       this.$refs.usernameInput.regenerate(true)
     },
     joinByID () {
-      this.join.gameID = ''
-      this.join.pinCode = ''
+      this.join.gameID = undefined
+      this.join.pinCode = undefined
       this.join.hasPinCode = false
       this.join.isValid = false
       this.join.unknowGameID = true
@@ -225,6 +232,11 @@ export default {
         if (this.join.hasPinCode === false && err.message === INVALID_PIN_MESSAGE) {
           this.join.hasPinCode = true
           this.$refs.confirm.show()
+          this.$nextTick(() => {
+            setTimeout(() => {
+              this.$refs.pin.focus()
+            }, 100)
+          })
         } else {
           this.$toast(this.$t(err.message))
         }
@@ -259,7 +271,7 @@ export default {
         this.$toast(this.$t('There\'s no space in the room.'))
       } else {
         this.join.gameID = row.id
-        this.join.pinCode = ''
+        this.join.pinCode = undefined
         this.join.username = ''
         this.join.hasPinCode = row.has_pin_code
         this.join.isValid = false

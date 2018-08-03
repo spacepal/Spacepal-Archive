@@ -54,6 +54,10 @@ export default {
     force: {
       type: Boolean,
       default: undefined
+    },
+    autoSelect: {
+      type: Boolean,
+      default: undefined
     }
   },
   mounted () {
@@ -63,14 +67,18 @@ export default {
       this._regExp = new RegExp('^[+-]{0,1}[0-9]+$')
     }
     this.revalidate()
-    this.placeholder = this.value + ''
-    if (this.force) {
+    if (this.value !== undefined) {
+      this.placeholder = this.value + ''
+    }
+    if (this.force && this.value !== undefined) {
       this.text = this.value
-      this.$nextTick().then(() => {
-        setTimeout(() => {
-          this.$refs.inp.select()
-        }, 20)
-      })
+      if (this.autoSelect) {
+        this.$nextTick().then(() => {
+          setTimeout(() => {
+            this.$refs.inp.select()
+          }, 20)
+        })
+      }
     }
   },
   data () {
