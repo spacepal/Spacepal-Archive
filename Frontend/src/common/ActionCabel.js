@@ -23,10 +23,7 @@ export default class ActionCabel {
         room: `games:${gameID}`
       },
       {
-        connected: () => {
-          self.requestData()
-          self.onConnected()
-        },
+        connected: this.onConnected.bind(self),
         received: this.onReceived.bind(self),
         disconnected: this.onDisconnected.bind(self)
       })
@@ -59,22 +56,24 @@ export default class ActionCabel {
       this._okResolvePromise(true)
       this._okResolvePromise = undefined
     }
-    if (data.type === 'players') {
+    if (data.type === 'room' && this._playerRoom === undefined) {
+      this._playerRoom = this._cable.subscriptions.create({
+        channel: PLAYER_CHANNEL,
+        room: data.data.roomName
+      },
+      {
+        connected: () => {
+          this.requestData()
+          this.onConnected.bind(this)
+        },
+        received: this.onReceived.bind(this),
+        disconnected: this.onDisconnected.bind(this)
+      })
+    } else if (data.type === 'players') {
       store.dispatch('setMembers', data.data.players)
     } else if (data.type === 'game') {
       store.dispatch('game/setInfo', data.data)
     } else if (data.type === 'profile') {
-      if (this._playerRoom === undefined) {
-        this._playerRoom = this._cable.subscriptions.create({
-          channel: PLAYER_CHANNEL,
-          room: `players:${data.data.id}`
-        },
-        {
-          connected: this.onConnected.bind(this),
-          received: this.onReceived.bind(this),
-          disconnected: this.onDisconnected.bind(this)
-        })
-      }
       store.dispatch('setProfile', data.data)
     } else if (data.type === 'fleets') {
       store.dispatch('fleets/set', data.data.fleets)
