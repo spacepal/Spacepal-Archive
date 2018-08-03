@@ -88,6 +88,17 @@ module Broadcastable
     ActionCable.server.broadcast("games:#{@game_id}", { "type" => "turn_ended" })
   end
 
+  def transmitted_room
+    "transmitted room".bg(:black).color(:blue).out
+    _hash = {
+      "type" => "room",
+      "data" => {
+        "roomName" => "players:" + @player_id.to_s
+      }
+    }
+    return _hash
+  end
+
   def transmitted_player
     "transmitted player".bg(:black).color(:blue).out
     player = Player[@player_id]
