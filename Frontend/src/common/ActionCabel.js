@@ -23,14 +23,16 @@ export default class ActionCabel {
         room: `games:${gameID}`
       },
       {
-        connected: this.onConnected.bind(self),
+        connected: () => {
+          self.onConnected(`games:${gameID}`)
+        },
         received: this.onReceived.bind(self),
         disconnected: this.onDisconnected.bind(self)
       })
     })
   }
-  onConnected () {
-    debug.info('Action cable: connnected')
+  onConnected (room) {
+    debug.info('Action cable: connnected: ', room)
   }
   onDisconnected () {
     debug.info('Action cable: disconnected')
@@ -64,7 +66,7 @@ export default class ActionCabel {
       {
         connected: () => {
           this.requestData()
-          this.onConnected.bind(this)
+          this.onConnected(data.data.roomName)
         },
         received: this.onReceived.bind(this),
         disconnected: this.onDisconnected.bind(this)
