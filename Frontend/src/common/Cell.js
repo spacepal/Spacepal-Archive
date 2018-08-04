@@ -1,5 +1,6 @@
 import store from '@/store'
 import Colors from './Colors'
+import debug from './Debug.js'
 
 const CAPITAL_COLOR_ID = 4
 
@@ -183,7 +184,12 @@ class Cell {
           this.firstPoint.y + 80)
       }
       let shipsText = planet.ships > 9999 ? this.$t('S.') : this.$t('Ships')
-      ctx.fillText(shipsText + ': ' + (planet.ships - this._shipsDec(planet.id)),
+      let shipsCount = planet.ships - this._shipsDec(planet.id)
+      if (shipsCount < 0) {
+        debug.error("Count of ships is negative!", planet)
+        shipsCount = 0
+      }
+      ctx.fillText(shipsText + ': ' + shipsCount,
         this.firstPoint.x + this._a / 2,
         this.firstPoint.y + 140)
       if (this._isHovered) {
