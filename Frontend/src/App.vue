@@ -12,26 +12,38 @@
       </div>
     </Window>
     <Signal ref="signal" />
-    <Window ref="settings" type="confirm" @confirm="setCustom"
-      :title="$t('Settings')" :enabled="settingsAreValid" class="settings">
+    <Window ref="settings" @confirm="setCustom" type="custom"
+      :title="$t('Settings')" class="settings">
       <template>
         <Form ref="settingsForm" class="withoutborder">
           <TextInput :label="$t('Host')" v-model="host" :min="1" @change="checkForm" />
           <TextInput type="number" :label="$t('Port')" v-model="port"
-            :min="1" :max="65535" @change="checkForm" />
-          <p class="flex-horizontal"><SwitchBox :label="$t('Full render')" v-model="slowRender" /></p>
-          <p class="flex-horizontal"><SwitchBox :label="$t('Show menu')" v-model="menuIsVisible" /></p>
-          <p class="flex-horizontal">
-            <a @click="setLocale('en')"
-              v-if="$i18n.locale() !== 'en'">English</a>
-            <a @click="setLocale('ru')"
-              v-if="$i18n.locale() !== 'ru'">Русский</a>
-          </p>
+            :min="1" :max="65535" @change="checkForm" class="port-inp" />
+          <div class="flex-horizontal">
+            <div class="button" @click="setCustom" :class="saveBtnClass">
+              {{ $t('Save settings') }}
+            </div>
+            <div class="button" @click="setDefault">
+              {{ $t('Default') }}
+            </div>
+          </div>
         </Form>
+        <p class="flex-horizontal">
+          <SwitchBox :label="$t('Full render')" v-model="slowRender" />
+        </p>
+        <p class="flex-horizontal">
+          <SwitchBox :label="$t('Show menu')" v-model="menuIsVisible" />
+        </p>
+        <p class="flex-horizontal">
+          <a @click="setLocale('en')"
+            v-if="$i18n.locale() !== 'en'">English</a>
+          <a @click="setLocale('ru')"
+            v-if="$i18n.locale() !== 'ru'">Русский</a>
+        </p>
       </template>
       <template slot="footer">
-        <div class="button" @click="setDefault">
-          {{ $t('Default') }}
+        <div class="button" @click="hideSettings">
+          {{ $t('Close') }}
         </div>
       </template>
     </Window>
@@ -110,6 +122,9 @@ export default {
     }
   },
   computed: {
+    saveBtnClass () {
+      return this.settingsAreValid ? '' : 'disabled'
+    },
     slowRender: {
       get () {
         return this.$store.getters['settings/fullRender']
@@ -151,6 +166,10 @@ export default {
       setSetting: 'settings/set',
       saveLocale: 'saveLocale'
     }),
+    hideSettings () {
+      this.$refs.settings.close()
+      location.reload()
+    },
     checkForm () {
       this.settingsAreValid = this.$refs.settingsForm.isValid()
     },
@@ -197,4 +216,5 @@ export default {
 .settings * {
   z-index: 10000000000001 !important;
 }
+
 </style>

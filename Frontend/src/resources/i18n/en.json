@@ -157,5 +157,8 @@
   "can't find the game": "The game not found",
   "player_name": "The username is already used",
   "Cell ID": "Cell ID",
-  "Go to planet": "Go to planet"
+  "Go to planet": "Go to planet",
+  "Accept": "Accept",
+  "Close": "Close",
+  "Save settings": "Save"
 }
