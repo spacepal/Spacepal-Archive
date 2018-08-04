@@ -6,21 +6,21 @@ import debug from '../../common/Debug.js'
 
 const STORAGE_AUTOTASKS = 'autotasks'
 const STORAGE_TASKS = 'tasks'
+const STORAGE_TASKS_TURN = 'tasks_turn'
 
-let savedTasks = JSON.parse(sessionStorage.getItem(STORAGE_TASKS)) || {}
+let savedAutoTasks = JSON.parse(sessionStorage.getItem(STORAGE_AUTOTASKS)) || {}
+
+function saveTasks (tasks, turnNumber) {
+  sessionStorage.setItem(STORAGE_TASKS_TURN, turnNumber)
+  sessionStorage.setItem(STORAGE_TASKS, JSON.stringify(tasks))
+}
 
 const state = {
-  tasks: savedTasks,
-  shipsDecreasing: Object.values(savedTasks).reduce((decr, task) => {
-    if (decr[task.from] === undefined) {
-      decr[task.from] = task.count
-    } else {
-      decr[task.from] += task.count
-    }
-    return decr
-  }, {}),
-  autoTasks: JSON.parse(sessionStorage.getItem(STORAGE_AUTOTASKS)) || {},
-  lastTaskID: Object.keys(savedTasks).reduce((last, cur) => Math.max(last, cur), 0)
+  tasks: { },
+  shipsDecreasing: {},
+  autoTasks: savedAutoTasks,
+  lastTaskID: Object.keys(savedAutoTasks).reduce(
+    (last, cur) => Math.max(last, cur), 0) + 1
 }
 
 const mutations = {
@@ -63,6 +63,21 @@ const mutations = {
 }
 
 const actions = {
+  setSaved ({ dispatch, rootGetters }) {
+    let savedTasksTurn = parseInt(sessionStorage.getItem(STORAGE_TASKS_TURN)) || -1
+    if (rootGetters['game/info'].turnNumber === savedTasksTurn) {
+      let savedTasks = JSON.parse(sessionStorage.getItem(STORAGE_TASKS)) || {}
+      Object.values(savedTasks).forEach(task => {
+        dispatch('add', {
+          from: task.from,
+          to: task.to,
+          count: task.count,
+          isDispatchAutoTask: false,
+          isHoldAutoTask: false
+        })
+      })
+    }
+  },
   doAutoTasks ({ state, rootGetters, dispatch }) {
     if (rootGetters.isLocked) {
       debug.warn('tasks.doAutoTasks: isLocked')
@@ -98,7 +113,7 @@ const actions = {
       })
     }
   },
-  del ({ state, commit }, taskID) {
+  del ({ state, commit, rootGetters }, taskID) {
     if (state.autoTasks[taskID]) {
       commit('REMOVE_AUTO_TASK', taskID)
       sessionStorage.setItem(STORAGE_AUTOTASKS, JSON.stringify(state.autoTasks))
@@ -106,7 +121,7 @@ const actions = {
       let task = state.tasks[taskID]
       commit('REMOVE_TASK', taskID)
       commit('INCREASE_SHIPS', { planetID: task.from, count: task.count })
-      sessionStorage.setItem(STORAGE_TASKS, JSON.stringify(state.tasks))
+      saveTasks(state.tasks, rootGetters['game/info'].turnNumber)
     } else {
       debug.warn('tasks.del: invalid taskID')
     }
@@ -167,15 +182,15 @@ const actions = {
     commit('DECREASE_SHIPS', { planetID: from, count })
     commit('ADD_TASK', { from, to, count, stepsLeft })
     commit('INCREASE_ID')
-    sessionStorage.setItem(STORAGE_TASKS, JSON.stringify(state.tasks))
+    saveTasks(state.tasks, rootGetters['game/info'].turnNumber)
   },
   clear ({ commit }) {
-    commit('CLEAR_TASKS')
     sessionStorage.removeItem(STORAGE_TASKS)
+    commit('CLEAR_TASKS')
   },
   clearAutoTasks ({ commit }) {
-    commit('CLEAR_AUTO_TASKS')
     sessionStorage.removeItem(STORAGE_AUTOTASKS)
+    commit('CLEAR_AUTO_TASKS')
   }
 }
 

@@ -136,6 +136,7 @@ const actions = {
       !getters['profile'].isEndTurn &&
       !getters['profile'].isGameOver) {
       dispatch('unlock')
+      dispatch('tasks/setSaved')
     }
     if (state.sync.endTurn && !state.sync.endTurnClear) {
       dispatch('syncSet', 'endTurnClear')
