@@ -37,6 +37,7 @@ const state = {
     endTurnClear: false,
     autotasks: false // complete
   },
+  afterReload: true,
   endTurnLock: true,
   backendServer: localStorage.getItem(STORAGE_BACKEND) || DEFAULT_BACKEND, // @todo Move to settings
   quickStart: localStorage.getItem(STORAGE_QUICKSTART),
@@ -85,6 +86,9 @@ const mutations = {
   },
   SAVE_LOCALE (state, locale) {
     state.savedLocale = locale
+  },
+  RESET_AFTER_RELOAD (state) {
+    state.afterReload = false
   }
 }
 
@@ -128,6 +132,9 @@ const actions = {
   },
   syncSet ({ state, commit, dispatch, getters }, syncType) {
     commit('SYNC_SET', syncType)
+    if (syncType === 'endTurn') {
+      commit('RESET_AFTER_RELOAD')
+    }
     if (state.endTurnLock &&
       state.sync.game &&
       state.sync.profile &&
@@ -144,7 +151,7 @@ const actions = {
       dispatch('tasks/clear')
     }
     if (!state.sync.autotasks &&
-      !state.endTurnLock) {
+      !state.endTurnLock && !state.afterReload) {
       dispatch('tasks/doAutoTasks')
     }
   },
