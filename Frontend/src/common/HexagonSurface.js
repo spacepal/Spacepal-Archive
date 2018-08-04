@@ -6,7 +6,7 @@ const TRANSLATE_SCALE_FACTOR = 1.5
 const DEFAULT_SCALE = 2.0
 const MAX_RENDER_ZOOM = 2.0
 const BIG_ZOOM = 4.0
-const TO_POINT_SIZE = 5
+const TO_POINT_SIZE = 3
 const FROM_POINT_SIZE = 2
 const ARROW_LINE_WIDTH = 1.25
 
@@ -109,7 +109,8 @@ export default {
       let fromPoint = from.center
       let toPoint = to.center
       let ctx = this.context
-      let zoom = this.scale * 1.25
+      // let zoom = this.scale * 1.25
+      let zoom = 1.0
       ctx.beginPath()
       ctx.strokeStyle = 'rgba(255, 255, 255, ' + opacity + ')'
       ctx.lineWidth = ARROW_LINE_WIDTH / zoom
@@ -317,6 +318,10 @@ export default {
     redraw (ctx) {
       let { scale, dx, dy } = this.pending
       this.pending = { scale: 1.0, dx: 0.0, dy: 0.0 }
+
+      if (isNaN(scale)) { //
+        scale = 1.0
+      }
 
       this.dx += dx
       this.dy += dy
