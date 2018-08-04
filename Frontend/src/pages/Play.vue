@@ -45,9 +45,14 @@
       <Bookmarks ref="bookmarks" @goToCell="goToCell" />
     </GamePanel>
 
-    <GameMenu @goHome="goHome" @toggleArrows="toggleArrows" />
+    <GameMenu
+      @goHome="goHome"
+      @toggleArrows="toggleArrows"
+      @goToPlanet="goToCellWindow" /> <!-- MENU -->
+
     <EndTurnMsg @onTurnEnded="onTurnEnded"
-      @onTurnAnimationEnded="onTurnAnimationEnded" />
+      @onTurnAnimationEnded="onTurnAnimationEnded" /> <!-- END-TURN-MESSAGE -->
+
     <Window ref="quickStart" type="alert" :title="$t('Quick start')">
       <template>
         <span class="quick-start-p">At the start of the game you have only one planet — your capital (press <span class="mdi mdi-keyboard mdi-24px splitter"></span>Home for quick goto).</span>
@@ -58,6 +63,17 @@
         <span class="quick-start-p">Press <span class="mdi mdi-keyboard mdi-24px splitter"></span>K for show all hotkeys</span>
         <span class="quick-start-btn"><SwitchBox v-model="quickStartDisabled" label="Don't show again" :title="$t('You can press KeyL for show quick start again')" /></span>
       </template>
+    </Window>
+
+    <Window ref="goToCell" type="confirm" :enabled="goToCellInpIsValid"
+      :title="$t('Go to planet')" @confirm="goToCell(goToCellInp)"> <!-- GO-TO-PLANET-WINDOW -->
+      <Form ref="goToCellForm" class="withoutborder">
+        <TextInput type="number" :autoSelect="true"
+          :label="$t('Cell ID')" :min="1"
+          :max="game['mapWidth'] * game['mapHeight']"
+          v-model="goToCellInp"
+          @change="checkGoToCellForm"></TextInput>
+      </Form>
     </Window>
   </div>
 </template>
@@ -76,6 +92,7 @@ import GameMenu from '../components/GameMenu'
 import EndTurnMsg from '../components/nano/EndTurnMsg'
 import Bookmarks from '../components/Bookmarks'
 import GamePanel from '../components/GamePanel'
+import TextInput from '../components/TextInput'
 
 const NOTIFICATION_ICON = 'https://avatars2.githubusercontent.com/u/41302202?s=400&v=4'
 
@@ -93,7 +110,8 @@ export default {
     SwitchBox,
     EndTurnMsg,
     Bookmarks,
-    GamePanel
+    GamePanel,
+    TextInput
   },
   data () {
     let hotKeys = [
@@ -106,6 +124,13 @@ export default {
             this.endTurn()
           }
           this.forceAutoEndTurn ^= true
+        },
+        modalLock: true
+      },
+      {
+        code: 'KeyG',
+        method: () => {
+          this.goToCellWindow()
         },
         modalLock: true
       },
@@ -175,6 +200,8 @@ export default {
       }
     ]
     return {
+      goToCellInp: 0,
+      goToCellInpIsValid: false,
       winIsFocused: true,
       hotKeys,
       areNotificationsSupported: false,
@@ -202,6 +229,16 @@ export default {
     }
   },
   methods: {
+    goToCellWindow () {
+      this.goToCellInp = 0
+      this.goToCellInpIsValid = false
+      this.$refs.goToCell.show()
+    },
+    checkGoToCellForm () {
+      this.$nextTick(() => {
+        this.goToCellInpIsValid = this.$refs.goToCellForm.isValid()
+      })
+    },
     ...mapActions({
       delTask: 'tasks/del',
       togglePanel: 'panels/toggle',

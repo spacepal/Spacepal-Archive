@@ -41,6 +41,10 @@
       <a @click="showPanel('bookmarks')">{{ $t('Bookmarks') }}</a>
       <span>[B]</span>
 
+      <span class="mdi mdi-google-maps"></span>
+      <a @click="goToPlanet">{{ $t('Go to planet') }}</a>
+      <span>[G]</span>
+
       <span class="mdi mdi-cancel"></span>
       <a @click="exit">{{ $t('Surrender') }}</a>
       <span>[<span class="mdi mdi-cancel"></span>]</span>
@@ -116,6 +120,9 @@ export default {
     goHome () {
       this.$emit('goHome')
     },
+    goToPlanet () {
+      this.$emit('goToPlanet')
+    },
     fullScreen () {
       let isFullScreen = document.fullscreen ||
         document.webkitIsFullScreen ||
@@ -187,7 +194,7 @@ $menuBtn: $iconSize + $padding * 2;
 }
 .menu:hover {
   transform: translateX($menuBtn);
-  height: 300px;
+  height: 340px;
   transition: transform 0.1s ease-out,
     height 0.1s ease-out;
 }

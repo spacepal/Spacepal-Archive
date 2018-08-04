@@ -155,5 +155,7 @@
   "the game was started": "The game was started",
   "players_limit": "There's no space in the room",
   "can't find the game": "The game not found",
-  "player_name": "The username is already used"
+  "player_name": "The username is already used",
+  "Cell ID": "Cell ID",
+  "Go to planet": "Go to planet"
 }
