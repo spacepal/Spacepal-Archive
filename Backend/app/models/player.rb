@@ -88,7 +88,8 @@ class Player < Ohm::Model
   end
 
   def current_fleet_size
-    self.fleets.to_a.pluck_arr(:ships).sum + self.planets.to_a.pluck_arr(:ships).sum
+    ships = self.fleets.inject(0) { |s, f| s = f.started? ? s += f.ships : s }
+    ships + self.planets.to_a.pluck_arr(:ships).sum
   end
 
   def update hash
