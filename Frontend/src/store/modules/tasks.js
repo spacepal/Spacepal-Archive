@@ -54,8 +54,8 @@ const mutations = {
   REMOVE_TASK (state, taskID) {
     Vue.delete(state.tasks, taskID)
   },
-  REMOVE_AUTO_TASK (state, taskID) {
-    Vue.delete(state.autoTasks, taskID)
+  REMOVE_AUTO_TASK (state, autoTaskID) {
+    Vue.delete(state.autoTasks, autoTaskID)
   },
   INCREASE_ID (state) {
     state.lastTaskID++
@@ -73,7 +73,8 @@ const actions = {
           to: task.to,
           count: task.count,
           isDispatchAutoTask: false,
-          isHoldAutoTask: false
+          isHoldAutoTask: false,
+          autoTaskID: task.autoTaskID
         })
       })
     }
@@ -109,13 +110,23 @@ const actions = {
       dispatch('add', {
         from: task.from,
         to: task.to,
-        count
+        count,
+        autoTaskID: taskID
       })
     }
   },
-  del ({ state, commit, rootGetters }, taskID) {
+  del ({ state, commit, rootGetters, dispatch }, taskID) {
+    taskID = parseInt(taskID)
     if (state.autoTasks[taskID]) {
       commit('REMOVE_AUTO_TASK', taskID)
+      Object.keys(state.tasks).forEach(tID => {
+        let task = state.tasks[tID]
+        if (task.autoTaskID === taskID) {
+          dispatch('del', tID)
+          return true
+        }
+        return false
+      })
       sessionStorage.setItem(STORAGE_AUTOTASKS, JSON.stringify(state.autoTasks))
     } else if (state.tasks[taskID]) {
       let task = state.tasks[taskID]
@@ -127,7 +138,7 @@ const actions = {
     }
   },
   add ({ state, getters, rootGetters, commit, dispatch },
-    { from, to, count, isDispatchAutoTask, isHoldAutoTask }) {
+    { from, to, count, autoTaskID, isDispatchAutoTask, isHoldAutoTask }) {
     let planet = rootGetters.planetByID(from)
     if (!planet) {
       debug.warn('tasks.add: the planet is not found')
@@ -180,7 +191,7 @@ const actions = {
       return
     }
     commit('DECREASE_SHIPS', { planetID: from, count })
-    commit('ADD_TASK', { from, to, count, stepsLeft })
+    commit('ADD_TASK', { from, to, count, stepsLeft, autoTaskID })
     commit('INCREASE_ID')
     saveTasks(state.tasks, rootGetters['game/info'].turnNumber)
   },
