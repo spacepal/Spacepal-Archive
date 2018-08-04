@@ -46,7 +46,7 @@
         <div class="button" @click="goHome">
           <span class="mdi mdi-arrow-left"></span> {{ $t('Back') }}
         </div>
-        <div class="button" :class="createButtonClass" @click="createGame">
+        <div class="button" :class="createButtonClass" @click="createGame()">
           <span class="mdi mdi-earth"> </span> {{ $t('Create game') }}
         </div>
         <div class="button" @click="setRandom" :title="$t('Set random parameters')">
