@@ -204,14 +204,17 @@ export default {
         cell.isHovered = true
         this.hoveredIndex = cell.id - 1
         if (this.selectedIndex !== -1) {
-          let distance = calcDistance(this.selectedIndex + 1,
-            cell.id, this.$store.getters['game/info'].mapWidth)
+          let distance = this.calculateDistance(this.selectedIndex + 1, cell.id)
           cell.render(this.context, distance, this.simplyRender, this.bigZoom)
         } else {
           cell.render(this.context, -1, this.simplyRender, this.bigZoom)
         }
       }
       this._moveLock = false
+    },
+    calculateDistance(cellFirst, cellSeoncd) {
+      return calcDistance(cellFirst, cellSeoncd,
+        this.$store.getters['game/info'].mapWidth)
     },
     pause () {
       this.paused = true
@@ -352,7 +355,12 @@ export default {
           cell.firstPoint.y > startPoint.y &&
           cell.firstPoint.y < endPoint.y) {
           requestAnimationFrame(() => {
-            cell.render(ctx, -1, this.simplyRender, this.bigZoom)
+            let distance = -1
+            if (cell.id === this.hoveredIndex + 1 &&
+              this.selectedIndex !== -1) {
+              distance = this.calculateDistance(this.selectedIndex + 1, cell.id)
+            }
+            cell.render(ctx, distance, this.simplyRender, this.bigZoom)
           })
           return true
         }
