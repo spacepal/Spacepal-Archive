@@ -139,6 +139,7 @@ const actions = {
   },
   add ({ state, getters, rootGetters, commit, dispatch },
     { from, to, count, autoTaskID, isDispatchAutoTask, isHoldAutoTask }) {
+    autoTaskID = parseInt(autoTaskID)
     let planet = rootGetters.planetByID(from)
     if (!planet) {
       debug.warn('tasks.add: the planet is not found')
