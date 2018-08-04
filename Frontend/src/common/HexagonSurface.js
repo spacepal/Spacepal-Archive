@@ -212,7 +212,7 @@ export default {
       }
       this._moveLock = false
     },
-    calculateDistance(cellFirst, cellSeoncd) {
+    calculateDistance (cellFirst, cellSeoncd) {
       return calcDistance(cellFirst, cellSeoncd,
         this.$store.getters['game/info'].mapWidth)
     },
