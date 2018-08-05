@@ -6,7 +6,7 @@
         validate='^[0-9A-Za-z_-]*$' :min="1" :generator="usernameGen"
         :max="32" @change="checkForm" />
       <TextInput v-model="pref.gamename" :generator="gamenameGen" ref="gamename"
-        :label="$t('Game name')" :max="32" @change="checkForm" />
+        :label="$t('Game name')" :min="1" :max="32" @change="checkForm" />
       <div class="flex-horizontal">
         <TextInput v-model="pref.map.width" :label="$t('Map width')"
           type="number" :min="2" :max="64" @change="checkForm" />
