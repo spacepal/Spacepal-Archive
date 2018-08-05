@@ -186,7 +186,7 @@ class Cell {
       let shipsText = planet.ships > 9999 ? this.$t('S.') : this.$t('Ships')
       let shipsCount = planet.ships - this._shipsDec(planet.id)
       if (shipsCount < 0) {
-        debug.error("Count of ships is negative!", planet)
+        debug.error('Count of ships is negative!', planet)
         shipsCount = 0
       }
       ctx.fillText(shipsText + ': ' + shipsCount,
