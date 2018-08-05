@@ -15,7 +15,7 @@
       </div>
       <div class="flex-horizontal">
         <TextInput v-model="pref.playersLimit" :label="$t('Players limit')"
-          type="number" :min="2" :max="8" @change="checkForm" />
+          type="number" :min="2" :max="Math.min(pref.map.width * pref.map.height, 8)" @change="checkForm" />
         <TextInput v-model="pref.planetsCount" :label="$t('Planets count')"
           type="number" :min="pref.playersLimit"
           @change="checkForm" :max="pref.map.height * pref.map.width"/>
