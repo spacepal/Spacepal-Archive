@@ -68,6 +68,7 @@ export default {
   components: { Window, TextInput, Form, SwitchBox },
   data () {
     return {
+      renderWithoutDecreasing: false,
       mouse: {
         x: 0,
         y: 0
@@ -86,6 +87,22 @@ export default {
       height: 1080,
       drag: false,
       hotKeys: [
+        {
+          code: 'KeyY',
+          methodDown: () => {
+            this.renderWithoutDecreasing = true
+            this.$nextTick(() => {
+              this.tick()
+            })
+          },
+          method: () => {
+            this.renderWithoutDecreasing = false
+            this.$nextTick(() => {
+              this.tick()
+            })
+          },
+          description: this.$t('Show ships without tasks')
+        },
         {
           code: 'ArrowDown',
           methodDown: () => {

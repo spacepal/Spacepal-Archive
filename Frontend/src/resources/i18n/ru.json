@@ -160,5 +160,6 @@
   "Go to planet": "Перейти к планете",
   "Accept": "Принять",
   "Close": "Закрыть",
-  "Save settings": "Сохранить"
+  "Save settings": "Сохранить",
+  "Show ships without tasks": "Показывать корабли без учета заданий"
 }

@@ -75,7 +75,7 @@ export default {
       let cell = this._all[this.centeredIndex]
       if (cell) {
         cell.isCentered = !cell.isCentered
-        cell.render(this.context, -1, this.simplyRender, this.bigZoom)
+        cell.render(this.context, this.renderConfig(cell))
       }
       this._centeredAnimTimeout = setTimeout(this._centeredAnimTimerFunc, 350)
     }
@@ -98,7 +98,8 @@ export default {
       return {
         stepsTo: distance,
         simply: this.simplyRender,
-        simplyNoBorder: this.bigZoom
+        simplyNoBorder: this.bigZoom,
+        withoutDecreasing: this.renderWithoutDecreasing
       }
     },
     _drawArrows (arr) {
@@ -186,7 +187,7 @@ export default {
     _switchCell (cellID, selected) {
       let cell = this._all[cellID]
       cell.isSelected = selected
-      cell.render(this.context, -1, this.simplyRender, this.bigZoom)
+      cell.render(this.context, this.renderConfig(cell))
     },
     resolvePlanet ({ mx, my }) {
       let cell = this._resolveCell(this.context, { mx, my })
@@ -207,8 +208,10 @@ export default {
       this._moveLock = true
 
       if (this.hoveredIndex !== undefined) {
-        this._all[this.hoveredIndex].isHovered = false
-        this._all[this.hoveredIndex].render(this.context, -1, this.simplyRender, this.bigZoom)
+        let cell = this._all[this.hoveredIndex]
+        this.hoveredIndex = undefined
+        cell.isHovered = false
+        cell.render(this.context, cell)
       }
 
       let cell = this._resolveCell(this.context, {mx, my})

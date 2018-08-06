@@ -97,7 +97,12 @@ class Cell {
       C.x * (A.y - B.y)) * 0.5
   }
 
-  render (ctx, { stepsTo = 0, simply = false, simplyNoBorder = false }) {
+  render (ctx, {
+    stepsTo = 0,
+    simply = false,
+    simplyNoBorder = false,
+    withoutDecreasing = false
+  }) {
     let planet = this._planet(this._id)
     if (!planet && simplyNoBorder) {
       return
@@ -184,7 +189,8 @@ class Cell {
           this.firstPoint.y + 80)
       }
       let shipsText = planet.ships > 9999 ? this.$t('S.') : this.$t('Ships')
-      let shipsCount = planet.ships - this._shipsDec(planet.id)
+      let shipsCount = planet.ships -
+        (withoutDecreasing ? 0 : this._shipsDec(planet.id))
       if (shipsCount < 0) {
         debug.error('Count of ships is negative!', planet)
         shipsCount = 0
