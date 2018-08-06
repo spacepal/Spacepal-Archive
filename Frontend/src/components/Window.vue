@@ -80,13 +80,17 @@ export default {
   },
   methods: {
     show () {
-      this.$disableHotKeys()
+      if (!this.isVisible) {
+        this.$disableHotKeys()
+      }
       this.isVisible = true
     },
     close () {
-      this.$enableHotKeys()
-      this.isVisible = false
-      this.$emit('reject')
+      if (this.isVisible) {
+        this.$enableHotKeys()
+        this.isVisible = false
+        this.$emit('reject')
+      }
     },
     confirm () {
       if (this.type === TYPE_ALERT) {

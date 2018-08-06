@@ -177,5 +177,7 @@
   "pac-help": "PAC [production after capture]: if you capture planet ships'll be increased by production  in the same turn.",
   "accum-help": "Accum [accumulative]: every turn production on each player planet wiil be increased by one. It's good to set for beginning.",
   "pirates-help": "Pirates is a game random factor. They attack fleets and player planets.",
-  "buffs-help": "Buffs: in the developing. It will be soon."
+  "buffs-help": "Buffs: in the developing. It will be soon.",
+  "Show help": "Show help",
+  "Submit": "Submit"
 }

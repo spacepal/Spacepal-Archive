@@ -39,7 +39,7 @@ const state = {
             'This is form for game creation'
           ]
         },
-        el: _ => undefined,
+        el: _ => undefined
       },
       {
         descr: () => {
@@ -91,9 +91,7 @@ const actions = {
 const getters = {
   stages: (state) => state.stages,
   done: state => {
-    // return (name) => state.done[name] === 'true'
-    // @todo!!!!
-    return _ => false
+    return (name) => state.done[name] === 'true'
   }
 }
 

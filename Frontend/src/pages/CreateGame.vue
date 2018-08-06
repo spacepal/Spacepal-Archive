@@ -104,22 +104,18 @@ export default {
         }
       },
       hotKeys: [
-        { code: 'Enter', method: () => this.createGame(), description: this.$t('Submit'), isKey: true },
-        { code: 'Escape', method: this.goHome, description: this.$t('Close'), isKey: true }
+        { code: 'Enter', method: () => this.createGame(), description: this.$t('Submit'), isKey: true, modalLock: true },
+        { code: 'Escape', methodDown: this.goHome, description: this.$t('Close'), isKey: true, modalLock: true }
       ]
     }
   },
   mounted () {
-    this.$disableHotKeys()
     if (this.$route.params['auto']) {
       this.setRandom()
       this.$nextTick(() => {
         this.createGame(true)
       })
     }
-  },
-  beforeDestroy () {
-    this.$enableHotKeys()
   },
   methods: {
     setRandom () {

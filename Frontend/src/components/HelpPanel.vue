@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isVisible" @click.self="nextStage">
+  <div v-show="isVisible" @click.self="nextStage">
     <div class="help-panel-bg"></div>
     <div class="help-panel" v-if="isVisible" @click="nextStage" :class="pos">
       <div class="description">
@@ -34,9 +34,18 @@ export default {
       isVisible: false,
       hotKeys: [
         {
+          code: 'KeyL',
+          method: this.show,
+          description: this.$t('Show help'),
+          isKey: true
+        },
+        {
           code: 'Escape',
           isKey: true,
-          method: this.done
+          method: () => {
+            this.done()
+            return false
+          }
         },
         {
           code: 'Space',
@@ -98,18 +107,25 @@ export default {
   },
   watch: {
     el (el) {
-      this.$scrollTo(el)
+      if (el !== undefined) {
+        this.$scrollTo(el)
+      }
     }
   },
   mounted () {
-    this.currentStage = -1
-    this.isVisible = !this.$store.getters['help/done'](this.name)
-    this.nextStage()
-    if (this.isVisible) {
-      this.$disableHotKeys()
+    if (!this.$store.getters['help/done'](this.name)) {
+      this.show()
     }
   },
   methods: {
+    show () {
+      this.currentStage = -1
+      this.isVisible = true
+      this.nextStage()
+      if (this.isVisible) {
+        this.$disableHotKeys()
+      }
+    },
     highlightEl () {
       if (this.el) {
         this.el.classList.add(hightlightClass)
