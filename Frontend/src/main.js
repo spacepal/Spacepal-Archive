@@ -7,10 +7,12 @@ import ToastPlugin from './plugins/Toast.js'
 import HotKeysPlugin from './plugins/HotKeys.js'
 import store from './store'
 import vuexI18n from 'vuex-i18n'
+import VueScrollTo from 'vue-scrollto'
 // languages
 import english from './resources/i18n/en.json'
 import russian from './resources/i18n/ru.json'
 
+Vue.use(VueScrollTo)
 Vue.use(vuexI18n.plugin, store)
 Vue.use(ToastPlugin)
 Vue.use(HotKeysPlugin)

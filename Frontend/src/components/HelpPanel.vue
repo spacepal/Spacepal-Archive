@@ -101,6 +101,11 @@ export default {
       return this.stage.pos || 'center'
     }
   },
+  watch: {
+    el (el) {
+      this.$scrollTo(el)
+    }
+  },
   mounted () {
     this.currentStage = -1
     this.isVisible = !this.$store.getters['help/done'](this.name)
