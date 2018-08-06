@@ -35,7 +35,7 @@
     }
 
     .help-panel-el-highlighted {
-      border: 2px solid map_get($colorHighlighted, $theme);
+      border: 2px solid map_get($colorBorder, $theme);
     }
   }
 }
