@@ -34,11 +34,6 @@ export default {
       isVisible: false,
       hotKeys: [
         {
-          code: 'Enter',
-          method: this.nextStage,
-          isKey: true
-        },
-        {
           code: 'Escape',
           isKey: true,
           method: this.done
@@ -133,10 +128,10 @@ export default {
       }
     },
     done () {
-      this.$enableHotKeys()
       this.unhighlightEl()
       this.isVisible = false
       this.$store.dispatch('help/done', this.name)
+      this.$enableHotKeys()
     },
     nextStage () {
       this.unhighlightEl()

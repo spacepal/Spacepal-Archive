@@ -104,8 +104,8 @@ export default {
         }
       },
       hotKeys: [
-        { code: 'Enter', method: this.createGame, description: this.$t('Submit'), isKey: true, modalLock: true },
-        { code: 'Escape', method: this.goHome, description: this.$t('Close'), isKey: true, modalLock: true }
+        { code: 'Enter', method: () => this.createGame(), description: this.$t('Submit'), isKey: true },
+        { code: 'Escape', method: this.goHome, description: this.$t('Close'), isKey: true }
       ]
     }
   },
