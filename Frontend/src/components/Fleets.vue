@@ -14,12 +14,23 @@
           <span class="mdi mdi-sort-descending"
             v-if="sortKey === 'toCell' && sortType === -1"></span>
         </a>
-        <span>{{ $t('Player') }}</span>
+        <a @click="changeSort('player')">{{ $t('Player') }}
+          <span class="mdi mdi-sort-ascending"
+            v-if="sortKey === 'player' && sortType === +1"></span>
+          <span class="mdi mdi-sort-descending"
+            v-if="sortKey === 'player' && sortType === -1"></span>
+        </a>
         <a @click="changeSort('count')">{{ $t('Count') }}
           <span class="mdi mdi-sort-ascending"
             v-if="sortKey === 'count' && sortType === +1"></span>
           <span class="mdi mdi-sort-descending"
             v-if="sortKey === 'count' && sortType === -1"></span>
+        </a>
+        <a @click="changeSort('kill')">{{ $t('Kill') }}
+          <span class="mdi mdi-sort-ascending"
+            v-if="sortKey === 'kill' && sortType === +1"></span>
+          <span class="mdi mdi-sort-descending"
+            v-if="sortKey === 'kill' && sortType === -1"></span>
         </a>
         <a @click="changeSort('stepsLeft')">{{ $t('Steps') }}
           <span class="mdi mdi-sort-ascending"
@@ -43,9 +54,12 @@
           <span class="mdi mdi-arrow-up" v-if="fleet.dispatch"></span>
         </span>
         <span :key="fleet.id + '_5'">
-          {{ fleet.stepsLeft }}
+          {{ fleet.kill }}
         </span>
         <span :key="fleet.id + '_6'">
+          {{ fleet.stepsLeft }}
+        </span>
+        <span :key="fleet.id + '_7'">
           <template v-if="canDelete">
             <a v-if="actionEnabled" @click="del(fleet.id)">{{ $t('delete') }}</a>
             <span v-else>{{ $t('no') }}</span>
@@ -110,14 +124,18 @@ export default {
         f.id = id
         let from = this.planetByID(f.from)
         if (from !== undefined) {
-          f.fromCell = this.planetByID(f.from).cellID
+          f.kill = from.killPerc
+          f.fromCell = from.cellID
         } else {
+          f.kill = 0
           f.fromCell = 0
         }
         let to = this.planetByID(f.to)
         if (to !== undefined) {
-          f.toCell = this.planetByID(f.to).cellID
+          f.player = to.ownerID
+          f.toCell = to.cellID
         } else {
+          f.player = 0
           f.toCell = 0
         }
         t.push(f)
@@ -140,7 +158,7 @@ export default {
 .tasks {
   display: grid;
   justify-content: space-around;
-  grid-template-columns: auto auto auto auto auto auto;
+  grid-template-columns: auto auto auto auto auto auto auto;
   user-select: none;
 }
 .tasks > * {
