@@ -71,6 +71,65 @@ const state = {
         el: $refs => $refs.pin,
         pos: 'top'
       }
+    ],
+    'Room': [
+      {
+        descr: () => {
+          return [
+            'This is a room. Here players wait for start.'
+          ]
+        },
+        el: _ => undefined
+      },
+      {
+        descr: () => {
+          return [
+            'room-map-help-1',
+            'room-map-help-2',
+            'room-map-help-3'
+          ]
+        },
+        el: $refs => $refs.map.$el
+      },
+      {
+        descr: () => {
+          return [
+            'room-planet-help-1',
+            'room-planet-help-creator-2',
+            'room-planet-help-3',
+            'room-planet-help-4'
+          ]
+        },
+        el: $refs => $refs.map.$el
+      },
+      {
+        descr: ({ isCreator }) => {
+          return [
+            'room-members-help-1',
+            isCreator ? 'room-members-help-creator-2' : 'room-members-help-2',
+            'room-members-help-3',
+            'room-members-help-4'
+          ]
+        },
+        el: $refs => $refs.members.$el,
+        pos: 'top'
+      },
+      {
+        descr: ({ isCreator }) => {
+          if (isCreator) {
+            return [
+              'room-actions-help-creator-1',
+              'room-actions-help-creator-2',
+              'room-actions-help-creator-3'
+            ]
+          }
+          return [
+            'room-actions-help'
+          ]
+        },
+        el: $refs => $refs.actions.$el,
+        pos: 'top'
+      }
     ]
   }
 }

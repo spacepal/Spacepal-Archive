@@ -1,14 +1,15 @@
 <template>
   <div>
     <div class="loop_header"></div>
-    <Map full :offsetX="280"></Map>
+    <Map full :offsetX="280" ref="map"></Map>
     <div class="info-field">
       <div class="info-panel-body">
-        <ActionButtons></ActionButtons>
+        <ActionButtons ref="actions"></ActionButtons>
         <GameInfo />
-        <Members />
+        <Members ref="members" />
       </div>
     </div>
+    <HelpPanel ref="help" name="Room" :data="helpData" :refs="$refs" />
   </div>
 </template>
 
@@ -17,12 +18,24 @@ import Map from '../components/Map'
 import GameInfo from '../components/GameInfo'
 import Members from '../components/Members'
 import ActionButtons from '../components/RoomActionButtons'
+import HelpPanel from '../components/HelpPanel.vue'
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'Room',
-  components: { GameInfo, Map, Members, ActionButtons },
+  components: { GameInfo, Map, Members, ActionButtons, HelpPanel },
   data () {
     return {
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'isCreator'
+    ]),
+    helpData () {
+      return {
+        isCreator: this.isCreator
+      }
     }
   }
 }

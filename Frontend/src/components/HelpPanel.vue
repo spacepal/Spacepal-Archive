@@ -26,7 +26,8 @@ export default {
   name: 'HelpPanel',
   props: {
     name: String,
-    refs: Object
+    refs: Object,
+    data: Object
   },
   data () {
     return {
@@ -96,7 +97,7 @@ export default {
       }
     },
     descr () {
-      return this.stage.descr()
+      return this.stage.descr(this.data)
     },
     el () {
       return this.stage.el(this.refs)

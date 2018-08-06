@@ -179,5 +179,22 @@
   "pirates-help": "Pirates is a game random factor. They attack fleets and player planets.",
   "buffs-help": "Buffs: in the developing. It will be soon.",
   "Show help": "Show help",
-  "Submit": "Submit"
+  "Submit": "Submit",
+  "This is a room. Here players wait for start.": "This is a room. Here players wait for start.",
+  "room-map-help-1": "This is a preview of the map.",
+  "room-map-help-2": "The capitals are future planets of the players.",
+  "room-map-help-3": "Neutral planets do not belong to anyone and they are peaceful.",
+  "room-planet-help-1": "A planet has kill percentage and production",
+  "room-planet-help-2": "A production determines the number of ships that will be built",
+  "room-planet-help-3": "A kill determinates a power of one ship",
+  "room-planet-help-4": "Transparent cells are interplanetary space",
+  "room-members-help-1": "This is a players list.",
+  "room-members-help-2": "If the player joins, he will appear here. The creator can add bots.",
+  "room-members-help-creator-2": "If the player joins, he will appear here. You can add bots.",
+  "room-members-help-3": "Bots are simple game AI. They are good opponents for beginners.",
+  "room-members-help-4": "The game can be started if count of members is greater than 2.",
+  "room-actions-help-creator-1": "If you are ready you can start the game",
+  "room-actions-help-creator-2": "Button Regen shuffle planets on the map.",
+  "room-actions-help-creator-3": "If you exit the game, the following player will become admin or the game will be deleted.",
+  "room-actions-help": "You can exit the room."
 }
