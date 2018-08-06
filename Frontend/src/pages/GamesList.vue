@@ -15,7 +15,7 @@
         <span class="mdi mdi-github-circle mdi-16px"></span>
       </div>
     </div>
-    <div class="buttons-right">
+    <div class="buttons-right" ref="buttonsCreation">
       <div class="button" @click="createRandom" :title="$t('Create random game')">
         <span class="mdi mdi-dice-multiple mdi-16px"></span>
       </div>
@@ -24,7 +24,7 @@
     <div class="flex-horizontal">
       <div class="flex-space"></div>
       <div id="games-list">
-        <STable :fields="fields" :rows="rows" @rowClicked="rowClicked"
+        <STable ref="gamesList" :fields="fields" :rows="rows" @rowClicked="rowClicked"
           @notFoundCliked="createRandom" :loading="isLoading">
           <template slot="notfound">
             <p>
@@ -58,8 +58,8 @@
         </div>
       </template>
     </Window>
-
-    <FullPreloader ref="loader"></FullPreloader>
+    <FullPreloader ref="loader" />
+    <HelpPanel ref="help" name="GamesList" :refs="$refs" />
   </div>
 </template>
 
@@ -71,6 +71,7 @@ import Window from '../components/Window.vue'
 import TextInput from '../components/TextInput.vue'
 import FullPreloader from '../components/FullPreloader.vue'
 import Form from '../components/Form.vue'
+import HelpPanel from '../components/HelpPanel.vue'
 import Service from '../common/Service.js'
 import { UsernameGenerator } from '../common/Generators.js'
 
@@ -86,7 +87,8 @@ export default {
     Window,
     TextInput,
     FullPreloader,
-    Form
+    Form,
+    HelpPanel
   },
   data () {
     return {

@@ -33,6 +33,24 @@
     .text-fail {
       color: map_get($colorFailText, $theme)
     }
+
+    .help-panel-el-highlighted {
+      border: 2px solid map_get($colorHighlighted, $theme);
+    }
+  }
+}
+
+.help-panel-el-highlighted {
+  z-index: 1000000001;
+  border-radius: 10px;
+}
+
+@keyframes hueRotation {
+  from {
+    filter: grayscale(100%);
+  }
+  to {
+    filter: grayscale(0%);
   }
 }
 

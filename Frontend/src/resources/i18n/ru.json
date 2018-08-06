@@ -161,5 +161,14 @@
   "Accept": "Принять",
   "Close": "Закрыть",
   "Save settings": "Сохранить",
-  "Show ships without tasks": "Показывать корабли без учета заданий"
+  "Show ships without tasks": "Показывать корабли без учета заданий",
+  "Welcome!": "Добро пожаловать!",
+  "Spacepal is a web-version of Konquest strategy game.": "Spacepal — это онлайн версия одноименной пошаговой стратегии Konquest.",
+  "The goal of the game is to expand your power across the universe.": "Цель игры — развить мощную планетарную систему и сразить соперников в космосе.",
+  "Click anywhere for next tip": "Кликните в любом месте для перехода далее",
+  "Stage {stage} of {total}": "Этап {stage} из {total}",
+  "This is a list of rooms, that are created by other players.": "Это список комнат, созданных другими игроками.",
+  "You can join one, but rush to nothing...": "Вы можете присоединиться к любой, но что наспех делается — недолго длится.",
+  "Create your first game for familiarity with SpacePal.": "Создайте свою первую игру для ознакмления с партией Spacepal.",
+  "For this click New button or Dice for the game with random parameters": "Для этого нажмите на кнопку «создать»."
 }

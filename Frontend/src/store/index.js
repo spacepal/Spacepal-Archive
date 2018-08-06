@@ -13,6 +13,7 @@ import tasks from './modules/tasks'
 import bookmarks from './modules/bookmarks'
 import panels from './modules/panels'
 import settings from './modules/settings'
+import help from './modules/help'
 
 Vue.use(Vuex)
 
@@ -222,7 +223,8 @@ export default new Vuex.Store({
     tasks,
     bookmarks,
     panels,
-    settings
+    settings,
+    help
   },
   strict: true
 })

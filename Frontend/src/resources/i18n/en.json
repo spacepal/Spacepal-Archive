@@ -161,5 +161,14 @@
   "Accept": "Accept",
   "Close": "Close",
   "Save settings": "Save",
-  "Show ships without tasks": "Show ships without tasks"
+  "Show ships without tasks": "Show ships without tasks",
+  "Welcome!": "Welcome!",
+  "Spacepal is a web-version of Konquest strategy game.": "Spacepal is a web-version of Konquest strategy game.",
+  "The goal of the game is to expand your power across the universe.": "The goal of the game is to expand your power across the universe.",
+  "Click anywhere for next tip": "Click anywhere for next tip",
+  "Stage {stage} of {total}": "Stage {stage} of {total}",
+  "This is a list of rooms, that are created by other players.": "This is a list of rooms, that are created by other players.",
+  "You can join one, but rush to nothing...": "You can join one, but rush to nothing...",
+  "Create your first game for familiarity with SpacePal.": "Create your first game for familiarity with SpacePal.",
+  "For this click New button or Dice for the game with random parameters": "For this click New button or Dice for the game with random parameters"
 }
