@@ -19,7 +19,7 @@ import GameInfo from '../components/GameInfo'
 import Members from '../components/Members'
 import ActionButtons from '../components/RoomActionButtons'
 import HelpPanel from '../components/HelpPanel.vue'
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Room',

@@ -95,7 +95,7 @@ const state = {
         descr: () => {
           return [
             'room-planet-help-1',
-            'room-planet-help-creator-2',
+            'room-planet-help-2',
             'room-planet-help-3',
             'room-planet-help-4'
           ]
