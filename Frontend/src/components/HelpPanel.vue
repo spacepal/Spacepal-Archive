@@ -1,7 +1,7 @@
 <template>
   <div v-if="isVisible" @click.self="nextStage">
     <div class="help-panel-bg"></div>
-    <div class="help-panel" v-if="isVisible" @click="nextStage">
+    <div class="help-panel" v-if="isVisible" @click="nextStage" :class="pos">
       <div class="description">
         <p class="descr-line" v-for="d in descr" :key="d">{{ $t(d) }}</p>
         <p class="text-additional">
@@ -96,6 +96,9 @@ export default {
     },
     el () {
       return this.stage.el(this.refs)
+    },
+    pos () {
+      return this.stage.pos || 'center'
     }
   },
   mounted () {

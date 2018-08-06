@@ -22,7 +22,8 @@ const state = {
           'This is a list of rooms, that are created by other players.',
           'You can join one, but rush to nothing...'
         ],
-        el: ($refs) => $refs.gamesList.$el
+        el: ($refs) => $refs.gamesList.$el,
+        pos: 'top'
       },
       {
         descr: () => [
@@ -38,7 +39,7 @@ const state = {
             'This is form for game creation'
           ]
         },
-        el: _ => undefined
+        el: _ => undefined,
       },
       {
         descr: () => {
@@ -46,7 +47,8 @@ const state = {
             'It\'s good to set map width > height.'
           ]
         },
-        el: $refs => $refs.mapSize
+        el: $refs => $refs.mapSize,
+        pos: 'top'
       },
       {
         descr: () => {
@@ -57,7 +59,8 @@ const state = {
             'buffs-help'
           ]
         },
-        el: $refs => $refs.switches
+        el: $refs => $refs.switches,
+        pos: 'top'
       },
       {
         descr: () => {
@@ -65,7 +68,8 @@ const state = {
             'Set a pincode so that other players can not join.'
           ]
         },
-        el: $refs => $refs.pin
+        el: $refs => $refs.pin,
+        pos: 'top'
       }
     ]
   }
