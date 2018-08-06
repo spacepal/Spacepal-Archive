@@ -89,6 +89,18 @@ export default {
     clearTimeout(this._fpsTimeout)
   },
   methods: {
+    renderConfig (cell) {
+      let distance = -1
+      if (cell.id === this.hoveredIndex + 1 &&
+        this.selectedIndex !== -1) {
+        distance = this.calculateDistance(this.selectedIndex + 1, cell.id)
+      }
+      return {
+        stepsTo: distance,
+        simply: this.simplyRender,
+        simplyNoBorder: this.bigZoom
+      }
+    },
     _drawArrows (arr) {
       this.context.save()
       Object.values(arr).forEach(fleet => {
@@ -203,12 +215,7 @@ export default {
       if (cell) {
         cell.isHovered = true
         this.hoveredIndex = cell.id - 1
-        if (this.selectedIndex !== -1) {
-          let distance = this.calculateDistance(this.selectedIndex + 1, cell.id)
-          cell.render(this.context, distance, this.simplyRender, this.bigZoom)
-        } else {
-          cell.render(this.context, -1, this.simplyRender, this.bigZoom)
-        }
+        cell.render(this.context, this.renderConfig(cell))
       }
       this._moveLock = false
     },
@@ -280,7 +287,7 @@ export default {
         let cell = this._all[cI]
         if (cell) {
           cell.isCentered = centered
-          cell.render(this.context, -1, this.simplyRender, this.bigZoom)
+          cell.render(this.context, this.renderConfig(cell))
         }
       }
       _highlightCenterize(this.centeredIndex, false)
@@ -355,12 +362,7 @@ export default {
           cell.firstPoint.y > startPoint.y &&
           cell.firstPoint.y < endPoint.y) {
           requestAnimationFrame(() => {
-            let distance = -1
-            if (cell.id === this.hoveredIndex + 1 &&
-              this.selectedIndex !== -1) {
-              distance = this.calculateDistance(this.selectedIndex + 1, cell.id)
-            }
-            cell.render(ctx, distance, this.simplyRender, this.bigZoom)
+            cell.render(ctx, this.renderConfig(cell))
           })
           return true
         }

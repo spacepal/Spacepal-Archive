@@ -97,7 +97,7 @@ class Cell {
       C.x * (A.y - B.y)) * 0.5
   }
 
-  render (ctx, stepsTo = 0, simply = false, simplyNoBorder = false) {
+  render (ctx, { stepsTo = 0, simply = false, simplyNoBorder = false }) {
     let planet = this._planet(this._id)
     if (!planet && simplyNoBorder) {
       return
