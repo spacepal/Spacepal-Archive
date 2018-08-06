@@ -19,7 +19,7 @@ const state = {
       },
       {
         descr: () => [
-          'This is a list of rooms, that are created by other players.',
+          'This is the list of rooms, that are created by other players.',
           'You can join one, but rush to nothing...'
         ],
         el: ($refs) => $refs.gamesList.$el,
@@ -76,7 +76,7 @@ const state = {
       {
         descr: () => {
           return [
-            'This is a room. Here players wait for start.'
+            'This is the room. Players are waiting for start here.'
           ]
         },
         el: _ => undefined
