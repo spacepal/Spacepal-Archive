@@ -43,6 +43,7 @@
 .help-panel-el-highlighted {
   z-index: 1000000001;
   border-radius: 10px;
+  position: relative;
 }
 
 @keyframes hueRotation {

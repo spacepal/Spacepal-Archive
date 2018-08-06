@@ -167,8 +167,15 @@
   "The goal of the game is to expand your power across the universe.": "Цель игры — развить мощную планетарную систему и сразить соперников в космосе.",
   "Click anywhere for next tip": "Кликните в любом месте для перехода далее",
   "Stage {stage} of {total}": "Этап {stage} из {total}",
-  "This is a list of rooms, that are created by other players.": "Это список комнат, созданных другими игроками.",
+  "This is a list of rooms, that are created by other players.": "Это список комнат, которые были созданы другими игроками.",
   "You can join one, but rush to nothing...": "Вы можете присоединиться к любой, но что наспех делается — недолго длится.",
-  "Create your first game for familiarity with SpacePal.": "Создайте свою первую игру для ознакмления с партией Spacepal.",
-  "For this click New button or Dice for the game with random parameters": "Для этого нажмите на кнопку «создать»."
+  "Create your first game for familiarity with SpacePal.": "Создайте свою первую игру для ознакомления с партией Spacepal.",
+  "For this click New button or Dice for the game with random parameters": "Для этого нажмите на кнопку «создать».",
+  "This is form for game creation": "Это форма для создания игры",
+  "It's good to set map width > height.": "Попробуйте сыграть на небольшой карте. Например: 6x8.",
+  "Set a pincode so that other players can not join.": "Установите ПИН-код, чтобы другие игроки не могли зайти.",
+  "pac-help": "ППЗ [производство после захвата]: если установлен этот флаг, то после захвата планеты корабли на ней в тот же ход построятся.",
+  "accum-help": "Аккум [аккумулятивный]: каждый ход производство кораблей на планетах игроков будет увеличиваться (рекомендуется).",
+  "pirates-help": "Пираты вносят элемент случайности в игровой процесс, они могут атаковать корабли и планеты, но при этом не могут захыватывать их.",
+  "buffs-help": "Баффы: добавляют пассивные факторы игрокам [пока не реализовано]."
 }

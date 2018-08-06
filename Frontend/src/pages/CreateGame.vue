@@ -1,5 +1,6 @@
 <template>
   <div id="create-page" class="flex-vertical">
+    <HelpPanel ref="help" name="CreateGame" :refs="$refs" />
     <GameTitle></GameTitle>
     <Form ref="form">
       <TextInput v-model="pref.username" :label="$t('Username')" ref="username"
@@ -7,7 +8,7 @@
         :max="32" @change="checkForm" />
       <TextInput v-model="pref.gamename" :generator="gamenameGen" ref="gamename"
         :label="$t('Game name')" :min="1" :max="32" @change="checkForm" />
-      <div class="flex-horizontal">
+      <div class="flex-horizontal" ref="mapSize">
         <TextInput v-model="pref.map.width" :label="$t('Map width')"
           type="number" :min="2" :max="64" @change="checkForm" />
         <TextInput v-model="pref.map.height" :label="$t('Map height')"
@@ -20,7 +21,7 @@
           type="number" :min="pref.playersLimit"
           @change="checkForm" :max="pref.map.height * pref.map.width"/>
       </div>
-      <div class="switches">
+      <div class="switches" ref="switches">
         <SwitchBox :label="$t('Buffs')" v-model="pref.flags.buffs" />
         <SwitchBox :label="$t('PAC')" v-model="pref.flags.productionAfterCapture"
           :title="$t('Production after capture')" />
@@ -28,7 +29,7 @@
         <SwitchBox :label="$t('Accum')"
           :title="$t('Accumulative')" v-model="pref.flags.accumulative" />
       </div>
-      <div class="flex-horizontal pincode-field">
+      <div class="flex-horizontal pincode-field" ref="pin">
         <label class="flex-horizontal pincode-switch">
           <span v-if="pref.flags.hasPinCode" class="mdi mdi-lock mdi-24px"></span>
           <span v-else class="mdi mdi-lock-open mdi-24px"></span>
@@ -65,6 +66,7 @@ import TextInput from '../components/TextInput.vue'
 import SwitchBox from '../components/SwitchBox.vue'
 import FullPreloader from '../components//FullPreloader.vue'
 import Form from '../components/Form.vue'
+import HelpPanel from '../components/HelpPanel.vue'
 import Faker from 'faker'
 import { UsernameGenerator, GameNameGenerator } from '../common/Generators.js'
 
@@ -75,7 +77,8 @@ export default {
     TextInput,
     SwitchBox,
     FullPreloader,
-    Form
+    Form,
+    HelpPanel
   },
   data () {
     return {
@@ -101,8 +104,8 @@ export default {
         }
       },
       hotKeys: [
-        { code: 'Enter', method: this.createGame, description: this.$t('Submit'), isKey: true },
-        { code: 'Escape', method: this.goHome, description: this.$t('Close'), isKey: true }
+        { code: 'Enter', method: this.createGame, description: this.$t('Submit'), isKey: true, modalLock: true },
+        { code: 'Escape', method: this.goHome, description: this.$t('Close'), isKey: true, modalLock: true }
       ]
     }
   },

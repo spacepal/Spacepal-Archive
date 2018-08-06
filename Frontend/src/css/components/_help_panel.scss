@@ -20,7 +20,7 @@
 }
 .descr-line {
   padding: 0;
-  margin: 0;
+  margin: 4px;
 }
 .help-panel-bg {
   background: rgba(0, 0, 0, 0.9);
@@ -35,16 +35,18 @@
   top: 0;
   display: flex;
   justify-content: center;
-  text-align: center;
   align-items: center;
   z-index: 1000000002;
   opacity: 1.0 !important;
   .text-additional {
     font-size: 10pt;
+    text-align: center;
   }
   .description {
+    max-width: 600px;
     padding: 40px;
     border-radius: 10px;
     background: rgba(0, 0, 0, 0.98);
+    text-align: justify;
   }
 }
