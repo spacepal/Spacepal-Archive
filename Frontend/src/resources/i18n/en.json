@@ -200,18 +200,18 @@
   "game-help-1": "Good, the game has begun!",
   "game-help-2": "Each player has one planet (the color of planet is the color of the player).",
   "game-help-3": "It's a good idea to capture nearest planet with low kill %. This is necessary to increase the total production.",
-  "game-help-noaccum-4": "Production in this game is constant. It means that at the beginning you cannot capture powerful planet.",
+  "game-help-noaccum-4": "Production in this game is constant. It means that you can't capture powerful planet at the beginning.",
   "game-help-accum-4": "The longer the planet belongs to you, the more production it has.",
-  "game-help-nopirates-5": "You can be calm, pirates will not be.",
+  "game-help-nopirates-5": "Don't worry, pirates are absent.",
   "game-help-pirates-5": "Space pirates are aggressive in space and sometimes attack planets.",
   "game-help-6": "Press the key Q for show the status of the game.",
   "game-help-map-1": "To zoom the map use mouse wheel or +/- keys.",
   "game-help-map-2": "To navigate the map use arrow keys or middle mouse button (or shift + left mouse button).",
   "game-help-7": "Other players don't know about your tasks.",
-  "game-help-8": "To send ships click on your planet (press Home for goto there), then on the target planet. The attack of ships depends on the attack of the planet-sender.",
+  "game-help-8": "To send ships click on your planet (press Home for goto there), then on the target planet. The attack of ships is the same with the attack of the planet-sender.",
   "game-help-9": "Players make a move concurrently. The game turn will end when all players make a move. After making a move, you can not return the fleet back.",
   "game-help-10": "To control the ships before their departure, press the key T.",
   "game-help-11": "When you are ready to end the turn, press key space.",
   "game-help-12": "To view the hotkeys, press key K.",
-  "game-help-13": "Have a good game! GG."
+  "game-help-13": "Have a good game!"
 }
