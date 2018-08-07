@@ -211,7 +211,7 @@ export default {
         let cell = this._all[this.hoveredIndex]
         this.hoveredIndex = undefined
         cell.isHovered = false
-        cell.render(this.context, cell)
+        cell.render(this.context, this.renderConfig(cell))
       }
 
       let cell = this._resolveCell(this.context, {mx, my})
