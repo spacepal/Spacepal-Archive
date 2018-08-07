@@ -2,15 +2,7 @@
   <div id="app" :class="theme">
     <div class="bg"></div>
     <router-view/>
-    <Window ref="hotKeysWin" type="alert" :title="$t('Hotkeys')">
-      <div class="hotKeysGrid">
-        <template v-for="list in Array.from(allHotKeys)">
-          <span :key="list[0] + '-description'">{{list[0]}}</span>
-          <span :key="list[0] + '-icon'" class="mdi mdi-keyboard mdi-24px splitter"></span>
-          <span :key="list[0] + '-hotkeys'">{{Array.from(list[1]).join(', ')}}</span>
-        </template>
-      </div>
-    </Window>
+    <HotKeysWin ref="hotKeysWin" />
     <Signal ref="signal" />
     <Window ref="settings" @confirm="setCustom" type="custom"
       :title="$t('Settings')" class="settings">
@@ -69,6 +61,7 @@ import Window from './components/Window'
 import Form from './components/Form'
 import TextInput from './components/TextInput'
 import SwitchBox from './components/SwitchBox'
+import HotKeysWin from './components/win/HotKeysWin'
 import Signal from './components/nano/Signal'
 import { DEFAULT_BACKEND } from './common/constants.js'
 import { mapActions } from 'vuex'
@@ -112,13 +105,11 @@ export default {
         {
           code: 'KeyK',
           method: () => {
-            this.allHotKeys = this.$allHotKeys()
-            this.$refs.hotKeysWin.show()
+            this.$refs.hotKeysWin.show(this.$allHotKeys())
           },
           description: this.$t('Show hotkeys')
         }
-      ],
-      allHotKeys: new Map()
+      ]
     }
   },
   computed: {
@@ -145,7 +136,7 @@ export default {
       return themes[this.currentTheme]
     }
   },
-  components: { Window, Signal, Form, TextInput, SwitchBox },
+  components: { Window, HotKeysWin, Signal, Form, TextInput, SwitchBox },
   mounted () {
     if (this.$store.getters['isPlayer']) {
       this.$store.dispatch('enableCable').catch(() => {

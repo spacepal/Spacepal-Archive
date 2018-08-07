@@ -46,8 +46,6 @@
 import GameTitle from '../components/nano/GameTitle.vue'
 import STable from '../components/STable.vue'
 import Paginator from '../components/Paginator.vue'
-import Window from '../components/Window.vue'
-import TextInput from '../components/TextInput.vue'
 import FullPreloader from '../components/FullPreloader.vue'
 import Form from '../components/Form.vue'
 import HelpPanel from '../components/HelpPanel.vue'
@@ -64,8 +62,6 @@ export default {
     STable,
     Paginator,
     GameTitle,
-    Window,
-    TextInput,
     FullPreloader,
     Form,
     HelpPanel,
