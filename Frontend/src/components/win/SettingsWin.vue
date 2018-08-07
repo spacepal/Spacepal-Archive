@@ -11,9 +11,6 @@
             <div class="button" @click="setCustom" :class="saveBtnClass">
               {{ $t('Save settings') }}
             </div>
-            <div class="button" @click="setDefault">
-              {{ $t('Default') }}
-            </div>
           </div>
         </Form>
         <p class="flex-horizontal">
@@ -32,6 +29,9 @@
       <template slot="footer">
         <div class="button" @click="hideSettings">
           {{ $t('Close') }}
+        </div>
+        <div class="button" @click="setDefault">
+          {{ $t('Default') }}
         </div>
       </template>
     </Window>
@@ -81,6 +81,7 @@ export default {
   methods: {
     ...mapActions({
       setSetting: 'settings/set',
+      resetSettings: `settings/reset`,
       saveLocale: 'saveLocale'
     }),
     hideSettings () {
@@ -91,14 +92,12 @@ export default {
     },
     setCustom () {
       if (this.settingsAreValid) {
-        this.$store.dispatch('setBackendServer', this.host + ':' + this.port)
+        this.setSetting({ key: 'backendServer', value: this.host + ':' + this.port })
         location.reload()
       }
     },
     setDefault () {
-      this.$store.dispatch('settings/reset')
-      this.$store.dispatch('resetBackendServer')
-      this.$refs.settings.close()
+      this.resetSettings()
       location.reload()
     },
     setLocale (locale) {

@@ -1,10 +1,12 @@
 import Vue from 'vue'
+import { DEFAULT_BACKEND } from '../../common/constants'
 
 const STORAGE_PREFIX = 'pref_'
 
 const DEFAULT_VALUES = { // only Boolean, Number, String !
   menuIsVisible: true,
-  fullRender: false
+  fullRender: false,
+  backendServer: DEFAULT_BACKEND
 }
 
 function getAdoptedKey (key) {
@@ -47,7 +49,7 @@ const actions = {
       value: !state.settings.menuIsVisible
     })
   },
-  reset ({ state, dispatch }) {
+  reset ({ dispatch }) {
     Object.keys(DEFAULT_VALUES).forEach(key => {
       dispatch('set', { key, value: DEFAULT_VALUES[key] })
     })
@@ -60,6 +62,9 @@ const getters = {
   },
   fullRender (state) {
     return state.settings.fullRender
+  },
+  backendServer (state) {
+    return state.settings.backendServer
   }
 }
 
