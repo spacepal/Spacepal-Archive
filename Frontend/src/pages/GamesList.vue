@@ -36,28 +36,7 @@
       </div>
       <div class="flex-space"></div>
     </div>
-    <Window ref="confirm" type="confirm" @confirm="joinConfirm"
-      :title="$t('Confirm action')" :enabled="join.isValid">
-      <template>
-        {{ $t('Do you want to join game') }}<span v-if="!join.unknowGameID"> #{{ join.gameID }}</span>?
-        <Form ref="joinForm" class="withoutborder">
-          <TextInput :label="$t('Game ID')" v-model="join.gameID" ref="usernameInput"
-            type="number" v-if="join.unknowGameID" :min="1" force
-            @change="checkJoinForm" />
-          <TextInput :label="$t('Username')" v-model="join.username" ref="usernameInput"
-            type="text" validate='^[0-9A-Za-z_-]*$' :min="1" :max="32" force
-            @change="checkJoinForm" :generator="usernameGenerator" />
-          <TextInput ref="pin" :label="$t('Pincode')" v-if="join.hasPinCode" v-model="join.pinCode"
-            type="text" :min="4" :max="4" validate='^[0-9]+$'
-            :enableValidation="join.hasPinCode" @change="checkJoinForm" />
-        </Form>
-      </template>
-      <template slot="footer">
-        <div class="button" @click="setRandom">
-          <span class="mdi mdi-dice-multiple mdi-24px"> </span>
-        </div>
-      </template>
-    </Window>
+    <JoinWin ref="joinWin" @join="joinConfirm"></JoinWin>
     <FullPreloader ref="loader" />
     <HelpPanel ref="help" name="GamesList" :refs="$refs" />
   </div>
@@ -67,11 +46,10 @@
 import GameTitle from '../components/nano/GameTitle.vue'
 import STable from '../components/STable.vue'
 import Paginator from '../components/Paginator.vue'
-import Window from '../components/Window.vue'
-import TextInput from '../components/TextInput.vue'
 import FullPreloader from '../components/FullPreloader.vue'
 import Form from '../components/Form.vue'
 import HelpPanel from '../components/HelpPanel.vue'
+import JoinWin from '../components/win/JoinWin.vue'
 import Service from '../common/Service.js'
 import { UsernameGenerator } from '../common/Generators.js'
 
@@ -84,11 +62,10 @@ export default {
     STable,
     Paginator,
     GameTitle,
-    Window,
-    TextInput,
     FullPreloader,
     Form,
-    HelpPanel
+    HelpPanel,
+    JoinWin
   },
   data () {
     return {
@@ -150,18 +127,10 @@ export default {
       limit: 9,
       total: 0,
       isLoading: true,
-      join: {
-        gameID: 0,
-        hasPinCode: false,
-        pinCode: undefined,
-        username: '',
-        isValid: false
-      },
       hotKeys: [
         { code: 'KeyN', method: this.goToCreate, description: this.$t('Create game') },
         { code: 'KeyC', method: this.goToCreate, description: this.$t('Create game') }
       ],
-      usernameGenerator: () => UsernameGenerator,
       offset: 0
     }
   },
@@ -176,13 +145,6 @@ export default {
   },
   beforeDestroy () {
     clearTimeout(this._refreshTimer)
-  },
-  watch: {
-    'join.gameID': function () {
-      if (this.join.unknowGameID) {
-        this.join.hasPinCode = false
-      }
-    }
   },
   methods: {
     goToGithub () {
@@ -199,7 +161,7 @@ export default {
     joinRandom () {
       this.$refs.loader.show()
       this.$store.dispatch('game/joinRandom', {
-        username: this.usernameGenerator().next().value
+        username: UsernameGenerator.next().value
       }).then(() => {
         this.$nextTick(() => {
           this.$refs.loader.hide()
@@ -210,42 +172,28 @@ export default {
         this.$toast(this.$t(err.message))
       })
     },
-    setRandom () {
-      this.$refs.usernameInput.regenerate(true)
-    },
     joinByID () {
-      this.join.gameID = undefined
-      this.join.pinCode = undefined
-      this.join.hasPinCode = false
-      this.join.isValid = false
-      this.join.unknowGameID = true
-      this.join.username = ''
-      this.$refs.confirm.show()
+      this.$refs.joinWin.show({})
     },
-    joinConfirm () {
+    joinConfirm (data) {
       this.$refs.loader.show()
-      this.$store.dispatch('game/join', this.join).then(() => {
+      this.$store.dispatch('game/join', data).then(() => {
         this.$nextTick(() => {
           this.$refs.loader.hide()
           this.$router.push({ name: 'Game' })
         })
       }).catch(err => {
         this.$refs.loader.hide()
-        if (this.join.hasPinCode === false && err.message === INVALID_PIN_MESSAGE) {
-          this.join.hasPinCode = true
-          this.$refs.confirm.show()
-          this.$nextTick(() => {
-            setTimeout(() => {
-              this.$refs.pin.focus()
-            }, 100)
+        if (data.hasPinCode === false && err.message === INVALID_PIN_MESSAGE) {
+          this.$refs.joinWin.show({
+            hasPinCode: true,
+            gameID: data.gameID,
+            username: data.username
           })
         } else {
           this.$toast(this.$t(err.message))
         }
       })
-    },
-    checkJoinForm () {
-      this.join.isValid = this.$refs.joinForm.isValid()
     },
     goToCreate () {
       this.$router.push({
@@ -272,13 +220,10 @@ export default {
       if (row.players_count === row.players_limit) {
         this.$toast(this.$t('There\'s no space in the room.'))
       } else {
-        this.join.gameID = row.id
-        this.join.pinCode = undefined
-        this.join.username = ''
-        this.join.hasPinCode = row.has_pin_code
-        this.join.isValid = false
-        this.join.unknowGameID = false
-        this.$refs.confirm.show()
+        this.$refs.joinWin.show({
+          gameID: row.id,
+          hasPinCode: row.has_pin_code
+        })
       }
     }
   }

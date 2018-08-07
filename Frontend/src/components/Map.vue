@@ -10,37 +10,14 @@
       :class="canvasClass"
       :style="bgPosStyle"
       ref="canvas"></canvas>
-    <Window type="confirm" ref="taskWindow" :title="$t('Create task')"
-      @confirm="taskConfirm" @close="taskReject" :enabled="task.isValid">
-      <Form ref="taskForm" class="withoutborder">
-        <TextInput type="number" :autoSelect="true"
-          :label="taskLabel" :force="true"
-          :min="(task.isHoldAutoTask ? 0 : 1)"
-          :max="(isAutoTask ? Number.MAX_VALUE : task.maxCount)"
-          v-model="task.count"
-          @change="checkTaskForm"></TextInput>
-        <div class="flex-horizontal">
-          <SwitchBox :label="$t('Hold') + autoTaskLabel({hold: true, dispatch: false})"
-            :title="$t('Create autotask that hold ships on the planet')"
-            v-model="task.isHoldAutoTask"
-            @change="onHold(); checkTaskForm()" />
-          <SwitchBox :label="$t('Dispatch') + autoTaskLabel({hold: false, dispatch: true})"
-            :title="$t('Create autotask that dispatch ships from the planet')"
-            v-model="task.isDispatchAutoTask"
-            @change="onDispatch(); checkTaskForm()" />
-        </div>
-      </Form>
-    </Window>
+    <TaskWin ref="taskWin" @cancel="taskReject" @confirm="taskConfirm" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import HexagonSurface from '../common/HexagonSurface'
-import Window from './Window'
-import TextInput from './TextInput'
-import Form from './Form'
-import SwitchBox from './SwitchBox'
+import TaskWin from '../components/win/TaskWin'
 
 const PARALLAX = 34 // divider
 const RESOLUTION_FACTOR = 1.5
@@ -65,7 +42,9 @@ export default {
       default: 100
     }
   },
-  components: { Window, TextInput, Form, SwitchBox },
+  components: {
+    TaskWin
+  },
   data () {
     return {
       renderWithoutDecreasing: false,
@@ -74,15 +53,7 @@ export default {
         y: 0
       },
       isBookmarkMode: false,
-      task: {
-        from: null,
-        to: null,
-        count: 0,
-        maxCount: 0,
-        isHoldAutoTask: false,
-        isDispatchAutoTask: false,
-        isValid: false
-      },
+      taskFrom: null,
       width: 2048,
       height: 1080,
       drag: false,
@@ -189,11 +160,6 @@ export default {
           description: this.$t('Default zoom')
         },
         {
-          code: 'Space',
-          method: this.autoTask,
-          modalEnabled: true
-        },
-        {
           code: 'KeyH',
           method: this.goHome,
           description: this.$t('Your best planet')
@@ -236,14 +202,6 @@ export default {
       isLocked: 'isLocked',
       fullRender: 'settings/fullRender'
     }),
-    taskLabel () {
-      let count = this.task.maxCount
-      if (this.task.isHoldAutoTask) {
-        count -= this.task.count
-      }
-      count = Math.max(count || 0, 0)
-      return `${this.$t('Ships')}: ${count}`
-    },
     bgPosStyle () {
       if (this.fullRender) {
         return {
@@ -251,9 +209,6 @@ export default {
         }
       }
       return { }
-    },
-    isAutoTask () {
-      return this.task.isHoldAutoTask || this.task.isDispatchAutoTask
     },
     mapSizeWidth () {
       return this.$store.getters['game/info'].mapWidth || 5
@@ -388,53 +343,23 @@ export default {
       this.scaleSurface(0)
       this.tick()
     },
-    autoTaskLabel ({ hold, dispatch }) {
-      if ((dispatch && this.task.isHoldAutoTask) ||
-        (hold && !this.task.isHoldAutoTask && !this.task.isDispatchAutoTask)) {
-        return this.$t('keySpace')
-      }
-      return ''
-    },
-    autoTask () {
-      if (this.task.isHoldAutoTask) {
-        this.task.isHoldAutoTask = false
-        this.task.isDispatchAutoTask = true
-      } else if (this.task.isDispatchAutoTask) {
-        this.task.isHoldAutoTask = false
-        this.task.isDispatchAutoTask = false
-      } else {
-        this.task.isHoldAutoTask = true
-      }
-    },
-    onHold () {
-      if (this.task.isDispatchAutoTask && this.task.isHoldAutoTask) {
-        this.task.isDispatchAutoTask = false
-      }
-    },
-    onDispatch () {
-      if (this.task.isDispatchAutoTask && this.task.isHoldAutoTask) {
-        this.task.isHoldAutoTask = false
-      }
-    },
-    checkTaskForm () {
-      this.$nextTick(() => {
-        this.task.isValid = this.$refs.taskForm.isValid()
-      })
-    },
-    taskConfirm () {
-      if (this.task.isValid) {
-        this.$store.dispatch('tasks/add', this.task)
-        this.taskReject()
-      }
+    taskConfirm (task) {
+      this.$store.dispatch('tasks/add', task)
+      this.taskFrom = null
     },
     taskReject () {
-      this.task.from = null
-      this.task.to = null
-      this.task.maxCount = null
-      this.task.count = null
+      this.taskFrom = null
     },
-    showShipsDialog () {
-      this.$refs.taskWindow.show()
+    showShipsDialog (taskTo) {
+      let shipsCount = this.availableShips(this.taskFrom)
+      this.$refs.taskWin.show({
+        from: this.taskFrom,
+        to: taskTo,
+        maxCount: shipsCount,
+        count: shipsCount,
+        isHoldAutoTask: shipsCount === 0,
+        isDispatchAutoTask: false
+      })
     },
     planetClicked (planet) {
       if (this.isBookmarkMode) {
@@ -444,15 +369,14 @@ export default {
       if (this.isLocked) {
         return
       }
-      if (this.task.from !== null) {
+      if (this.taskFrom !== null) {
         if (this.simplyRender) {
           this.$toast(this.$t('Zoom in for action'))
           return
         }
         this.unselectLastCell()
-        if (this.task.from !== planet.id) {
-          this.task.to = planet.id
-          this.showShipsDialog()
+        if (this.taskFrom !== planet.id) {
+          this.showShipsDialog(planet.id)
         } else {
           this.taskReject()
         }
@@ -468,11 +392,7 @@ export default {
           return
         }
         this.selectCell(planet.cellID - 1)
-        this.task.from = planet.id
-        this.task.maxCount = this.availableShips(planet.id)
-        this.task.count = this.task.maxCount
-        this.task.isHoldAutoTask = this.availableShips(planet.id) === 0
-        this.task.isDispatchAutoTask = false
+        this.taskFrom = planet.id
       }
     },
     mousewheel (event) {

@@ -1,7 +1,7 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
 import ActionCabel from '../common/ActionCabel'
-import { DEFAULT_BACKEND, API_POSTFIX, WS_POSTFIX } from '../common/constants.js'
+import { API_POSTFIX, WS_POSTFIX } from '../common/constants.js'
 /* modules */
 import events from './modules/events'
 import fleets from './modules/fleets'
@@ -18,7 +18,6 @@ import help from './modules/help'
 Vue.use(Vuex)
 
 const STORAGE_GAME_ID = 'game_id'
-const STORAGE_BACKEND = 'backend'
 const STORAGE_LOCALE = 'locale'
 
 var gID = localStorage.getItem(STORAGE_GAME_ID)
@@ -39,17 +38,10 @@ const state = {
   },
   afterReload: true,
   endTurnLock: true,
-  backendServer: localStorage.getItem(STORAGE_BACKEND) || DEFAULT_BACKEND, // @todo Move to settings
   savedLocale: localStorage.getItem(STORAGE_LOCALE)
 }
 
 const mutations = {
-  SET_BACKEND_SERVER (state, host) {
-    state.backendServer = host
-  },
-  RESET_BACKEND_SERVER (state) {
-    state.backendServer = DEFAULT_BACKEND
-  },
   SYNC_RESET (state) {
     for (let s in state.sync) {
       state.sync[s] = false
@@ -92,14 +84,6 @@ const actions = {
   saveLocale ({ commit }, locale) {
     localStorage.setItem(STORAGE_LOCALE, locale)
     commit('SAVE_LOCALE', locale)
-  },
-  resetBackendServer ({ commit }, host) {
-    localStorage.removeItem(STORAGE_BACKEND)
-    commit('RESET_BACKEND_SERVER')
-  },
-  setBackendServer ({ commit }, host) {
-    localStorage.setItem(STORAGE_BACKEND, host)
-    commit('SET_BACKEND_SERVER', host)
   },
   lock ({ commit, dispatch }) {
     commit('END_TURN_LOCK')
@@ -188,8 +172,8 @@ const actions = {
 }
 
 const getters = {
-  backendAPI: (state) => 'http://' + state.backendServer + API_POSTFIX,
-  backendWS: (state) => 'ws://' + state.backendServer + WS_POSTFIX,
+  backendAPI: (_, getters) => 'http://' + getters['settings/backendServer'] + API_POSTFIX,
+  backendWS: (_, getters) => 'ws://' + getters['settings/backendServer'] + WS_POSTFIX,
   isPlayer: (state) => !!state.gameID,
   sync: (state) => state.sync,
   isLocked: (state) => state.endTurnLock,
