@@ -35,12 +35,6 @@ export default {
       isVisible: false,
       hotKeys: [
         {
-          code: 'KeyL',
-          method: this.show,
-          description: this.$t('Show help'),
-          isKey: true
-        },
-        {
           code: 'Escape',
           isKey: true,
           method: () => {
@@ -81,6 +75,11 @@ export default {
         el.modalEnabled = true
         el.isKey = true
         return el
+      }).concat({
+        code: 'KeyL',
+        method: this.show,
+        description: this.$t('Show help'),
+        isKey: true
       })
     }
   },
