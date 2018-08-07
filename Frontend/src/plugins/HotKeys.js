@@ -17,6 +17,9 @@ const HotKeysPlugin = {
         this._hotKeysEvent = (e) => {
           let en = isEnabled
           this.hotKeys.some((key) => {
+            if (typeof key.en === 'function' && !key.en()) {
+              return false
+            }
             if (!(en || key.modalEnabled)) {
               return false
             }

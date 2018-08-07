@@ -74,12 +74,14 @@ export default {
       ].map(el => {
         el.modalEnabled = true
         el.isKey = true
+        el.en = this.enHotKeys
         return el
       }).concat({
         code: 'KeyL',
         method: this.show,
         description: this.$t('Show help'),
-        isKey: true
+        isKey: true,
+        en: () => !this.isVisible
       })
     }
   },
@@ -116,6 +118,9 @@ export default {
     }
   },
   methods: {
+    enHotKeys () {
+      return this.isVisible
+    },
     show () {
       this.currentStage = -1
       this.isVisible = true
@@ -133,7 +138,6 @@ export default {
       }
     },
     prevStage () {
-      if (!this.isVisible) return
       this.unhighlightEl()
       if (this.currentStage > 0) {
         this.currentStage -= 2
@@ -141,7 +145,6 @@ export default {
       }
     },
     done () {
-      if (!this.isVisible) return
       this.unhighlightEl()
       this.isVisible = false
       this.$store.dispatch('help/done', this.name)

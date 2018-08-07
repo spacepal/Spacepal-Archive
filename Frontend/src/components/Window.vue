@@ -59,22 +59,16 @@ export default {
         {
           code: 'Enter',
           isKey: true,
-          method: () => {
-            if (this.isVisible) {
-              this.confirm()
-            }
-          },
-          modalEnabled: true
+          method: this.confirm,
+          modalEnabled: true,
+          en: () => this.isVisible
         },
         {
           code: 'Escape',
           isKey: true,
-          method: () => {
-            if (this.isVisible) {
-              this.close()
-            }
-          },
-          modalEnabled: true
+          method: this.close,
+          modalEnabled: true,
+          en: () => this.isVisible
         }
       ]
     }
