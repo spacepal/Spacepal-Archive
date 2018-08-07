@@ -130,6 +130,58 @@ const state = {
         el: $refs => $refs.actions.$el,
         pos: 'top'
       }
+    ],
+    'Game': [
+      {
+        descr: () => {
+          return [
+            'game-help-1',
+            'game-help-2',
+            'game-help-3'
+          ]
+        },
+        el: _ => undefined
+      },
+      {
+        descr: ({ accum, pirates }) => {
+          return [
+            accum ? 'game-help-accum-4' : 'game-help-noaccum-4',
+            pirates ? 'game-help-pirates-5' : 'game-help-nopirates-5',
+            'game-help-6'
+          ]
+        },
+        el: _ => undefined
+      },
+      {
+        descr: () => {
+          return [
+            'game-help-map-1',
+            'game-help-map-2'
+          ]
+        },
+        el: $refs => $refs.map.$el
+      },
+      {
+        descr: () => {
+          return [
+            'game-help-7',
+            'game-help-8',
+            'game-help-9',
+            'game-help-10'
+          ]
+        },
+        el: _ => undefined
+      },
+      {
+        descr: () => {
+          return [
+            'game-help-11',
+            'game-help-12',
+            'game-help-13'
+          ]
+        },
+        el: _ => undefined
+      }
     ]
   }
 }
