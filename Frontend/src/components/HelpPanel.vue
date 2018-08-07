@@ -148,6 +148,7 @@ export default {
       this.$enableHotKeys()
     },
     nextStage () {
+      if (!this.isVisible) return
       this.unhighlightEl()
       this.currentStage++
       if (this.currentStage >= this.stages.length) {
