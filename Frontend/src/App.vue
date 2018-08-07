@@ -4,41 +4,7 @@
     <router-view/>
     <HotKeysWin ref="hotKeysWin" />
     <Signal ref="signal" />
-    <Window ref="settings" @confirm="setCustom" type="custom"
-      :title="$t('Settings')" class="settings">
-      <template>
-        <Form ref="settingsForm" class="withoutborder">
-          <TextInput :label="$t('Host')" v-model="host" :min="1" @change="checkForm" />
-          <TextInput type="number" :label="$t('Port')" v-model="port"
-            :min="1" :max="65535" @change="checkForm" class="port-inp" />
-          <div class="flex-horizontal">
-            <div class="button" @click="setCustom" :class="saveBtnClass">
-              {{ $t('Save settings') }}
-            </div>
-            <div class="button" @click="setDefault">
-              {{ $t('Default') }}
-            </div>
-          </div>
-        </Form>
-        <p class="flex-horizontal">
-          <SwitchBox :label="$t('Full render')" v-model="slowRender" />
-        </p>
-        <p class="flex-horizontal">
-          <SwitchBox :label="$t('Show menu')" v-model="menuIsVisible" />
-        </p>
-        <p class="flex-horizontal">
-          <a @click="setLocale('en')"
-            v-if="$i18n.locale() !== 'en'">English</a>
-          <a @click="setLocale('ru')"
-            v-if="$i18n.locale() !== 'ru'">Русский</a>
-        </p>
-      </template>
-      <template slot="footer">
-        <div class="button" @click="hideSettings">
-          {{ $t('Close') }}
-        </div>
-      </template>
-    </Window>
+    <SettingsWin ref="settingsWin" />
     <Toast ref="toast" glob />
     <Window ref="compitableWindow" :title="$t('Not supported')">
       <p class="text-fail">{{ $t('Sorry. The game is functional only in desktop browsers.') }}</p>
@@ -58,29 +24,22 @@
 
 <script>
 import Window from './components/Window'
-import Form from './components/Form'
-import TextInput from './components/TextInput'
-import SwitchBox from './components/SwitchBox'
 import HotKeysWin from './components/win/HotKeysWin'
+import SettingsWin from './components/win/SettingsWin'
 import Signal from './components/nano/Signal'
-import { DEFAULT_BACKEND } from './common/constants.js'
-import { mapActions } from 'vuex'
 let themes = ['dark', 'light']
-let backend = DEFAULT_BACKEND.split(':')
 
 export default {
   name: 'App',
   data () {
     return {
       settingsAreValid: false,
-      host: backend[0] || 'localhost',
-      port: parseInt(backend[1] || '80'),
       currentTheme: 0,
       hotKeys: [
         {
           code: 'KeyP',
           method: () => {
-            this.$refs.settings.show()
+            this.$refs.settingsWin.show()
           },
           description: this.$t('Advanced settings')
         },
@@ -106,37 +65,18 @@ export default {
           code: 'KeyK',
           method: () => {
             this.$refs.hotKeysWin.show(this.$allHotKeys())
-          },
-          description: this.$t('Show hotkeys')
+          }
+          // description: this.$t('Show hotkeys')
         }
       ]
     }
   },
   computed: {
-    saveBtnClass () {
-      return this.settingsAreValid ? '' : 'disabled'
-    },
-    slowRender: {
-      get () {
-        return this.$store.getters['settings/fullRender']
-      },
-      set (value) {
-        this.setSetting({ key: 'fullRender', value })
-      }
-    },
-    menuIsVisible: {
-      get () {
-        return this.$store.getters['settings/menuIsVisible']
-      },
-      set (value) {
-        this.setSetting({ key: 'menuIsVisible', value })
-      }
-    },
     theme () {
       return themes[this.currentTheme]
     }
   },
-  components: { Window, HotKeysWin, Signal, Form, TextInput, SwitchBox },
+  components: { Window, HotKeysWin, SettingsWin, Signal },
   mounted () {
     if (this.$store.getters['isPlayer']) {
       this.$store.dispatch('enableCable').catch(() => {
@@ -150,34 +90,6 @@ export default {
     }
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
       this.$refs.compitableWindow.show()
-    }
-  },
-  methods: {
-    ...mapActions({
-      setSetting: 'settings/set',
-      saveLocale: 'saveLocale'
-    }),
-    hideSettings () {
-      this.$refs.settings.close()
-      location.reload()
-    },
-    checkForm () {
-      this.settingsAreValid = this.$refs.settingsForm.isValid()
-    },
-    setCustom () {
-      this.$store.dispatch('setBackendServer', this.host + ':' + this.port)
-      location.reload()
-    },
-    setLocale (locale) {
-      this.$i18n.set(locale)
-      this.saveLocale(locale)
-      location.reload()
-    },
-    setDefault () {
-      this.$store.dispatch('settings/reset')
-      this.$store.dispatch('resetBackendServer')
-      this.$refs.settings.close()
-      location.reload()
     }
   }
 }
