@@ -19,7 +19,6 @@ Vue.use(Vuex)
 
 const STORAGE_GAME_ID = 'game_id'
 const STORAGE_BACKEND = 'backend'
-const STORAGE_QUICKSTART = 'quickstart'
 const STORAGE_LOCALE = 'locale'
 
 var gID = localStorage.getItem(STORAGE_GAME_ID)
@@ -41,7 +40,6 @@ const state = {
   afterReload: true,
   endTurnLock: true,
   backendServer: localStorage.getItem(STORAGE_BACKEND) || DEFAULT_BACKEND, // @todo Move to settings
-  quickStart: localStorage.getItem(STORAGE_QUICKSTART),
   savedLocale: localStorage.getItem(STORAGE_LOCALE)
 }
 
@@ -81,9 +79,6 @@ const mutations = {
   },
   END_TURN_UNLOCK (state) {
     state.endTurnLock = false
-  },
-  SET_QUICK_START (state, quickStart) {
-    state.quickStart = quickStart
   },
   SAVE_LOCALE (state, locale) {
     state.savedLocale = locale
@@ -189,17 +184,10 @@ const actions = {
     }
     dispatch('syncUnset', 'planets')
     state.cable.get(state.gameID).shuffleMap()
-  },
-  setQuickStart ({ commit }, quickStart) {
-    localStorage.setItem(STORAGE_QUICKSTART, quickStart)
-    commit('SET_QUICK_START', quickStart)
   }
 }
 
 const getters = {
-  quickStart: state => {
-    return state.quickStart !== 'false'
-  },
   backendAPI: (state) => 'http://' + state.backendServer + API_POSTFIX,
   backendWS: (state) => 'ws://' + state.backendServer + WS_POSTFIX,
   isPlayer: (state) => !!state.gameID,

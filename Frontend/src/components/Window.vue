@@ -16,7 +16,7 @@
           </div>
           <div id="control">
             <template v-if="isConfirm">
-              <div class="button" @click="close">
+              <div class="button" @click="reject">
                  {{ $t('Cancel') }}
               </div>
               <div class="button" @click="confirm" :class="confirmClass">
@@ -63,12 +63,18 @@ export default {
             if (this.isVisible) {
               this.confirm()
             }
-          }
+          },
+          modalEnabled: true
         },
         {
           code: 'Escape',
           isKey: true,
-          method: this.close
+          method: () => {
+            if (this.isVisible) {
+              this.close()
+            }
+          },
+          modalEnabled: true
         }
       ]
     }
@@ -80,17 +86,17 @@ export default {
   },
   methods: {
     show () {
-      if (!this.isVisible) {
-        this.$disableHotKeys()
-      }
       this.isVisible = true
+      this.$disableHotKeys()
     },
     close () {
-      if (this.isVisible) {
-        this.$enableHotKeys()
-        this.isVisible = false
-        this.$emit('reject')
-      }
+      this.isVisible = false
+      this.$enableHotKeys()
+      this.$emit('close')
+    },
+    reject () {
+      this.$emit('reject')
+      this.close()
     },
     confirm () {
       if (this.type === TYPE_ALERT) {

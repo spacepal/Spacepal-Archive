@@ -44,46 +44,44 @@ export default {
           code: 'Escape',
           isKey: true,
           method: () => {
+            if (!this.isVisible) return
             this.done()
             return false
           }
         },
         {
           code: 'Space',
-          isKey: true,
           method: this.nextStage
         },
         {
           code: 'ArrowDown',
-          isKey: true,
           methodDown: this.prevStage
         },
         {
           code: 'ArrowUp',
-          isKey: true,
           methodDown: this.nextStage
         },
         {
           code: 'ArrowLeft',
-          isKey: true,
           methodDown: this.prevStage
         },
         {
           code: 'ArrowRight',
-          isKey: true,
           methodDown: this.nextStage
         },
         {
           code: 'PageUp',
-          isKey: true,
           method: this.nextStage
         },
         {
           code: 'PageDown',
-          isKey: true,
           method: this.prevStage
         }
-      ]
+      ].map(el => {
+        el.modalEnabled = true
+        el.isKey = true
+        return el
+      })
     }
   },
   computed: {
@@ -123,9 +121,7 @@ export default {
       this.currentStage = -1
       this.isVisible = true
       this.nextStage()
-      if (this.isVisible) {
-        this.$disableHotKeys()
-      }
+      this.$disableHotKeys()
     },
     highlightEl () {
       if (this.el) {
@@ -138,6 +134,7 @@ export default {
       }
     },
     prevStage () {
+      if (!this.isVisible) return
       this.unhighlightEl()
       if (this.currentStage > 0) {
         this.currentStage -= 2
@@ -145,6 +142,7 @@ export default {
       }
     },
     done () {
+      if (!this.isVisible) return
       this.unhighlightEl()
       this.isVisible = false
       this.$store.dispatch('help/done', this.name)

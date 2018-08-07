@@ -11,7 +11,7 @@
       :style="bgPosStyle"
       ref="canvas"></canvas>
     <Window type="confirm" ref="taskWindow" :title="$t('Create task')"
-      @confirm="taskConfirm" @reject="taskReject" :enabled="task.isValid">
+      @confirm="taskConfirm" @close="taskReject" :enabled="task.isValid">
       <Form ref="taskForm" class="withoutborder">
         <TextInput type="number" :autoSelect="true"
           :label="taskLabel" :force="true"
@@ -186,12 +186,12 @@ export default {
           code: '0',
           isKey: true,
           method: this.zoomReset,
-          description: this.$t('Default zoom'),
-          modalLock: true
+          description: this.$t('Default zoom')
         },
         {
           code: 'Space',
-          method: this.autoTask
+          method: this.autoTask,
+          modalEnabled: true
         },
         {
           code: 'KeyH',
@@ -207,7 +207,10 @@ export default {
         {
           code: 'Escape',
           isKey: true,
-          method: this.unselectLastCell
+          method: () => {
+            this.unselectLastCell()
+            this.taskReject()
+          }
         },
         {
           code: 'KeyB',

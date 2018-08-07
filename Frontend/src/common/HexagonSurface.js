@@ -179,15 +179,16 @@ export default {
       this._switchCell(cellID, true)
     },
     unselectLastCell () {
-      if (this.selectedIndex >= 0) {
-        this._switchCell(this.selectedIndex, false)
-        this.selectedIndex = -1
-      }
+      let index = this.selectedIndex
+      this.selectedIndex = -1
+      this._switchCell(index, false)
     },
     _switchCell (cellID, selected) {
       let cell = this._all[cellID]
-      cell.isSelected = selected
-      cell.render(this.context, this.renderConfig(cell))
+      if (cell) {
+        cell.isSelected = selected
+        cell.render(this.context, this.renderConfig(cell))
+      }
     },
     resolvePlanet ({ mx, my }) {
       let cell = this._resolveCell(this.context, { mx, my })

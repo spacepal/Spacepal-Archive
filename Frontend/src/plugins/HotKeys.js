@@ -15,18 +15,19 @@ const HotKeysPlugin = {
         }
         registeredHotkeys.add(this.hotKeys)
         this._hotKeysEvent = (e) => {
+          let en = isEnabled
           this.hotKeys.some((key) => {
-            if (!isEnabled && (key.code.startsWith('Key') || key.modalLock)) {
-              return
+            if (!(en || key.modalEnabled)) {
+              return false
             }
             if (!key.ctrl === e.ctrlKey) {
-              return
+              return false
             }
             if (!key.shift === key.shiftKey) {
-              return
+              return false
             }
             if (!key.alt === key.altKey) {
-              return
+              return false
             }
             if (e.code === key.code || (e.key === key.code && key.isKey)) {
               if (e.type === 'keyup' &&
@@ -52,6 +53,8 @@ const HotKeysPlugin = {
       beforeDestroy: function () {
         registeredHotkeys.delete(this.hotKeys)
         window.removeEventListener('keyup', this._hotKeysEvent)
+        window.removeEventListener('keydown', this._hotKeysEvent)
+        window.removeEventListener('keypress', this._hotKeysEvent)
       }
     })
     let keyVal = key => {

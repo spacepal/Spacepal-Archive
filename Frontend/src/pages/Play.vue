@@ -53,18 +53,6 @@
     <EndTurnMsg @onTurnEnded="onTurnEnded"
       @onTurnAnimationEnded="onTurnAnimationEnded" /> <!-- END-TURN-MESSAGE -->
 
-    <Window ref="quickStart" type="alert" :title="$t('Quick start')">
-      <template>
-        <span class="quick-start-p">At the start of the game you have only one planet — your capital (press <span class="mdi mdi-keyboard mdi-24px splitter"></span>Home for quick goto).</span>
-        <span class="quick-start-p">Besides it on the map are located neutral planets (peaceful) and planets of your opponents.</span>
-        <span class="quick-start-p">You can attack another planet and captures it. The power of attack per ship depends on kill percentage (kill) of planet-sender.</span>
-        <span class="quick-start-p">Every turn, count of ships on the planet is increased by production value (prod).</span>
-        <span class="quick-start-p">If you conquer planets of other players — you will win.</span>
-        <span class="quick-start-p">Press <span class="mdi mdi-keyboard mdi-24px splitter"></span>K for show all hotkeys</span>
-        <span class="quick-start-btn"><SwitchBox v-model="quickStartDisabled" label="Don't show again" :title="$t('You can press KeyL for show quick start again')" /></span>
-      </template>
-    </Window>
-
     <Window ref="goToCell" type="confirm" :enabled="goToCellInpIsValid"
       :title="$t('Go to planet')" @confirm="goToCell(goToCellInp)"> <!-- GO-TO-PLANET-WINDOW -->
       <Form ref="goToCellForm" class="withoutborder">
@@ -75,6 +63,8 @@
           @change="checkGoToCellForm"></TextInput>
       </Form>
     </Window>
+
+    <HelpPanel ref="help" name="Game" :data="helpData" :refs="$refs" />
   </div>
 </template>
 
@@ -93,6 +83,7 @@ import EndTurnMsg from '../components/nano/EndTurnMsg'
 import Bookmarks from '../components/Bookmarks'
 import GamePanel from '../components/GamePanel'
 import TextInput from '../components/TextInput'
+import HelpPanel from '../components/HelpPanel'
 
 const NOTIFICATION_ICON = 'https://avatars2.githubusercontent.com/u/41302202?s=400&v=4'
 
@@ -111,7 +102,8 @@ export default {
     EndTurnMsg,
     Bookmarks,
     GamePanel,
-    TextInput
+    TextInput,
+    HelpPanel
   },
   data () {
     let hotKeys = [
@@ -133,13 +125,6 @@ export default {
           this.goToCellWindow()
         },
         modalLock: true
-      },
-      {
-        code: 'KeyL',
-        method: () => {
-          this.$refs.quickStart.show()
-        }
-        // description: this.$t('Quick start')
       },
       {
         code: 'KeyB',
@@ -215,16 +200,13 @@ export default {
       autoTasks: 'tasks/autoTasks',
       notifications: 'events/all',
       game: 'game/info',
-      quickStart: 'quickStart',
       isPlayerlost: 'isPlayerlost',
       bookmarksCount: 'bookmarks/count'
     }),
-    quickStartDisabled: {
-      get () {
-        return !this.quickStart
-      },
-      set (value) {
-        this.setQuickStart(!value)
+    helpData () {
+      return {
+        accum: this.game.accumulative || false,
+        pirates: this.game.pirates || false
       }
     }
   },
@@ -244,8 +226,7 @@ export default {
       togglePanel: 'panels/toggle',
       showPanel: 'panels/show',
       hidePanel: 'panels/hide',
-      hidePanels: 'panels/hideAll',
-      setQuickStart: 'setQuickStart'
+      hidePanels: 'panels/hideAll'
     }),
     setBookmark (planetID) {
       this.$refs.bookmarks.setBookmark(planetID)
@@ -313,9 +294,6 @@ export default {
     this._focusFunc = () => { this.winIsFocused = true }
     window.addEventListener('focus', this._focusFunc)
     window.addEventListener('blur', this._blurFunc)
-    // if (!this.quickStartDisabled) {
-    //   this.$refs.quickStart.show()
-    // }
   },
   beforeDestroy () {
     window.removeEventListener('focus', this._focusFunc)
@@ -337,18 +315,6 @@ export default {
   justify-content: center;
   align-items: center;
   margin: $margin;
-}
-
-.quick-start-btn, .quick-start-p {
-  display: inline-block;
-  margin: 8px 0;
-}
-.quick-start-p {
-  text-align: justify;
-}
-.quick-start-btn {
-  display: flex;
-  justify-content: center;
 }
 .main-panel {
   display: flex;
