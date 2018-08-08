@@ -174,7 +174,6 @@ export default {
           code: 'Escape',
           isKey: true,
           method: () => {
-            this.unselectLastCell()
             this.taskReject()
           }
         },
@@ -345,9 +344,11 @@ export default {
     },
     taskConfirm (task) {
       this.$store.dispatch('tasks/add', task)
+      this.unselectLastCell()
       this.taskFrom = null
     },
     taskReject () {
+      this.unselectLastCell()
       this.taskFrom = null
     },
     showShipsDialog (taskTo) {
@@ -374,7 +375,6 @@ export default {
           this.$toast(this.$t('Zoom in for action'))
           return
         }
-        this.unselectLastCell()
         if (this.taskFrom !== planet.id) {
           this.showShipsDialog(planet.id)
         } else {
