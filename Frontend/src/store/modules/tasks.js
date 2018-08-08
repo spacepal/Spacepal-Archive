@@ -166,7 +166,9 @@ const actions = {
       let autoTasks = state.autoTasks
       for (let id in autoTasks) {
         if (autoTasks[id].from === from) {
-          dispatch('del', id)
+          if (isHoldAutoTask || (isDispatchAutoTask && autoTasks[id].hold)) {
+            dispatch('del', id)
+          }
         }
       }
       commit('ADD_AUTO_TASK', {
