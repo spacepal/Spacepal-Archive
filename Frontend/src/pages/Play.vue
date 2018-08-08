@@ -1,6 +1,9 @@
 <template>
   <div class="game-page" ref="page">
     <Map ref="map" full @addBookmark="setBookmark" />
+    <GamePanel :group="0" panel="chat" :empty="false"> <!-- CHAT -->
+      <Chat />
+    </GamePanel>
     <GamePanel ref="gameInfo" :group="0" panel="main" :empty="true"> <!-- PLAYERS + GAME INFO -->
       <div class="main-panel">
         <Members class="withoutborder" />
@@ -84,6 +87,7 @@ import Bookmarks from '../components/Bookmarks'
 import GamePanel from '../components/GamePanel'
 import TextInput from '../components/TextInput'
 import HelpPanel from '../components/HelpPanel'
+import Chat from '../components/Chat'
 
 const NOTIFICATION_ICON = 'https://avatars2.githubusercontent.com/u/41302202?s=400&v=4'
 
@@ -103,7 +107,8 @@ export default {
     Bookmarks,
     GamePanel,
     TextInput,
-    HelpPanel
+    HelpPanel,
+    Chat
   },
   data () {
     let hotKeys = [
@@ -119,6 +124,13 @@ export default {
             this.forceAutoEndTurn ^= true
           }
         }
+      },
+      {
+        code: 'KeyC',
+        method: () => {
+          this.togglePanel({ group: 0, panel: 'chat' })
+        },
+        description: this.$t('Open chat') // @todo
       },
       {
         code: 'KeyG',

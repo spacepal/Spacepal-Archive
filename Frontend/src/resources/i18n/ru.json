@@ -216,5 +216,6 @@
   "game-help-13": "Хорошой игры!",
   "Show after turn end": "Показывать после завершения хода:",
   "animation-turn-end": "Анимацию",
-  "Info": "Информ."
+  "Info": "Информ.",
+  "send-message": "Отправить сообщение [enter]"
 }

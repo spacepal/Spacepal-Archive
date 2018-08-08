@@ -14,6 +14,7 @@ import bookmarks from './modules/bookmarks'
 import panels from './modules/panels'
 import settings from './modules/settings'
 import help from './modules/help'
+import chat from './modules/chat'
 
 Vue.use(Vuex)
 
@@ -196,7 +197,8 @@ export default new Vuex.Store({
     bookmarks,
     panels,
     settings,
-    help
+    help,
+    chat
   },
   strict: true
 })

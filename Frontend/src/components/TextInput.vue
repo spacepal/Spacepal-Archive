@@ -191,6 +191,8 @@ export default {
         if (!isNaN(parseInt(val))) {
           this.text = newValue + ''
         }
+      } else {
+        this.text = val
       }
     },
     text (newText) {

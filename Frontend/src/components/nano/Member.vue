@@ -1,7 +1,7 @@
 <template>
   <span :style="memberInfo.style">
     <span class="mdi" :class="memberInfo.icon"></span>
-    <span>{{ memberInfo.username }}</span>
+    <span class="member-username">{{ memberInfo.username }}</span>
   </span>
 </template>
 
