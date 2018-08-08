@@ -101,7 +101,8 @@ class Cell {
     stepsTo = 0,
     simply = false,
     simplyNoBorder = false,
-    withoutDecreasing = false
+    withoutDecreasing = false,
+    taskMode = false
   }) {
     let planet = this._planet(this._id)
     if (!planet && simplyNoBorder) {
@@ -161,7 +162,7 @@ class Cell {
     ctx.stroke()
 
     ctx.font = '32px Audiowide'
-    if (this._isHovered) {
+    if (this._isHovered || taskMode) {
       text = this.id + ''
     }
     ctx.fillStyle = memberColor.text

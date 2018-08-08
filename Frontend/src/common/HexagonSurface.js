@@ -47,7 +47,8 @@ export default {
       fleets: 'fleets/all',
       tasks: 'tasks/all',
       fleetsMaxShips: 'fleets/maxShipsCount',
-      fullRender: 'settings/fullRender'
+      fullRender: 'settings/fullRender',
+      panelGroups: 'panels/groups'
     }),
     simplyRender () {
       return (this.drag || this.scale < 1 / MAX_RENDER_ZOOM) && !this.fullRender
@@ -57,6 +58,17 @@ export default {
     },
     renderedCount () {
       return this._active.length
+    },
+    taskMode () {
+      if (this.panelGroups[0]) {
+        return this.panelGroups[0]['tasks'] || false
+      }
+      return false
+    }
+  },
+  watch: {
+    taskMode () {
+      this.tick()
     }
   },
   mounted () {
@@ -99,7 +111,8 @@ export default {
         stepsTo: distance,
         simply: this.simplyRender,
         simplyNoBorder: this.bigZoom,
-        withoutDecreasing: this.renderWithoutDecreasing
+        withoutDecreasing: this.renderWithoutDecreasing,
+        taskMode: this.taskMode // expand info of planets
       }
     },
     _drawArrows (arr) {
