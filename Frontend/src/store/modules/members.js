@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import Faker from 'faker'
 
 const state = {
   members: {}
@@ -36,6 +37,9 @@ const getters = {
   },
   members (state) {
     return state.members
+  },
+  randomMember (state) {
+    return Faker.random.objectElement(state.members)
   }
 }
 

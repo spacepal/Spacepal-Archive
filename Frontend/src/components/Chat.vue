@@ -3,7 +3,7 @@
     <div class="block">
       <span v-if="messages.length === 0" class="empty text-additional">Empty</span>
       <div v-else class="body" ref="chatBody">
-        <template v-for="(msg, i) in messages">
+        <template v-for="(msg, i) in adoptedMessages">
           <Member
             v-if="i === 0 || messages[i - 1].playerID !== msg.playerID"
             :id="msg.playerID" :key="i + '_1'" />
@@ -84,6 +84,7 @@ export default {
   computed: {
     ...mapGetters({
       members: 'members',
+      randomMember: 'randomMember',
       member: 'member',
       messages: 'chat/messages',
       panelGroups: 'panels/groups',
@@ -108,21 +109,21 @@ export default {
     },
     sendBtnClass () {
       return this.msg === '' ? 'disabled' : ''
+    },
+    adoptedMessages () {
+      return this.messages.map(msg => {
+        let m = this.member(msg.playerID)
+        if (m && m.isArtificialIntelligence) {
+          let username = '%username%'
+          let rndM = this.randomMember()
+          if (rndM) {
+            username = rndM.username
+          }
+          msg.text = this.$t(msg.text, { username })
+        }
+        return msg
+      })
     }
-    // adoptedMessages () {
-    //   return this.messages.map(msg => {
-    //     let color = Colors['neutral'].bg
-    //     let m = this.member(msg.playerID)
-    //     if (m) {
-    //       let tmp = Colors[m.color]
-    //       if (tmp !== undefined) {
-    //         color = tmp.bg
-    //       }
-    //     }
-    //     msg.style = { color }
-    //     return msg
-    //   })
-    // }
   },
   methods: {
     ...mapActions({

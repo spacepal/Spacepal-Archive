@@ -1,6 +1,7 @@
 /* pending fleets */
 
 import Vue from 'vue'
+import Faker from 'faker'
 import { calcDistance } from '../../common/DistanceHelper.js'
 import debug from '../../common/Debug.js'
 
@@ -62,16 +63,6 @@ const mutations = {
   }
 }
 
-function shuffle (arr) {
-  for (let i = 0; i < arr.length; i++) {
-    let j = Math.floor(Math.random() * (i + 1))
-    let tmp = arr[i]
-    arr[i] = arr[j]
-    arr[j] = tmp
-  }
-  return arr
-}
-
 const actions = {
   setSaved ({ dispatch, rootGetters }) {
     let savedTasksTurn = parseInt(sessionStorage.getItem(STORAGE_TASKS_TURN)) || -1
@@ -94,7 +85,7 @@ const actions = {
       debug.warn('tasks.doAutoTasks: isLocked')
       return
     }
-    shuffle(Object.keys(state.autoTasks)).forEach(taskID => {
+    Faker.helpers.shuffle(Object.keys(state.autoTasks)).forEach(taskID => {
       dispatch('doAutoTask', taskID)
     })
     dispatch('syncSet', 'autotasks', { root: true })
