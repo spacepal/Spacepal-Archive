@@ -41,7 +41,7 @@
 }
 
 .help-panel-el-highlighted {
-  z-index: 1000000001;
+  z-index: 1000000001 !important;
   border-radius: 10px;
   position: relative;
 }

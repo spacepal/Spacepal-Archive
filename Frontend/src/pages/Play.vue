@@ -1,7 +1,7 @@
 <template>
   <div class="game-page" ref="page">
     <Map ref="map" full @addBookmark="setBookmark" />
-    <GamePanel :group="0" panel="main" :empty="true"> <!-- PLAYERS + GAME INFO -->
+    <GamePanel ref="gameInfo" :group="0" panel="main" :empty="true"> <!-- PLAYERS + GAME INFO -->
       <div class="main-panel">
         <Members class="withoutborder" />
         <GameInfo class="withoutborder" />
@@ -9,7 +9,7 @@
     </GamePanel>
     <GamePanel :group="0" panel="tasks" :title="$t('Tasks')"
       :empty="Object.values(tasks).length == 0"> <!-- TASKS -->
-      <Fleets
+      <Fleets ref="tasks"
           :canDelete="true"
           :syncs="['planets', 'profile']"
           :fleets="tasks"
@@ -116,15 +116,13 @@ export default {
             this.endTurn()
           }
           this.forceAutoEndTurn ^= true
-        },
-        modalLock: true
+        }
       },
       {
         code: 'KeyG',
         method: () => {
           this.goToCellWindow()
-        },
-        modalLock: true
+        }
       },
       {
         code: 'KeyB',

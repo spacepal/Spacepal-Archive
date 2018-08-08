@@ -28,8 +28,17 @@ const state = {
       {
         descr: () => [
           'Create your first game for familiarity with SpacePal.',
-          'For this click New button or Dice for the game with random parameters'],
-        el: ($refs) => $refs.buttonsCreation
+          'For this press KeyN'],
+        el: ($refs) => $refs.buttonsCreation,
+        hotKeys: ($self) => [
+          {
+            code: 'KeyN',
+            methodDown: () => {
+              $self.done()
+            },
+            modalEnabled: true
+          }
+        ]
       }
     ],
     'CreateGame': [
@@ -89,7 +98,8 @@ const state = {
             'room-map-help-3'
           ]
         },
-        el: $refs => $refs.map.$el
+        el: $refs => $refs.map.$el,
+        pos: 'top'
       },
       {
         descr: () => {
@@ -100,7 +110,8 @@ const state = {
             'room-planet-help-4'
           ]
         },
-        el: $refs => $refs.map.$el
+        el: $refs => $refs.map.$el,
+        pos: 'bottom'
       },
       {
         descr: ({ isCreator }) => {
@@ -150,7 +161,22 @@ const state = {
             'game-help-6'
           ]
         },
-        el: _ => undefined
+        el: _ => undefined,
+        pos: 'center',
+        hotKeys: ($self) => [
+          {
+            code: 'KeyQ',
+            method: () => {
+              $self.$store.dispatch('panels/hide', { group: 0, panel: 'main' })
+              $self.visible()
+            },
+            methodDown: () => {
+              $self.$store.dispatch('panels/show', { group: 0, panel: 'main' })
+              $self.invisible()
+            },
+            modalEnabled: true
+          }
+        ]
       },
       {
         descr: () => {
@@ -159,7 +185,8 @@ const state = {
             'game-help-map-2'
           ]
         },
-        el: $refs => $refs.map.$el
+        el: $refs => $refs.map.$el,
+        pos: 'top'
       },
       {
         descr: () => {
@@ -170,7 +197,28 @@ const state = {
             'game-help-10'
           ]
         },
-        el: _ => undefined
+        el: _ => undefined,
+        hotKeys: ($self) => [
+          {
+            code: 'KeyT',
+            method: () => {
+              $self.$store.dispatch('panels/hide', { group: 0, panel: 'tasks' })
+              $self.visible()
+            },
+            methodDown: () => {
+              $self.$store.dispatch('panels/show', { group: 0, panel: 'tasks' })
+              $self.invisible()
+            },
+            modalEnabled: true
+          },
+          {
+            code: 'Home',
+            isKey: true,
+            method: () => $self.visible(),
+            methodDown: () => $self.invisible(),
+            modalEnabled: true
+          }
+        ]
       },
       {
         descr: () => {
@@ -180,7 +228,16 @@ const state = {
             'game-help-13'
           ]
         },
-        el: _ => undefined
+        el: _ => undefined,
+        hotKeys: ($self) => [
+          {
+            code: 'KeyK',
+            methodDown: () => {
+              $self.done()
+            },
+            modalEnabled: true
+          }
+        ]
       }
     ]
   }

@@ -1,6 +1,6 @@
 <template>
-  <div v-show="isVisible" @click.self="nextStage">
-    <div class="help-panel-bg"></div>
+  <div v-show="isVisible">
+    <div class="help-panel-bg" @click.self="nextStage"></div>
     <div class="help-panel" v-if="isVisible" @click="nextStage" :class="pos">
       <div class="description">
         <p class="descr-line" v-for="d in descr" :key="d">{{ $t(d) }}</p>
@@ -103,6 +103,11 @@ export default {
     },
     pos () {
       return this.stage.pos || 'center'
+    },
+    stageHotKeys () {
+      if (typeof this.stage.hotKeys === 'function') {
+        return this.stage.hotKeys(this)
+      }
     }
   },
   watch: {
@@ -118,6 +123,12 @@ export default {
     }
   },
   methods: {
+    invisible () {
+      this.isVisible = false
+    },
+    visible () {
+      this.isVisible = true
+    },
     enHotKeys () {
       return this.isVisible
     },
@@ -131,10 +142,16 @@ export default {
       if (this.el) {
         this.el.classList.add(hightlightClass)
       }
+      if (this.stageHotKeys) {
+        this.$registerHotKeys(this.stageHotKeys)
+      }
     },
     unhighlightEl () {
       if (this.el) {
         this.el.classList.remove(hightlightClass)
+      }
+      if (this.stageHotKeys) {
+        this.$unregisterHotKeys(this.stageHotKeys)
       }
     },
     prevStage () {

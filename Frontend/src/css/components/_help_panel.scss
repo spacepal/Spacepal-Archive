@@ -37,7 +37,11 @@
   margin-top: -20px;
   align-items: flex-end;
 }
+.help-panel * {
+  pointer-events: all;
+}
 .help-panel {
+  pointer-events: none;
   user-select: none;
   position: fixed;
   width: 100%;
