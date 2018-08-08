@@ -62,6 +62,14 @@ const mutations = {
   }
 }
 
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 const actions = {
   setSaved ({ dispatch, rootGetters }) {
     let savedTasksTurn = parseInt(sessionStorage.getItem(STORAGE_TASKS_TURN)) || -1
@@ -84,9 +92,9 @@ const actions = {
       debug.warn('tasks.doAutoTasks: isLocked')
       return
     }
-    for (let taskID in state.autoTasks) {
+    shuffle(Object.keys(state.autoTasks)).forEach(taskID => {
       dispatch('doAutoTask', taskID)
-    }
+    })
     dispatch('syncSet', 'autotasks', { root: true })
   },
   doAutoTask ({ state, rootGetters, dispatch, getters }, taskID) {
