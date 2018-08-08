@@ -62,12 +62,14 @@ const mutations = {
   }
 }
 
-function shuffle(a) {
-  for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
+function shuffle (arr) {
+  for (let i = 0; i < arr.length; i++) {
+    let j = Math.floor(Math.random() * (i + 1))
+    let tmp = arr[i]
+    arr[i] = arr[j]
+    arr[j] = tmp
   }
-  return a;
+  return arr
 }
 
 const actions = {
