@@ -48,6 +48,6 @@ func (h *DoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	h.handler.Handle(in)
-	log.Print(in)
+	// log.Print(in)
 	w.Write([]byte("hello world"))
 }

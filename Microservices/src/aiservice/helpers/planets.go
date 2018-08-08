@@ -2,7 +2,6 @@ package helpers
 
 import (
 	"aiservice/model/imodel"
-	"log"
 )
 
 // Planets stores player & opponents planets
@@ -58,7 +57,7 @@ func (p Planets) SelfGroups(radius int) map[int][]imodel.PlanetGetter {
 			zones[zoneID] = append(zones[zoneID], union)
 		}
 	}
-	log.Print("Zones: ", len(zones), " R: ", radius)
+	// log.Print("Zones: ", len(zones), " R: ", radius)
 	return zones
 }
 

@@ -47,10 +47,11 @@ func (h TurnHandler) process(in imodel.InGetter) {
 		err := h.asyncResponse(in.CallbackURL(), out)
 		if err != nil {
 			log.Error("ai/handler.go (async response error): ", err)
-		} else {
-			log.Info("ai/handler.go tasks are successfully sent")
-			log.Info(out)
 		}
+		// } else {
+		// 	log.Info("ai/handler.go tasks are successfully sent")
+		// 	log.Info(out)
+		// }
 	}()
 }
 
