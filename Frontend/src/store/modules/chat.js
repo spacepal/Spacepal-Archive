@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Faker from 'faker'
 
-let members = [193, 194, 194, 194, 195]
+let members = [198, 199]
 let messages = []
 for (let i = 0; i < 100; i++) {
   messages.push({

@@ -217,5 +217,6 @@
   "Show after turn end": "Show after turn end",
   "animation-turn-end": "Animation",
   "Info": "Info",
-  "send-message": "Send message [enter]"
+  "send-message": "Send message [enter]",
+  "Open chat": "Open chat"
 }

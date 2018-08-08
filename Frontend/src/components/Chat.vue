@@ -1,10 +1,10 @@
 <template>
   <div class="chat">
-    <div class="members">
+    <!-- <div class="members">
       <p v-for="m in members" :key="m.id">
         <Member :id="m.id" />
       </p>
-    </div>
+    </div> -->
     <div class="block">
       <div class="body">
         <template v-for="(msg, i) in messages">
@@ -16,7 +16,8 @@
         </template>
       </div>
       <div class="input flex-horizontal">
-        <TextInput v-model="msg" force />
+        <span class="mdi mdi-account-multiple mdi-24px">All</span>
+        <TextInput ref="msgInp" v-model="msg" force />
         <span @click="send"
           :class="sendBtnClass"
           class="button mdi mdi-send mdi-16px"
@@ -36,7 +37,29 @@ export default {
   name: 'Chat',
   data () {
     return {
-      msg: ''
+      msg: '',
+      hotKeys: [
+        {
+          code: 'Enter',
+          isKey: true,
+          method: this.send,
+          modalEnabled: true,
+          en: () => this.isVisible
+        },
+        {
+          code: 'Escape',
+          isKey: true,
+          method: this.close,
+          modalEnabled: true,
+          en: () => this.isVisible
+        },
+        {
+          code: 'KeyC',
+          method: this.close,
+          modalEnabled: true,
+          en: () => this.isVisible
+        }
+      ]
     }
   },
   components: {
@@ -47,8 +70,15 @@ export default {
     ...mapGetters({
       members: 'members',
       member: 'member',
-      messages: 'chat/messages'
+      messages: 'chat/messages',
+      panelGroups: 'panels/groups'
     }),
+    isVisible () {
+      if (this.panelGroups[0]) {
+        return this.panelGroups[0]['chat'] || false
+      }
+      return false
+    },
     sendBtnClass () {
       return this.msg === '' ? 'disabled' : ''
     }
@@ -69,7 +99,9 @@ export default {
   },
   methods: {
     ...mapActions({
-      sendMessage: 'chat/send'
+      sendMessage: 'chat/send',
+      setRead: 'chat/setRead',
+      hidePanel: 'panels/hide',
     }),
     send () {
       if (this.msg === '') {
@@ -77,12 +109,31 @@ export default {
       }
       this.sendMessage(this.msg)
       this.msg = ''
+      this.$refs.msgInp.focus()
+    },
+    close () {
+      this.hidePanel({
+        group: 0,
+        panel: 'chat'
+      })
+    }
+  },
+  watch: {
+    isVisible (val) {
+      if (val) {
+        this.$refs.msgInp.focus()
+        this.$disableHotKeys()
+        this.setRead()
+      } else {
+        this.$enableHotKeys()
+        this.setRead()
+      }
     }
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .chat {
   display: flex;
   .body {
@@ -99,15 +150,5 @@ export default {
   .input {
     align-items: center;
   }
-}
-.members > * {
-  padding: 0;
-  margin: 0;
-}
-.members .member-username {
-  display: none;
-}
-.members :hover .member-username {
-  display: inline-block;
 }
 </style>
