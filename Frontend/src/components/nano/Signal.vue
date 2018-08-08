@@ -1,5 +1,5 @@
 <template>
-  <div class="info-panel-bg signal" v-show="isVisible" :class="signalClass">
+  <div @click="hide" class="info-panel-bg signal" v-show="isVisible" :class="signalClass">
     <GameTitle mode="small no-signal-item"></GameTitle>
     <Form class="info-panel-body">
       <span class="signal-icon mdi mdi-16px text-highlighted" :class="icon"></span>
@@ -83,7 +83,9 @@ export default {
       this.isShowed = true
     },
     hide () {
-      this.isShowed = false
+      if (this.signalStrength !== 0) {
+        this.isShowed = false
+      }
     },
     checkConnection () {
       let startTime = (new Date()).getTime()
