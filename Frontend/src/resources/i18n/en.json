@@ -213,5 +213,8 @@
   "game-help-10": "To control the ships before their departure, press the key T.",
   "game-help-11": "When you are ready to end the turn, press key space.",
   "game-help-12": "To view the hotkeys, press key K.",
-  "game-help-13": "Have a good game!"
+  "game-help-13": "Have a good game!",
+  "Show after turn end": "Show after turn end",
+  "animation-turn-end": "Animation",
+  "Info": "Info"
 }

@@ -201,7 +201,9 @@ export default {
       notifications: 'events/all',
       game: 'game/info',
       isPlayerlost: 'isPlayerlost',
-      bookmarksCount: 'bookmarks/count'
+      bookmarksCount: 'bookmarks/count',
+      autoEvent: 'settings/autoEvent',
+      autoGameInfo: 'settings/autoGameInfo'
     }),
     helpData () {
       return {
@@ -257,7 +259,7 @@ export default {
       })
     },
     onTurnAnimationEnded () {
-      if (!this.isPlayerlost) {
+      if (!this.isPlayerlost && this.autoEvent) {
         this.showPanel({
           group: 0,
           panel: 'notifications'
@@ -276,7 +278,9 @@ export default {
       } else if (this.$store.getters.isLocked) {
         this.$toast(this.$t('The turn is already ended'))
       } else {
-        this.showPanel({ group: 0, panel: 'main' })
+        if (this.autoGameInfo) {
+          this.showPanel({ group: 0, panel: 'main' })
+        }
         this.$store.dispatch('game/endTurn')
       }
     },

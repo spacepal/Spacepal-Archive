@@ -6,7 +6,10 @@ const STORAGE_PREFIX = 'pref_'
 const DEFAULT_VALUES = { // only Boolean, Number, String !
   menuIsVisible: true,
   fullRender: false,
-  backendServer: DEFAULT_BACKEND
+  backendServer: DEFAULT_BACKEND,
+  autoEvent: true,
+  autoGameInfo: true,
+  turnAnim: true
 }
 
 function getAdoptedKey (key) {
@@ -65,6 +68,15 @@ const getters = {
   },
   backendServer (state) {
     return state.settings.backendServer
+  },
+  autoEvent (state) {
+    return state.settings.autoEvent
+  },
+  autoGameInfo (state) {
+    return state.settings.autoGameInfo
+  },
+  turnAnim (state) {
+    return state.settings.turnAnim
   }
 }
 

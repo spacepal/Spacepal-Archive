@@ -19,6 +19,15 @@
         <p class="flex-horizontal">
           <SwitchBox :label="$t('Show menu')" v-model="menuIsVisible" />
         </p>
+        <p class="flex-horizontal text-additional">
+          {{ $t('Show after turn end') }}:</p>
+        <p class="flex-horizontal">
+          <SwitchBox :label="$t('animation-turn-end')" v-model="turnAnim" />
+        </p>
+        <p class="flex-horizontal">
+          <SwitchBox :label="$t('Info')" v-model="autoGameInfo" />
+          <SwitchBox :label="$t('Events')" v-model="autoEvent" />
+        </p>
         <p class="flex-horizontal">
           <a @click="setLocale('en')"
             v-if="$i18n.locale() !== 'en'">English</a>
@@ -58,6 +67,30 @@ export default {
     }
   },
   computed: {
+    autoEvent: {
+      get () {
+        return this.$store.getters['settings/autoEvent']
+      },
+      set (value) {
+        this.setSetting({ key: 'autoEvent', value })
+      }
+    },
+    autoGameInfo: {
+      get () {
+        return this.$store.getters['settings/autoGameInfo']
+      },
+      set (value) {
+        this.setSetting({ key: 'autoGameInfo', value })
+      }
+    },
+    turnAnim: {
+      get () {
+        return this.$store.getters['settings/turnAnim']
+      },
+      set (value) {
+        this.setSetting({ key: 'turnAnim', value })
+      }
+    },
     saveBtnClass () {
       return this.settingsAreValid ? '' : 'disabled'
     },

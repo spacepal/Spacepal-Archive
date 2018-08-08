@@ -19,7 +19,8 @@ export default {
     ...mapGetters({
       game: 'game/info',
       sync: 'sync',
-      isPlayerlost: 'isPlayerlost'
+      isPlayerlost: 'isPlayerlost',
+      turnAnim: 'settings/turnAnim'
     }),
     turn () {
       let t = this.game.turnNumber
@@ -37,12 +38,14 @@ export default {
       }
       this.$store.dispatch('syncUnset', 'endTurn')
       clearTimeout(this._timer)
-      this._timer = setTimeout(() => {
-        this.isShowed = false
-        this.$emit('onTurnAnimationEnded')
-      }, 1000)
-      if (!this.isPlayerlost) {
+      if (!this.isPlayerlost && this.turnAnim) {
         this.isShowed = true
+        this._timer = setTimeout(() => {
+          this.isShowed = false
+          this.$emit('onTurnAnimationEnded')
+        }, 1000)
+      } else {
+        this.$emit('onTurnAnimationEnded')
       }
       this.$emit('onTurnEnded')
     })
