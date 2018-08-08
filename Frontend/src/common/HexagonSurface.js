@@ -61,7 +61,9 @@ export default {
     },
     taskMode () {
       if (this.panelGroups[0]) {
-        return this.panelGroups[0]['tasks'] || false
+        return this.panelGroups[0]['tasks'] ||
+          this.panelGroups[0]['autoTasks'] ||
+          this.panelGroups[0]['fleets'] || false
       }
       return false
     }
