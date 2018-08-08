@@ -1,7 +1,7 @@
 <template>
   <div v-show="isVisible">
     <div class="help-panel-bg" @click.self="nextStage"></div>
-    <div class="help-panel" v-if="isVisible" @click="nextStage" :class="pos">
+    <div class="help-panel" v-if="isVisible" @click="nextStage" :class="cls">
       <div class="description">
         <p class="descr-line" v-for="d in descr" :key="d">{{ $t(d) }}</p>
         <p class="text-additional">
@@ -101,8 +101,11 @@ export default {
     el () {
       return this.stage.el(this.refs)
     },
-    pos () {
-      return this.stage.pos || 'center'
+    cls () {
+      return [
+        this.stage.pos || 'center',
+        this.stage.events !== false ? 'events' : ''
+      ].join(' ')
     },
     stageHotKeys () {
       if (typeof this.stage.hotKeys === 'function') {

@@ -23,7 +23,8 @@ const state = {
           'You can join one, but rush to nothing...'
         ],
         el: ($refs) => $refs.gamesList.$el,
-        pos: 'top'
+        pos: 'top',
+        events: false
       },
       {
         descr: () => [

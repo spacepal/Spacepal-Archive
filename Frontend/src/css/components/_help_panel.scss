@@ -38,10 +38,12 @@
   align-items: flex-end;
 }
 .help-panel * {
-  pointer-events: all;
+  pointer-events: auto;
+}
+.help-panel.events {
+  pointer-events: none;
 }
 .help-panel {
-  pointer-events: none;
   user-select: none;
   position: fixed;
   width: 100%;
