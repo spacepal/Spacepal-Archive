@@ -19,6 +19,9 @@
         <p class="flex-horizontal">
           <SwitchBox :label="$t('Show menu')" v-model="menuIsVisible" />
         </p>
+        <p class="flex-horizontal">
+          <SwitchBox :label="$t('Mute chat')" v-model="muteChat" />
+        </p>
         <p class="flex-horizontal text-additional">
           {{ $t('Show after turn end') }}:</p>
         <p class="flex-horizontal">
@@ -67,6 +70,14 @@ export default {
     }
   },
   computed: {
+    muteChat: {
+      get () {
+        return this.$store.getters['settings/muteChat']
+      },
+      set (value) {
+        this.setSetting({ key: 'muteChat', value })
+      }
+    },
     autoEvent: {
       get () {
         return this.$store.getters['settings/autoEvent']

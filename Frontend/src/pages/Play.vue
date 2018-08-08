@@ -134,7 +134,7 @@ export default {
         method: () => {
           this.togglePanel({ group: 0, panel: 'chat' })
         },
-        description: this.$t('Open chat') // @todo
+        description: this.$t('Open chat')
       },
       {
         code: 'KeyG',

@@ -9,7 +9,8 @@ const DEFAULT_VALUES = { // only Boolean, Number, String !
   backendServer: DEFAULT_BACKEND,
   autoEvent: true,
   autoGameInfo: true,
-  turnAnim: true
+  turnAnim: true,
+  muteChat: false
 }
 
 function getAdoptedKey (key) {
@@ -77,6 +78,9 @@ const getters = {
   },
   turnAnim (state) {
     return state.settings.turnAnim
+  },
+  muteChat (state) {
+    return state.settings.muteChat
   }
 }
 

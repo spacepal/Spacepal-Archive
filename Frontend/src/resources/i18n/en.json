@@ -218,5 +218,6 @@
   "animation-turn-end": "Animation",
   "Info": "Info",
   "send-message": "Send message [Enter]",
-  "Open chat": "Open chat [C]"
+  "Open chat": "Open chat [C]",
+  "Mute chat": "Mute chat"
 }

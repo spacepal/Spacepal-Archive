@@ -10,7 +10,8 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'MessageNotify',
   computed: {
-    ...mapGetters({ // @todo settings mute
+    ...mapGetters({
+      muted: 'settings/muteChat',
       unread: 'chat/unread',
       panelGroups: 'panels/groups'
     }),
@@ -21,7 +22,7 @@ export default {
       return false
     },
     isVisible () {
-      return this.unread && !this.chatIsOpened
+      return this.unread && !this.chatIsOpened && !this.muted
     }
   },
   methods: {
