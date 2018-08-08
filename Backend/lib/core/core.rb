@@ -52,7 +52,9 @@ class Core
     unless player.end_turn?
       game = player.game
       self.player_ends_turn fleets
+      p "fkmjifjlfkjsnoijdkfnlsrjtiu"
       if self.everybody_ends_turn?
+        p "vspoienvoekmvs;eoivnspioer"
         self.game_end_turn
       else 
         self.broadcast_on_player_ends_turn
@@ -85,16 +87,20 @@ class Core
   end
 
   def send_asked_data
-    self.broadcast_the_rest_of_data
+    if Game[@game_id].room?
+      self.broadcast_the_rest_of_data_in_room
+    else
+      self.broadcast_the_rest_of_data_on_play
+    end
   end
 
   def check_game_on_leaving
     game = Game[@game_id]
-    self.execute_game
+    self.act_on_leaving
     if game.over?
       self.broadcast_on_end_game
     else
-      self.broadcast_on_everybody_ends_turn
+      #self.broadcast_on_everybody_ends_turn
     end
   end
 

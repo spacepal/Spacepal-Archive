@@ -325,7 +325,11 @@ class Game < Ohm::Model
   end
 
   def not_loosing_players_count
-    (self.players.map { |player| player unless player.game_over? }).compact.count
+    self.not_loosing_players.count
+  end
+
+  def not_loose_not_bot_players_count
+    (self.players.map { |player| player unless player.game_over? or player.ai? }).compact.count
   end
 
   def everybody_ends_turn?

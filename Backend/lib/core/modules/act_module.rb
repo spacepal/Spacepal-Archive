@@ -25,6 +25,14 @@ module Actable
     Game[@game_id].everybody_ends_turn?
   end
 
+  def act_on_leaving
+    game = Game[@game_id]
+    self.execute_game
+    if game.not_loose_not_bot_players_count == 0 or game.not_loosing_players_count < 2
+      game.over
+    end
+  end
+
 private
 
   def save_fleets array_fleets_hash

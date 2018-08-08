@@ -37,7 +37,7 @@ private
       "target" => planet_id,
       "player_id" => player_id
     }
-    @notifications[player_id] << nots if @notifications
+    @notifications[player_id] << nots if @notifications and @notifications[player_id]
   end
 
   def pirates_fleet player_id, fleet_data
@@ -46,7 +46,7 @@ private
       "fleet" => fleet_data,
       "member" => player_id
     }
-    @notifications[player_id] << nots if @notifications
+    @notifications[player_id] << nots if @notifications and @notifications[player_id]
   end
 
   def fleet_land player_id, fleet_data
@@ -55,7 +55,7 @@ private
       "fleet" => fleet_data,
       "member" => player_id
     }
-    @notifications[player_id] << nots if @notifications
+    @notifications[player_id] << nots if @notifications and @notifications[player_id]
   end
 
   def fleet_conquer player_id1, planet_id, player_id2
@@ -64,14 +64,14 @@ private
       "target" => planet_id,
       "member" => player_id2
     }
-    @notifications[player_id1] << nots if @notifications
+    @notifications[player_id1] << nots if @notifications and @notifications[player_id1]
     unless player_id2.to_i == -1
       nots = {
         "type" => "PLANET_LOST",
         "target" => planet_id,
         "member" => player_id1
       }
-      @notifications[player_id2] << nots if @notifications
+      @notifications[player_id2] << nots if @notifications and @notifications[player_id2]
     end
   end
 
@@ -82,14 +82,14 @@ private
       "target" => planet_id,
       "member" => player_id2
     }
-    @notifications[player_id1] << nots
+    @notifications[player_id1] << nots if @notifications and @notifications[player_id1]
     unless player_id2.to_i == -1
       nots = {
         "type" => "PLANET_SAVED",
         "target" => planet_id,
         "member" => player_id1
       }
-      @notifications[player_id2] << nots if @notifications
+      @notifications[player_id2] << nots if @notifications and @notifications[player_id2]
     end
   end
 
@@ -101,7 +101,7 @@ private
     }
     Game[@game_id].players.each do |player|
       unless player.id == player_id
-        @notifications[player.id] << nots if @notifications
+        @notifications[player.id] << nots if @notifications and @notifications[player.id]
       end 
     end
   end

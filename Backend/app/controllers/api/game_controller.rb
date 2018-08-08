@@ -70,6 +70,7 @@ class Api::GameController < ApplicationController
   end
 
   def leave
+    "leave".color(:blue).bg(:white).out
     game_id = cookies.encrypted[:game_id]
     player_id = cookies.encrypted[:player_id]
     cookies.delete :game_id
@@ -80,9 +81,9 @@ class Api::GameController < ApplicationController
       core = Core.new game_id, player_id
       if game&.playing?
         core.end_turn([])
-        core.check_game_on_leaving
+        #core.check_game_on_leaving
       end
-      if game
+      if game and game&.room?
         core.broadcast_player game.get_creator.id
         core.broadcast_players
         core.broadcast_planets

@@ -33,9 +33,22 @@ module Broadcastable
     self.broadcast_end_turn
   end
 
-  def broadcast_the_rest_of_data
-    "broadcast the rest of data".bg(:black).color(:blue).out
-    self.broadcast_all_data_to_player
+  def broadcast_the_rest_of_data_on_play
+    "broadcast all data to player".bg(:black).color(:blue).out
+    self.broadcast_game_to_player 
+    self.broadcast_players_to_player 
+    self.broadcast_planets_to_player 
+    self.broadcast_player
+    self.broadcast_fleets
+    self.broadcast_notifications
+  end
+
+  def broadcast_the_rest_of_data_in_room 
+    "broadcast all data to player".bg(:black).color(:blue).out
+    self.broadcast_game_to_player 
+    self.broadcast_players
+    self.broadcast_planets_to_player 
+    self.broadcast_player
   end
 
   def broadcast_on_end_game
@@ -49,16 +62,6 @@ module Broadcastable
     self.broadcast_game
     self.broadcast_players
     self.broadcast_planets
-  end
-
-  def broadcast_all_data_to_player 
-    "broadcast all data to player".bg(:black).color(:blue).out
-    self.broadcast_game_to_player 
-    self.broadcast_players_to_player 
-    self.broadcast_planets_to_player 
-    self.broadcast_player
-    self.broadcast_fleets
-    self.broadcast_notifications
   end
 
   def broadcast_private_data
