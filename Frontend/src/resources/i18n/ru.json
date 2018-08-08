@@ -218,6 +218,7 @@
   "animation-turn-end": "Анимацию",
   "Info": "Информ.",
   "send-message": "Отправить сообщение [Enter]",
+  "Chat": "Чат",
   "Open chat": "Открыть чат [C]",
   "Mute chat": "Приглушить чат"
 }

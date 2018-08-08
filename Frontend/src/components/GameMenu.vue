@@ -41,6 +41,10 @@
       <a @click="showPanel('bookmarks')">{{ $t('Bookmarks') }}</a>
       <span>[B]</span>
 
+      <span class="mdi mdi-comment-multiple-outline"></span>
+      <a @click="showPanel('chat')">{{ $t('Chat') }}</a>
+      <span>[C]</span>
+
       <span class="mdi mdi-google-maps"></span>
       <a @click="goToPlanet">{{ $t('Go to planet') }}</a>
       <span>[G]</span>
