@@ -1,12 +1,8 @@
 <template>
   <div class="chat">
-    <!-- <div class="members">
-      <p v-for="m in members" :key="m.id">
-        <Member :id="m.id" />
-      </p>
-    </div> -->
     <div class="block">
-      <div class="body">
+      <span v-if="messages.length === 0" class="empty text-additional">Empty</span>
+      <div v-else class="body" ref="chatBody">
         <template v-for="(msg, i) in messages">
           <Member
             v-if="i === 0 || messages[i - 1].playerID !== msg.playerID"
@@ -14,9 +10,27 @@
           <span v-else :key="i + '_1'"></span>
           <span :style="msg.style" :key="i + '_2'">{{ msg.text }}</span>
         </template>
+        <span ref="chatBottom" class="chat-bottom"></span>
       </div>
       <div class="input flex-horizontal">
-        <span class="mdi mdi-account-multiple mdi-24px">All</span>
+        <div class="recepient">
+          <span class="mdi mdi-account-multiple mdi-16px current" v-if="recepient === -1">
+            All
+          </span>
+          <span class="current" v-else>
+            <Member :id="recepient" />
+          </span>
+          <div class="popup light-border">
+            <p v-for="r in recepients" :key="r.id">
+              <a @click="setRecepient(r.id)">
+                <span class="mdi mdi-account-multiple mdi-16px current" v-if="r.id === -1">
+                  All
+                </span>
+                <Member v-else :id="r.id" />
+              </a>
+            </p>
+          </div>
+        </div>
         <TextInput ref="msgInp" v-model="msg" force />
         <span @click="send"
           :class="sendBtnClass"
@@ -38,6 +52,7 @@ export default {
   data () {
     return {
       msg: '',
+      recepient: -1,
       hotKeys: [
         {
           code: 'Enter',
@@ -71,8 +86,20 @@ export default {
       members: 'members',
       member: 'member',
       messages: 'chat/messages',
-      panelGroups: 'panels/groups'
+      panelGroups: 'panels/groups',
+      profile: 'profile'
     }),
+    recepients () {
+      console.log(this.members)
+      return Object.values(this.members).reduce((arr, m) => {
+        if (m.id !== this.profile.id) {
+          arr.push(m)
+        }
+        return arr
+      }, [{
+        id: -1
+      }])
+    },
     isVisible () {
       if (this.panelGroups[0]) {
         return this.panelGroups[0]['chat'] || false
@@ -101,21 +128,35 @@ export default {
     ...mapActions({
       sendMessage: 'chat/send',
       setRead: 'chat/setRead',
-      hidePanel: 'panels/hide',
+      hidePanel: 'panels/hide'
     }),
     send () {
       if (this.msg === '') {
         return
       }
-      this.sendMessage(this.msg)
+      this.sendMessage({
+        text: this.msg,
+        recepientID: this.recepient
+      })
       this.msg = ''
       this.$refs.msgInp.focus()
+      this.scrollBottom()
     },
     close () {
       this.hidePanel({
         group: 0,
         panel: 'chat'
       })
+    },
+    setRecepient (playerID) {
+      this.recepient = playerID
+    },
+    scrollBottom () {
+      let container = this.$refs.chatBody
+      let bottom = this.$refs.chatBottom
+      if (container !== undefined && bottom !== undefined) {
+        this.$scrollTo(bottom, 500, { container })
+      }
     }
   },
   watch: {
@@ -124,10 +165,14 @@ export default {
         this.$refs.msgInp.focus()
         this.$disableHotKeys()
         this.setRead()
+        this.scrollBottom()
       } else {
         this.$enableHotKeys()
         this.setRead()
       }
+    },
+    messages () {
+      this.scrollBottom()
     }
   }
 }
@@ -136,11 +181,19 @@ export default {
 <style lang="scss" scoped>
 .chat {
   display: flex;
+  .empty {
+    display: flex;
+    height: 180px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
   .body {
     display: grid;
     grid-template-columns: auto 300px;
     text-align: justify;
-    max-height: 500px;
+    min-height: 200px;
+    max-height: 70vh;
     overflow-y: auto;
     padding: 8px;
   }
@@ -151,4 +204,35 @@ export default {
     align-items: center;
   }
 }
+.popup {
+  position: absolute;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.95);
+  border-radius: 6px 6px 6px 0;
+  display: flex;
+  flex-direction: row;
+}
+.popup > * {
+  white-space: nowrap
+}
+.recepient {
+  user-select: none;
+  position: relative;
+  .popup {
+    display: none
+  }
+  .current {
+    text-align: center;
+    margin: 0 5px;
+    white-space: nowrap
+  }
+}
+.recepient:hover .popup {
+  display: block;
+  bottom: 20px;
+}
+.chat-bottom {
+  grid-column: 1 2;
+}
+
 </style>

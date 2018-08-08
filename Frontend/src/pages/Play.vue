@@ -67,6 +67,8 @@
       </Form>
     </Window>
 
+    <MessageNotify />
+
     <HelpPanel ref="help" name="Game" :data="helpData" :refs="$refs" />
   </div>
 </template>
@@ -88,6 +90,7 @@ import GamePanel from '../components/GamePanel'
 import TextInput from '../components/TextInput'
 import HelpPanel from '../components/HelpPanel'
 import Chat from '../components/Chat'
+import MessageNotify from '../components/nano/MessageNotify'
 
 const NOTIFICATION_ICON = 'https://avatars2.githubusercontent.com/u/41302202?s=400&v=4'
 
@@ -108,7 +111,8 @@ export default {
     GamePanel,
     TextInput,
     HelpPanel,
-    Chat
+    Chat,
+    MessageNotify
   },
   data () {
     let hotKeys = [

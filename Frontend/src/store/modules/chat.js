@@ -1,17 +1,7 @@
 import Vue from 'vue'
-import Faker from 'faker'
-
-let members = [198, 199]
-let messages = []
-for (let i = 0; i < 100; i++) {
-  messages.push({
-    playerID: members[i % members.length],
-    text: Faker.hacker.phrase()
-  })
-}
 
 const state = {
-  messages: messages,
+  messages: [],
   unread: false
 }
 
@@ -28,9 +18,8 @@ const mutations = {
 }
 
 const actions = {
-  set ({ commit, dispatch }, events) {
-    commit('SET_EVENTS', events)
-    dispatch('syncSet', 'events', { root: true })
+  set ({ commit, dispatch }, messages) {
+    commit('SET_MESSAGES', messages)
   },
   add ({ commit }, message) {
     commit('UNREAD', true)
@@ -39,8 +28,8 @@ const actions = {
   setRead ({ commit }) {
     commit('UNREAD', false)
   },
-  send (_, message) {
-    console.log('@todo sending ', message)
+  send ({ rootState }, message) {
+    rootState.cable.get(rootState.gameID).sendMessage(message)
   }
 }
 

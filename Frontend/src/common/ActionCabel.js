@@ -1,4 +1,4 @@
-import { GAME_CHANNEL, PLAYER_CHANNEL } from './constants.js'
+import { GAME_CHANNEL, PLAYER_CHANNEL, CHAT_CHANNEL } from './constants.js'
 import debug from './Debug.js'
 import ActionCable from 'actioncable'
 import store from '@/store'
@@ -9,6 +9,8 @@ const START_ACTION = 'start_game'
 const ADD_BOT_ACTION = 'add_bot'
 const DEL_BOT_ACTION = 'del_bot'
 const REQUEST_DATA_ACTION = 'ask_data'
+const REQUEST_MESSAGES_ACTION = 'ask_messages'
+const SEND_MESSAGE_ACTION = 'send_message'
 
 export default class ActionCabel {
   constructor (gameID, wsServer) {
@@ -25,6 +27,18 @@ export default class ActionCabel {
       {
         connected: () => {
           self.onConnected(`games:${gameID}`)
+        },
+        received: this.onReceived.bind(self),
+        disconnected: this.onDisconnected.bind(self)
+      })
+      self._chatRoom = this._cable.subscriptions.create({
+        channel: CHAT_CHANNEL,
+        room: `chats:${gameID}`
+      },
+      {
+        connected: () => {
+          self.requestMessages()
+          self.onConnected(`chats:${gameID}`)
         },
         received: this.onReceived.bind(self),
         disconnected: this.onDisconnected.bind(self)
@@ -87,6 +101,10 @@ export default class ActionCabel {
       this.requestData()
     } else if (data.type === 'notifications') {
       store.dispatch('events/set', data.data.notifications)
+    } else if (data.type === 'messages') {
+      store.dispatch('chat/set', data.data.messages)
+    } else if (data.type === 'message') {
+      store.dispatch('chat/add', data.data.message)
     } else {
       debug.warn(`ActionCable.js: Unknown type`)
     }
@@ -111,5 +129,11 @@ export default class ActionCabel {
   }
   requestData () {
     this._gameRoom.perform(REQUEST_DATA_ACTION, { })
+  }
+  requestMessages () {
+    this._chatRoom.perform(REQUEST_MESSAGES_ACTION, { })
+  }
+  sendMessage (message) {
+    this._chatRoom.perform(SEND_MESSAGE_ACTION, message)
   }
 }
