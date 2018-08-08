@@ -112,10 +112,12 @@ export default {
         ctrl: true,
         shift: true,
         method: () => {
-          if (!this.forceAutoEndTurn) {
-            this.endTurn()
+          if (process.env.NODE_ENV === 'development') {
+            if (!this.forceAutoEndTurn) {
+              this.endTurn()
+            }
+            this.forceAutoEndTurn ^= true
           }
-          this.forceAutoEndTurn ^= true
         }
       },
       {

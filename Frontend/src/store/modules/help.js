@@ -247,13 +247,20 @@ const state = {
 const mutations = {
   DONE (state, name) {
     Vue.set(state.done, name, 'true')
-    localStorage.setItem(STORAGE_DONE, JSON.stringify(state.done))
+  },
+  RESET (state) {
+    Vue.set(state, 'done', {})
   }
 }
 
 const actions = {
-  done ({ commit }, name) {
+  done ({ state, commit }, name) {
     commit('DONE', name)
+    localStorage.setItem(STORAGE_DONE, JSON.stringify(state.done))
+  },
+  reset ({ commit }) {
+    commit('RESET')
+    localStorage.removeItem(STORAGE_DONE)
   }
 }
 

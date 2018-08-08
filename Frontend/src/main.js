@@ -28,6 +28,14 @@ if (store.getters.savedLocale) {
   Vue.i18n.set('en')
 }
 
+if (process.env.NODE_ENV === 'development') {
+  window.dev = window.dev || {}
+  window.dev.resetHelp = () => {
+    store.dispatch('help/reset')
+    location.reload()
+  }
+}
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
