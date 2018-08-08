@@ -137,9 +137,10 @@ export default {
   mounted () {
     let silent = false
     let refreshFunc = () => {
-      this.refresh(this.offset, silent)
-      silent = true
-      this._refreshTimer = setTimeout(refreshFunc, REFRESH_TIMEOUT)
+      this.refresh(this.offset, silent).then(() => {
+        silent = true
+        this._refreshTimer = setTimeout(refreshFunc, REFRESH_TIMEOUT)
+      })
     }
     refreshFunc()
   },
@@ -202,14 +203,18 @@ export default {
     },
     refresh (offset, silent = false) {
       this.isLoading = !silent
-      Service.game.all(offset, this.limit).then((resp) => {
-        this.isLoading = false
-        this.total = resp.data.count
-        this.rows = resp.data.games
-      }).catch((resp) => {
-        if (!silent) {
-          this.$toast(this.$t('Connection error'))
-        }
+      return new Promise(resolve => {
+        Service.game.all(offset, this.limit).then((resp) => {
+          this.isLoading = false
+          this.total = resp.data.count
+          this.rows = resp.data.games
+          resolve()
+        }).catch((resp) => {
+          if (!silent) {
+            this.$toast(this.$t('Connection error'))
+          }
+          resolve()
+        })
       })
     },
     pageChanged (pageInfo) {
