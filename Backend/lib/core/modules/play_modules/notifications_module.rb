@@ -59,13 +59,15 @@ private
   end
 
   def fleet_conquer player_id1, planet_id, player_id2
-    nots = {
-      "type" => "ATTACK_SUCCESS",
-      "target" => planet_id,
-      "member" => player_id2
-    }
-    @notifications[player_id1] << nots if @notifications and @notifications[player_id1]
-    unless player_id2.to_i == -1
+    unless Player[player_id1].ai?
+      nots = {
+        "type" => "ATTACK_SUCCESS",
+        "target" => planet_id,
+        "member" => player_id2
+      }
+      @notifications[player_id1] << nots if @notifications and @notifications[player_id1]
+    end
+    unless player_id2.to_i == -1 or Player[player_id2]&.ai?
       nots = {
         "type" => "PLANET_LOST",
         "target" => planet_id,
@@ -76,14 +78,15 @@ private
   end
 
   def fleet_failed player_id1, planet_id, player_id2
-    p "fleet_failed"
-    nots = {
-      "type" => "ATTACK_FAILED",
-      "target" => planet_id,
-      "member" => player_id2
-    }
-    @notifications[player_id1] << nots if @notifications and @notifications[player_id1]
-    unless player_id2.to_i == -1
+    unless Player[player_id1].ai?
+      nots = {
+        "type" => "ATTACK_FAILED",
+        "target" => planet_id,
+        "member" => player_id2
+      }
+      @notifications[player_id1] << nots if @notifications and @notifications[player_id1]
+    end
+    unless player_id2.to_i == -1  or Player[player_id2]&.ai?
       nots = {
         "type" => "PLANET_SAVED",
         "target" => planet_id,
@@ -100,7 +103,7 @@ private
       "member" => player_id
     }
     Game[@game_id].players.each do |player|
-      unless player.id == player_id
+      unless player.id == player_id or player.ai?
         @notifications[player.id] << nots if @notifications and @notifications[player.id]
       end 
     end

@@ -15,7 +15,9 @@ module PirateModule
           if pirates_attack_planet?
             planet.ships = (planet.ships * (1 - pirates_attack_planet_damage)).to_i
             planet.save
-            self.add_notification type: 1, player_id1: player.id, _object_id: planet.id
+            unless player.ai?
+              self.add_notification type: 1, player_id1: player.id, _object_id: planet.id
+            end
           end
         end
         player.fleets.each do |fleet|
@@ -23,7 +25,9 @@ module PirateModule
               fleet_count = fleet.ships.clone
               fleet.ships = (fleet.ships * (1 - pirates_attack_fleet_damage)).to_i
               fleet.save
+            unless player.ai?
               self.add_notification(type: 2, player_id1: player.id, fleet_data: (make_hash_pirate(fleet_count, fleet)))
+            end
           end
         end
       end
