@@ -103,7 +103,7 @@ private
       "member" => player_id
     }
     Game[@game_id].players.each do |player|
-      unless player.id == player_id or player.ai?
+      unless player.id == player_id or player&.ai?
         @notifications[player.id] << nots if @notifications and @notifications[player.id]
       end 
     end

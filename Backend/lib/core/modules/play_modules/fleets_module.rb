@@ -38,18 +38,18 @@ module FleetModule
       fleet_ = fleet.clone
       if fleet.player == planet.player
         planet.took_fleet fleet
-        unless Player[fleet_player_id].ai?
+        unless Player[fleet_player_id]&.ai?
           self.add_notification type: 3, player_id1: fleet_player_id, fleet_data: make_hash_land(fleet_)
         end
       else
         result = planet.defend_against_fleet fleet
         case result
         when "planet"
-          unless Player[fleet_player_id].ai? or Player[planet_player_id].ai?
+          unless Player[fleet_player_id]&.ai? or Player[planet_player_id]&.ai?
             self.add_notification type: 5, player_id1: fleet_player_id, _object_id: planet.id, player_id2: planet_player_id 
           end
         when "fleet"
-          unless Player[fleet_player_id].ai? or Player[planet_player_id].ai?
+          unless Player[fleet_player_id]&.ai? or Player[planet_player_id]&.ai?
             self.add_notification type: 4, player_id1: fleet_player_id, _object_id: planet.id, player_id2: planet_player_id 
           end
         end
